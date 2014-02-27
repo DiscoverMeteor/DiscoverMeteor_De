@@ -1,3 +1,5 @@
+See it live at: http://de.discovermeteor.com/
+
 Here are a couple of comments for the current version of the (ongoing) translation:
 
 #### Common notes
