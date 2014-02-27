@@ -2,10 +2,17 @@ Here are a couple of comments for the current version of the (ongoing) translati
 
 #### A couple of english terms to stick with - even in german:
 
-- Package
-- Repository
+- Bug
 - Code
+- Commit
 - Framework
+- Header
+- Live
+- Link
+- Package
+- Repo
+- Repository
+- 
 
 
 #### Who is 'you'?
