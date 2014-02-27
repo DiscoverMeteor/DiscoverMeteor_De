@@ -24,7 +24,7 @@ In german, we have two meanings of the word 'YOU' - the one complies (approx.) w
 For this book, I decided to use the 'friends/familiy' variation, which translates to 'Du'. So the author talks to the reader directly, which I find more appropriate for this kind of *geeky* material ;)
 
 #### Time
-We talk in the 'present' form. I somehow dislike the original texts where the authors 'wanted' to do something... did they stop wanting it? I guess no - wo let's keep it present (pun intended).
+We talk in the 'present' form. I somehow dislike the original texts where the authors 'wanted' to do something... did they stop wanting it? I guess no - so let's keep it present (pun intended).
 
 
 Andy
