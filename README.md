@@ -1,4 +1,7 @@
-Here are a couple of comments for the current version of the (ongoing) translation
+Here are a couple of comments for the current version of the (ongoing) translation:
+
+#### We don't translate slugs
+
 
 #### A couple of english terms to stick with - even in german:
 
@@ -12,7 +15,7 @@ Here are a couple of comments for the current version of the (ongoing) translati
 - Package
 - Repo
 - Repository
-- 
+
 
 
 #### Who is 'you'?
