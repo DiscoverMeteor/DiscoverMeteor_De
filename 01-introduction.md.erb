@@ -7,55 +7,55 @@ contents: Was macht Meteor so besonders.|Lies die Geschichte dieses Buches.|Lern
 paragraphs: 35
 ---
 
-////
+Mache doch mal ein Experiment. Stell dir vor Du öffnest denselben Ordner in zwei unterschiedlichen Fenstern auf deinem Computer.
 
-////
+Jetzt lösche eine Datei in einem der beiden Fenster. Ist diese Datei aus dem zweiten Fenster ebenfalls verschwunden?
 
-////
+Du mußt diese beiden Schritte nicht ausführen, um das Ergebnis zu sehen. Wenn wir auf dem lokalen Dateisystem etwas ändern, werden diese Änderungen überall übernommen, ohne das zusätzliche Schritte oder Aktualisierungen notwendig sind. Es passiert einfach.
 
-////
+Aber wie würde dies im Web funktionieren? Nimm mal an, Du öffnest die Administrations-Oberfläche einer WordPress-Installation auf zwei Computern und erstellst einen neuen Blog-Eintrag in einer der beiden Oberflächen. Anders als auf Deinem lokalen Schreibtisch, wird sich im zweiten Fenster nichts ändern - egal wie lange Du wartest. Es sei denn, Du aktualisierst das Fenster.
 
-////
+Im Laufe der Jahre haben wir uns daran gewöhnt, dass wir mit einer Webseite in kurzen, unabhängigen Aktionen kommunizieren.
 
-////
+Aber Meteor ist Teil einer neuen Art von Framework und Technologien, die versuchen, das Web reaktionsfreudiger und Echtzeit-fähiger zu machen.
 
 ### Was ist Meteor?
 
-////
+Meteor ist eine Plattform, die auf Node.js aufsetzt, um Echtzeit-Web-Apps zu ermöglichen. Meteor sitzt zwischen der Datenbank deiner App und dem Benutzer-Interface und stellt dabei sicher, dass beide synchron sind.
 
-////
+Da es auf Node.js aufsetzt, verwendet Meteor auf dem Server, wie auch dem Client Javascript. Besser noch - Meteor kann denselben Code sogar mit beiden Seiten teilen.
 
-////
+Das Ergebnis ist eine Plattform die sehr leistungsfähig und dabei doch einfach ist, da sie dir viele Schwierigkeiten und Fallstricke der Echtzeit-Web-App-Entwicklung erspart.
 
 ### Warum Meteor?
 
-////
+Aber warum solltest du Zeit vergeuden, um Meteor - statt einem anderen Web-Framework - zu lernen? Einmal abgesehen von den verschiedenen Funktionen von Meteor selbst, glauben wir, dass es auf eines besonders ankommt: Meteor ist einfach zu lernen.
 
-////
+Mehr als jedes andere Framework, ermöglicht es Meteor, eine Echtzeit-Web-Anwendung in wenigen Stunden zu erstellen. Und falls Du schon mal eine Benutzer-Schnittstelle erstellt hast, kennst Du Javascript sowieso - Du musst also nicht einmal etwas Neues lernen.
 
-////
+Meteor könnte also das ideale Framework für deine Zwecke sein - oder auch nicht. Aber da man mit Meteor nach ein paar Abenden oder einem Wochenende bereits gut arbeiten kann, kann man es doch wenigstens mal ausprobieren, oder nicht?!
 
 ### Warum dieses Buch?
 
-////
+In den letzten Monaten haben wir an [Telescope](http://telesc.pe), einer open-source Meteor-App gearbeitet, mit der jeder seine eigene soziale Webseite erstellen kann (sowas wie [Reddit](http://reddit.com) oder [Hacker news](http://news.ycombinator.com)), wo Leute Links eintragen und bewerten können.
 
-////
+Dabei haben wir einen Haufen gelernt, aber es war auch nicht einfach immer gleich eine passende Antwort auf unsere Fragen zu finden. Oft mussten wir viele kleine Teile aus unterschiedlichen Quellen zusammen-stückeln, oder manchmal auch was ganz neues erfinden. Mit diesem Buch wollen wir genau diese Erfahrungen teilen und eine einfach zu benutzende Anleitung geben, wie man eine dicke Meteor-App ganz von Anfang an erstellen kann.
 
-////
+Die App die wir hier bauen, ist eine etwas vereinfachte Version von Telescope, die wir an dieser Stelle 'Microscope' nennen. Während wir diese erstellen, zeigen wir alle Elemente, die am Ende eine Meteor-App ausmachen; wie z.B. Benutzer-Konten, Meteor-Collections, Routing und mehr.
 
-////
+Und wenn du mit dem Buch durch bist und weitermachen willst, dann verstehst du den Code von Telescope, weil er genau den Schritten in dieser Anleitung folgt.
 
 ### Über die Autoren
 
-////
+Falls du dich fragst, wer wir eigentlich sind und warum du uns glauben sollst, gibt's hier noch ein paar Infos über uns beide.
 
 <%= image "tom-photo.jpg", "portrait" %>
 
-////
+**Tom Coleman** ist Mitbetreiber von [Percolate Studio](http://percolatestudio.com/), einer Web-Entwicklungs-Agentur mit Fokus auf Qualität und Bedienbarkeit. Er ist ausserdem der Mitenwickler von [Meteorite](https://github.com/oortcloud/meteorite) und dem  [Atmosphere](http://atmosphere.meteor.com) Package-Repository. Ausserderm steht er hinter vielen anderen Meteor open-source Projekten (wie z.B. [Router](https://github.com/tmeasday/meteor-router)).
 
 <%= image "sacha-photo.jpg", "portrait" %>
 
-////
+**Sacha Greif** hat bei vielen Startups, wie z.B. [Hipmunk](http://hipmunk.com) und [RubyMotion](http://rubymotion.com) als Produkt- oder Web-Designer mitgewirkt. Er hat [Telescope](http://telesc.pe) und [Sidebar](http://sidebar.io) geschrieben (welches wiederum auf Telescope aufsetzt). Ausserdem ist er der Gründer von [Folyo](http://folyo.me).
 
 ### Kapitel & Seitenleisten
 
@@ -73,11 +73,11 @@ paragraphs: 35
 
 ////
 
-<%= commit "11-2", "Meldungen im Header anzeigen." %>
+<%= commit "11-2", "Display notifications in the header." %>
 
 ////
 
-### Einige andere Hilfsmittel
+### A Few Other Resources
 
 ////
 
@@ -85,7 +85,7 @@ paragraphs: 35
 
 <% note do %>
 
-### Brauche ich Git?
+### Do I Need Git?
 
 ////
 
@@ -95,7 +95,7 @@ paragraphs: 35
 
 <% end %>
 
-### Kontakt aufnehmen
+### Getting in Touch
 
 - ////
 - ////
