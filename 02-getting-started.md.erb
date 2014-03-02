@@ -134,59 +134,59 @@ Wenn wir von Packages im Kontext von Meteor sprechen müssen wir dies etwas gena
 
 <% end %>
 
-### Die Datei-Struktur einer Meteor App
+### Die Datei-Struktur einer Meteor-App
 
-Bevor wir zu programmieren beginnen, müssen wir unsere Projekt korrekt aufsetzen. Um eine saubere Struktur zu gewährleisten, öffnen wir das `microscope` Verzeichnis und löschen `microscope.html`, `microscope.js und `microscope.css`.
+Bevor wir mit dem Programmieren anfangen, müssen wir unser Projekt korrekt aufsetzen. Um einen problemlosen Build-Prozess zu gewährleisten, öffnen wir das Verzeichnis `microscope` und löschen die Dateien `microscope.html`, `microscope.js` und `microscope.css`.
 
-Danach erstellen wir fünf Verzeichnisse in `/microscope`: `/client`, `/server`, `/public`, `/lib` und `/collections`. Weiter erstellen wir leere `main.html` und `main.js` Dateien in `/client`. Keine Sorge wenn du dadurch die App vorübergehend unbrauchbar machst - wir befüllen die Dateien im nächsten Kapitel.
+Danach erstellen wir fünf Verzeichnisse in `/microscope`: `/client`, `/server`, `/public`, `/lib` und `/collections`. Weiterhin legen wir die leeren Dateien `main.html` und `main.js` in `/client` an. Keine Sorge, dass Du die App dadurch vorübergehend unbrauchbar machst - wir befüllen die Dateien im nächsten Kapitel.
 
-Erwähnt werden sollte auch, dass einige dieser Verzeichnisse speziell sind. Im Bezug auf Dateien hat Meteor einige Regeln:
+Erwähnt werden sollte auch, dass einige dieser Verzeichnisse speziell sind. In Bezug auf Dateien hat Meteor folgende Regeln:
 
-- Code im `/server` Verzeichnis läuft nur auf dem Server.
-- Code im `/client` Verzeichnis läuft nur auf dem Client.
-- Alles andere läuft auf dem Client und dem Server.
-- Dateien in `/lib` werden vor allem anderen geladen.
-- Alle `main.*` Dateien werden nach allem anderen geladen.
-- Deine statischen Assets (Schriften, Bilder etc.) gehören in das `/public` Verzeichnis.
+- Programm-Code im Verzeichnis `/server` wird nur auf dem Server ausgeführt.
+- Programm-Code im Verzeichnis im Verzeichnis `/client` läuft nur auf dem Client.
+- Dateien an anderen Orten werden sowohl auf dem Client als auch auf  dem Server ausgeführt.
+- Dateien in `/lib` werden immer zuerst geladen.
+- Alle `main.*` Dateien werden als Letzes geladen.
+- Deine statischen Assets (Schriften, Bilder etc.) gehören in das Verzeichnis `/public`.
 
-Beachte dass obwohl Meteor diese Regeln hat, du trotzdem nicht zwingend diese vordefinierte Dateistruktur für deine App verwenden musst. Die Struktur die wir vorschlagen ist nur ein möglicher Weg und ist nicht in Stein gemeisselt.
+Beachte, dass obwohl Meteor diese Regeln hat, Du trotzdem nicht zwingend diese vordefinierte Dateistruktur für deine App verwenden musst. Die Struktur die wir vorschlagen ist nur ein möglicher Weg und ist nicht in Stein gemeisselt.
 
-Lies doch den auch die [offizielle Meteor Dokumentation](http://docs.meteor.com/#structuringyourapp), wenn du mehr Informationen hierzu möchtest.
+Lies doch auch die [offizielle Meteor Dokumentation](http://docs.meteor.com/#structuringyourapp), wenn Du mehr Informationen hierzu möchtest.
 
 <% note do %>
 
 ### Ist Meteor MVC?
 
-Wenn zu von anderen Frameworks wie Ruby on Rails kommst fragst du dich vielleicht, ob Meteor Apps das MVC (Model View Controller) Pattern verwenden.
+Wenn zu von anderen Frameworks wie Ruby on Rails benutzt, fragst Du dich vielleicht, ob Meteor-Apps das MVC-Pattern (Model View Controller) verwenden.
 
-Die kurze Antwort ist nein. Im Gegensatz zu Rails zwingt dich Meteor nicht eine vorgegeben Struktur für deine App zu nutzen. In diesem Book verwenden wir den Code wie er uns am meisten Sinn macht, ungeachtet etwaiger Acronymen.
+Die kurze Antwort ist Nein. Im Gegensatz zu Rails zwingt dich Meteor nicht eine vorgegeben Struktur für deine App zu nutzen. In diesem Book strukturieren wir den Code, wie er uns am meisten Sinn macht, ungeachtet etwaiger Akronyme.
 
 
 <% end %>
 
 ### Nicht öffentlich?
 
-Ok, wir haben etwas gelogen. Wir brauchen das `/public` Verzeichnis nicht unbedingt. Mit der einfachten Begründung, dass Microscope keine statischen Assets benötigt. Aber da die meisten anderen Meteor Apps mindestens einige Bilder einbinden, wollten wir es trotzdem abdecken.
+Ok, wir haben etwas gelogen. Wir brauchen das `/public` Verzeichnis eigentlichnicht. Dies hat die einfache Begründung, dass Microscope keine statischen Assets benötigt. Aber da die meisten anderen Meteor Apps mindestens einige Bilder einbinden, wollen wir es trotzdem anlegen.
 
-Vielleicht hast du das versteckte `.meteor` Verzeichnis bemerkt. Dort speichert Meteor seinen eigenen Code und hier Sachen zu verändern ist normalerweise eine schlechte Idee. Grundsätzlich musst du dieses Verzeichnis nicht kennen. Die einzigen Ausnahme sind die `.meteor/packages` und `.meteor/release' Dateien, welche genutzt werden können, um die Smart Packages und die Version von Meteor nachzusehen. Wenn du Packages hinzufügst oder den Meteor Release änderst kann es hilfreich sein, diese Dateien zu prüfen.
+Vielleicht hast du das versteckte Verzeichnis `.meteor` bemerkt. Dort speichert Meteor seinen eigenen Code. Dort Änderungen vorzunehmen ist normalerweise eine schlechte Idee. Grundsätzlich musst du dieses Verzeichnis nicht kennen. Die einzigen Ausnahmen sind die Dateien `.meteor/packages` und `.meteor/release'. Diese können genutzt werden, um die verwendeten Smart Packages aufzulisten und die benutzte Version von Meteor zu spezifizieren. Wenn du Packages hinzufügst oder den Meteor-Version änderst, kann es hilfreich sein, diese Änderungen dieser Dateien zu überprüfen.
 
 <% note do %>
 
 ### Unterstriche oder CamelCase
 
-Das einzige das wir zu der uralten Unterstriche (`my_variable`) vs CamelCase (`myVariable`) Debatte sagen ist, dass es nicht darauf ankommt welches du wählst, solange du dabei bleibst.
+Das einzige das wir zu der uralten Debatte Unterstriche (`my_variable`) vs CamelCase (`myVariable`) sagen, ist, dass es nicht darauf ankommt welches Du wählst, solange Du dich für eine Variante entscheidest.
 
-In diesem Buch verwenden wir CamelCase, da es üblicherweise so in JavaScript gemacht wird (schliesslich heisst es JavaScript und nicht java_script!).
+In diesem Buch verwenden wir CamelCase, da es üblicherweise so in JavaScript gemacht wird. (Schliesslich heisst es JavaScript und nicht java_script!).
 
-Die einzige Ausnahme zu dieser Regel sind Dateinamen, welche in welchen Unterstriche (`my_file.js`) verwendet werden, sowie CSS Klassen die mit Bindestriche (`.my-class`) geschrieben werden. Der Grund dafür ist, dass im Dateisystem Unterstriche geläufig sind, während in der CSS Syntax sich Bindestriche durchgesetzt haben (`font-family`, `text-align` etc.).
+Die einzige Ausnahme zu dieser Regel sind Dateinamen in welchen Unterstriche (`my_file.js`) verwendet werden, sowie CSS Klassen die Bindestriche (`.my-class`) benutzen. Der Grund dafür ist, dass im Dateisystem Unterstriche geläufig sind, während in der CSS Syntax sich Bindestriche durchgesetzt haben (`font-family`, `text-align`, etc.).
 
 <% end %>
 
 ### Verwendung von CSS
 
-Dieses Buch behandelt kein CSS. Um dich also nicht mit Styling Details zu belästigen haben wir uns entschieden das gesamte Stylesheet von Anfang verfügbar zu machen, damit du dich nicht damit bemühen musst.
+Dieses Buch behandelt kein CSS. Um dich nicht auch noch mit Design-Details zu belästigen, haben wir uns entschieden das gesamte Stylesheet von Anfang verfügbar zu machen. Damit musst Du Dir darüber keine Sorgen machen.
 
-CSS wird automatisch von Meteor geladen und komprimiert, desshalb muss es im Gegensatz zu den anderen statischen Assets im `/client` und nicht im `/public` Verzeichnis abgelegt werden. Erstelle nun ein `client/stylesheets/` Verzeichnis und speichere dieses `styles.css` darin:
+CSS wird automatisch von Meteor geladen und komprimiert. Desshalb muss es im Gegensatz zu den anderen statischen Assets im Verzeichnis `/client` und nicht im Verzeichnis `/public`  abgelegt werden. Erstelle nun das Verzeichnis `client/stylesheets/` und speichere die Datei `styles.css` mit folgendem Inhalt:
 
 
 ~~~css
@@ -287,13 +287,13 @@ body {
 ~~~
 <%= caption "client/stylesheets/style.css" %>
 
-<%= commit "2-3","Datei-Struktur modifiziert." %>
+<%= commit "2-3","modifizierte Datei-Struktur." %>
 
 <% note do %>
 
 ### Eine Anmerkung zu CoffeeScript
 
-In diesem Buch verwenden wir pures JavaScript. Solltest du CoffeeScript bevorzugen ist Meteor auch dazu fähig. Füge einfach das CoffeeScript Package hinzu:
+In diesem Buch verwenden wir pures JavaScript. Solltest du CoffeeScript bevorzugen, ist Meteor auch dazu fähig. Füge einfach das Package CoffeeScript hinzu:
 
 `mrt add coffeescript`
 
