@@ -194,11 +194,11 @@ Versuchen wir diese Probleme anzugehen.
 
 ### Absichern des Zugangs zum Anlegeformular eines Beitrages 
 
-////
+Wir fangen an, indem wir ausgeloggte Benutzer daran hindern, das Anlegeformular aufzurufen. Wir werden dies im Router implementieren, in dem wir einen *route hook* definieren.
 
-////
+Ein Hook fängt den Routing-Prozess ab und kann die Aktionen, die der Router vornimmt verändern. Du kannst es als Wachmann betrachten, der deinen Ausweis überprüft, bevor er Dich hereinlässt (oder abweist).
 
-////
+Was wir dazu unternehmen müssen, ist zu überprüfen, ob ein Benutzer eingeloggt ist. Wenn nicht muss anstelle des Templates `postSubmit` das Template `accessDenied` ausgegeben werden. Der Router wird dazu wie folgt angepasst:
 
 ~~~js
 Router.configure({
@@ -230,30 +230,30 @@ Router.before(requireLogin, {only: 'postSubmit'});
 <%= caption "lib/router.js" %>
 <%= highlight "18~25" %>
 
-////
+Wir legen auch ein Template für den verweigerten Zugriff an:
 
 ~~~html
 <template name="accessDenied">
-  <div class="alert alert-error">You can't get here! Please log in.</div>
+  <div class="alert alert-error">Du kannst diese Aktion nicht ausführen ! Bitte log dich ein.</div>
 </template>
 ~~~
 <%= caption "client/views/includes/access_denied.html" %>
 
 <%= commit "7-3", "Denied access to new posts page when not logged in." %>
 
-////
+Wenn du nun http://localhost:3000/submit/ aufrufst, ohne eingeloggt zu sein, solltest du folgendes sehen:
 
-<%= screenshot "7-3", "The access denied template" %>
+<%= screenshot "7-3", "Das Template für den verweigerten Zugriff" %>
 
-////
+Was Routing-Hooks richtig nett macht, ist dass sie _reaktiv_ sind. Das bedeutet, wir können deklarativ arbeiten und müssen uns nicht über Callbacks oder ähnliches kümmern, wenn der Benutzer sich einloggt. Wenn sich der Login-Zustand eines Benutzers ändert, wird das Seitentemplate sofort von `accessDenied` zu `postSubmit` geändert, ohne das wir explizit Code dafür schreiben müssen.
 
-////
+Log Dich ein und versuch dann die Seite neuzuladen. Du wirst eventuell das Template "Zugriff verweigert" für einen kurzen Moment aufflackern sehen bevor das Anlageformular erscheint. Der Grund dafür ist, dass Meteor Templates so früh wie möglich rendert. Es kann sein, dass dies geschieht, bevor mit dem Server darüber kommuniziert wird, ob der Benutzer eingeloggt ist. (Der Zustand wird übrigens im LocalStorage des Browsers gespeichert.)
 
-////
+Um dieses Problem zu verhindern (Es handelt sich um ein Problem, welches Du häufiger sehen wirst, wenn Du Dich mit den Eigenheiten von Latenz zwischen Server und Client beschäftigst), werden wir für eine kurze Zeit einen Ladebildschirm anzeigen und warten bis klar ist, ob der Benutzer eingeloggt ist oder nicht.
 
-////
+Dies ist notwendig, da wir ohne den Server nicht entscheiden können, ob der Benutzer eine korrekte Authorisierung vorgenommen hat oder nicht. Solange können wir keins der Template `accessDenied` oder `postSubmit` anzeigen.
 
-////
+Wir ändern also unseren Hook um unser Lade-Template anzuzeigen, solange `Meteor.loggingIn()` den Wert `true` zurückliefert:
 
 ~~~js
 Router.map(function() {
