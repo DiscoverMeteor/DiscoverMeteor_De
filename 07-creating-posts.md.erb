@@ -7,11 +7,11 @@ contents: Learn how to submit a post client-side.|Implement a simple security ch
 paragraphs: 60
 ---
 
-Nun haben wir gesehen, wie einfach es ist, Post-Aufrufe über die Konsole mit dem Datenbankaufruf `Posts.insert` anzulegen. Aber wir können natürlich nicht erwarten, dass unsere Benutzer die Konsole benutzen.
+Nun haben wir gesehen, wie einfach es ist, Beiträge über die Konsole mit dem Datenbankaufruf `Posts.insert` anzulegen. Aber wir können natürlich nicht erwarten, dass unsere Benutzer die Konsole benutzen.
 
 Also brauchen wir ein Benutzer-Interface, um unseren Benutzern die Möglichkeit zu geben, neue Beiträge anzulegen.
 
-### Aufbau der neuen Post-Seite
+### Aufbau der Seite zum Anlegen eines Beitrages
 
 Wir fangen an, indem wir eine neue Route für unsere Seite definieren:
 
@@ -42,7 +42,7 @@ Wir benutzen die Funktion `data` des Routers, um den Kontext `postPage` des Temp
 
 ### Hinzufügen eines Links zur Überschrift
 
-Da die Route nun angelegt ist, können wir nun einen Link zur Überschrift unserer Seite hinzufügen:
+Da die Route nun angelegt ist, können wir nun einen Link in der Überschrift unserer Seite hinzufügen:
 
 ~~~html
 <template name="header">
@@ -157,9 +157,9 @@ $ meteor remove insecure
 
 Danach wirst du feststellen, das das Formular nicht mehr funktioniert. Ohne das Package `insecure` sind client-seitige Einfügeoperationen in Collections _nicht mehr erlaubt_. Wir müssen entweder explizite Regeln anlegen, die Meteor mitteilen, dass es OK ist auf dem Client Objekte anzulegen oder wir müssen das Einfügen auf die Server-Seite verlegen.
 
-### Allowing Post Inserts
+### Einfügen von Beiträgen wieder erlauben
 
-////
+Wir zeigen nun, wie man das client-seitige Anlegen von Beiträgen erlaubt, damit das Formular wieder funktionsfähig wird. Wie es sich herausstellt, werden wir später eine andere Technik benutzen. Aber im Moment ist der folgende Code der einfachste Weg:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
@@ -176,23 +176,23 @@ Posts.allow({
 
 <%= commit "7-2", "Removed insecure, and allowed certain writes to posts." %>
 
-////
+Wir rufen die Methode `allow()` auf der Posts-Collection auf. Diese teilt Meteor mit, unter welchen Umständen Clients einen Beitrag einfügen dürfen. In diesem Fall sagen wir "clients dürfen neue Beiträge anlegen, wenn sie eine  `userId` besitzen". 
 
-////
+Die `userId` des Benutzers, der die Anlege-Operation vornimmt wird and die Aufrufe von `allow` und `deny` weitergeleitet (oder liefert `null`, wenn kein Benutzer eingeloggt ist). Weil die Benutzer-Accounts im Kern von Meteor verankert sind, können wir uns darauf verlassen, dass die `userId` immer korrekt gesetzt ist. 
 
-////
+Wir haben also sichergestellt, dass der Benutzer immer eingeloggt sein muss, um einen Beitrag anzulegen. Versuch mal, dich auszuloggen und einen Beitrag anzulegen. Du solltest folgendes in der Konsole sehen:
 
 <%= screenshot "7-2", "Insert failed: Access denied " %>
 
-////
+Aber wir müssen immer noch auf einige Dinge erledigen:
 
- - ////
- - ////
- - ////
+ - Ausgeloggte Benutzer können immer noch das Anlegeformular sehen.
+ - Der Beitrag ist noch nicht mit dem Benutzer verknüpft (und es gibt keinen Code auf dem Server um dies sicherzustellen)
+ - Mehrere Beiträge können angelegt werden, die die gleiche URL enthalten.
 
-////
+Versuchen wir diese Probleme anzugehen.
 
-### Securing Access To The New Post Form
+### Absichern des Zugangs zum Anlegeformular eines Beitrages 
 
 ////
 
@@ -293,7 +293,7 @@ Router.before(requireLogin, {only: 'postSubmit'});
 
 ~~~html
 <ul class="nav">
-  {{#if currentUser}}<li><a href="{{pathFor 'postSubmit'}}">Submit Post</a></li>{{/if}}
+  {{#if currentUser}}<li><a href="{{pathFor 'postSubmit'}}">Beitrag anlegen</a></li>{{/if}}
 </ul>
 ~~~
 <%= caption "client/views/includes/header.html" %>
