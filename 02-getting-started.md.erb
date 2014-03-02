@@ -7,35 +7,34 @@ contents: Meteor & Meteorite installieren.|Erfahre mehr über die 5 Typen der Me
 paragraphs: 49
 ---
 
-Der erste Eindruck ist entscheidend und Meteor's Installationsprozess sollte relativ einfach vonstatten gehen. Im Normalfall solltest du es in weniger als 5 Minuten installiert und lauffähig haben.
+Der erste Eindruck ist entscheidend und Meteors Installationsprozess sollte relativ einfach sein. Normalerweise sollte es in weniger als 5 Minuten installiert und lauffähig sein.
 
-Du kannst Meteor installieren, in dem du das Terminal öffnest und folgendes eingibst:
+Du kannst Meteor installieren, in dem du das Terminal öffnest und Folgendes eingibst:
 
 ~~~bash
 $ curl https://install.meteor.com | sh
 ~~~
 
-Diest installiert die ausführbare `meteor` Programmdatei in deinem System und macht dich bereit mit Meteor zu starten.
+Dies installiert das ausführbare Programm `meteor` auf deinem System und erlaubt Dir Meteor zu benutzen.
 
 <% note do %>
 
 ### Meteor *nicht* installieren
 
-
 Wenn du Meteor nicht lokal installieren kannst (oder willst) empfehlen wir dir [Nitrous.io](http://nitrous.io).
 
-Auf Nitrous.io kannst du deine App laufen lassen und den Code direkt im Browser bearbeiten. Wir haben dazu [eine kurze Anleitung](https://www.discovermeteor.com/2013/10/04/meteor-nitrous/) geschrieben um die Installation zu vereinfachen. 
+Auf Nitrous.io kannst Du deine App laufen lassen und den Code direkt im Browser bearbeiten. Wir haben dazu [eine kurze Anleitung](https://www.discovermeteor.com/2013/10/04/meteor-nitrous/) geschrieben, um die Installation zu vereinfachen. 
 
-Du kannst einfach der Anleitung folgen bis (und mit) dem Abschnitt "Installing Meteor & Meteorite" und dann wieder ab dem Abschnitt "Creating a Simple App" in gleichen Kapitel.
+Du kannst einfach dieser Anleitung folgen bis zu dem Abschnitt "Installing Meteor & Meteorite". Danach folgst Du wieder ab dem Abschnitt "Creating a Simple App" in diesem Kapitel.
 
 
 <% end %>
  
 ### Meteorite
 
-Da Meteor noch keine externen Packages unterstützt, haben Tom Coleman (einer der Autoren dieses Buches) und einige Community-Mitglieder [Meteorite](http://oortcloud.github.com/meteorite/) entwickelt, ein Hilfsprogramm/Wrapper für Meteor. Meteorite sorgt sich auch um die Installation von Meteor und verbindet den erhältlichen Packages.
+Da Meteor noch keine externen Packages unterstützt, haben Tom Coleman (einer der Autoren dieses Buches) und einige Community-Mitglieder [Meteorite](http://oortcloud.github.com/meteorite/) entwickelt, ein Hilfsprogramm/Wrapper für Meteor. Meteorite kümmert sich auch um die Installation von Meteor und verbindet den erhältlichen Packages.
 
-Da wir für einige Microscope Features externe Packages einsetzen, müssen wir Meteorite nun installieren. 
+Da wir für einige Microscope Features externe Packages einsetzen, fangen wir mit der Installation von Meteorite an. 
 
 ### Meteorite installieren
 
@@ -44,7 +43,7 @@ Stelle sicher, dass Node und Git auf deinem Computer installiert sind. Installie
 - [Node download site](http://nodejs.org/download/)
 - [Git download site](http://git-scm.com/downloads)
 
-Jetzt können wir Meteorite installieren. Da es eine [npm](https://npmjs.org/) Erweiterung ist (Node Packaged Modul, Node's standard Modulformat), installieren wir es damit:
+Jetzt können wir Meteorite installieren. Da es eine [npm](https://npmjs.org/) Erweiterung ist (Node Packaged Module, Das Standard-Modulformat von Node), installieren wir es mit:
 
 ~~~bash
 $ npm install -g meteorite
@@ -54,7 +53,7 @@ $ npm install -g meteorite
 
 ### Fehler in Berechtigungen?
 
-Auf manchen Systemen kann die Installation root Rechte benötigen. Um dies zu umgehen benutze `sudo -H`:
+Auf manchen Systemen kann die Installation Root-Rechte benötigen. Um dies zu umgehen, benutze `sudo -H`:
 
 ~~~bash
 $ sudo -H npm install -g meteorite
@@ -64,28 +63,28 @@ Du kannst mehr zu diesem Problem in der [Meteorite Dokumentation](https://github
 
 <% end %>
 
-Das wärs schon! Meteorite übernimmt den Rest für dich.
+Das war es schon! Meteorite übernimmt den Rest für dich.
 
-Beachte: Es gibt momentan noch keine Windows Ünterstützung für Meteorite, aber schau doch mal stattdessen unser [Windows Tutorial](http://themeteorbook.com/2013/03/20/using-meteor-and-atmopshere-on-windows/) an.
+Beachte: Es gibt momentan noch keine Windows-Ünterstützung für Meteorite. Aber schau doch mal stattdessen unser [Windows Tutorial](http://themeteorbook.com/2013/03/20/using-meteor-and-atmopshere-on-windows/) an.
 
 
 <% note do %>
 
   ### `mrt` vs `meteor`
   
-Meteorite installiert die `mrt` Programmdatei, welche wir nutzen können um Packages in unserer App zu installieren. Um den Server zu starten nutzen wir hingegen den `meteor` Befehl.
+Meteorite installiert die Programmdatei `mrt`. Diese nutzen wir um Packages in unserer App zu installieren. Um den Server zu starten nutzen wir hingegen den `meteor` Befehl.
   
 <% end %>
 
 ### Eine einfache App erzeugen
 
-Nun da wir Meteorite installiert haben, erstellen wir eine App. Dies machen wir mit dem Metorite Befehl `mrt`:
+Nun da wir Meteorite installiert haben, erstellen wir eine App. Dies machen wir mit dem Metorite-Befehl `mrt`:
 
 ~~~bash
 $ mrt create microscope
 ~~~
 
-Dieser Befehl lädt Meteor herunter und erstellt ein einfaches, lauffähiges Meteor Projekt für dich. Sobald es fertig ist solltest du ein Verzeichnis `microscope/` mit folgendem Inhalt sehen:
+Dieser Befehl lädt Meteor herunter und erstellt ein einfaches, lauffähiges Meteor-Projekt für dich. Sobald es fertig ist solltest Du ein Verzeichnis `microscope/` mit folgendem Inhalt sehen:
 
 ~~~bash
 microscope.css  
@@ -94,26 +93,26 @@ microscope.js
 smart.json 
 ~~~
 
-Die App die Meteor für dich erstellt hat ist eine einfache Start-App die einige einfache Strukturen zeigen soll.
+Die App die Meteor für dich erstellt hat ist eine einfache Boilerplate-App, die einige einfache Strukturen enthält.
 
-Obwohl die App noch nicht viel macht können wir sie nun starten. Um die App zu starten gehe zurück in das Terminal und gib folgendes ein:
+Obwohl die App noch nicht viel macht, können wir sie nun starten. Um die App zu starten wechsle zurück in das Terminal und gib Folgendes ein:
 
 ~~~bash
 $ cd microscope
 $ meteor
 ~~~
 
-Öffne nun in deinem Browser die URL `http://localhost:3000/` (oder identisch `http://0.0.0.0:3000/`), womit du nun ungefähr dies sehen solltest:
+Öffne nun in deinem Browser die URL `http://localhost:3000/` (oder identisch `http://0.0.0.0:3000/`). Du soltest nun ungefähr dies sehen:
 
 <%= screenshot "2-1", "Meteors Hello World." %>
 
 <%= commit "2-1", "Einfaches Microscope-Projekt erzeugt." %>
 
-Gratuliere! Du deine erste Meteor App ist nun lauffähig. Um die App wieder zu stoppen, gehe zurück ins Terminal in dem die App läuft und drücke `ctrl+c`. 
+Gratuliere! Deine erste Meteor App ist nun lauffähig. Um die App wieder zu stoppen, wechsle zurück in das Terminal, in dem die App läuft, und drücke `ctrl+c`. 
 
-### Package hinzufügen
+### Ein Package hinzufügen
 
-Nun nutzen wir Meteorite um ein "Smart Package" hinzuzufügen, welches [Bootstrap](http://getbootstrap.com/) in unser Projekt einbindet.
+Nun nutzen wir Meteorite um ein "Smart Package" hinzuzufügen, welches [Bootstrap](http://getbootstrap.com/) zu unsem Projekt hinzufügt.
 
 ~~~bash
 $ mrt add bootstrap
@@ -123,15 +122,15 @@ $ mrt add bootstrap
 
 <% note do %>
 
-### Anmerkung zu Packages
+### Eine Anmerkung zu Packages
 
-Wenn wir von Packages im Meteor Kontext sprechen müssen wir dies etwas differnzieren. Meteor nutzt fünf Basis Typen von Packages:
+Wenn wir von Packages im Kontext von Meteor sprechen müssen wir dies etwas genauer sein. Meteor nutzt fünf Basis-Typen von Packages:
 
-- Der Meteor Core ist selbst in verschiedene **Core Packages** unterteilt. Sie sind in jeder Meteor App integriert und du musst dich eigentlich nie um diese kümmern.
-- Meteor **Smart Packages** sind eine Gruppe von [ungefähr 37 Packages](http://docs.meteor.com/#packages) (du kannst die komplette Liste mit `meteor list` abrufen) die mit Meteor im Verbund können und die du wahlweise in deiner App importieren kannst. Du kannst sie in Verwendung mit Meteorite mit dem Befehl `meteor add packagename` hinzufügen.
--- **Lokale Packages** sind benutzerdefinierte Packages die du selbst erstellen und in `/packages` ablegen kannst. Dazu benötigst du auch nicht Meteorite.
-- **Atmosphere Smart Packages** sind externe Meteor Packages, die in [Atmosphere](http://atmosphere.meteor.com) zu finden sind. Um diese zu importieren und nutzen wird Meteorite benötigt.
-- **NPM Packages** (Node Packaged Modules) sind Node.js Packages. Obwohl diese nicht einfach so mit Meteor funktionieren, *können* sie von vorher genannten Typen von Packages genutzt werden.
+- Der Meteor-Core ist selbst in verschiedene **Core Packages** unterteilt. Sie sind in jeder Meteor-App integriert und Du musst dich eigentlich nie um diese kümmern.
+- Meteor **Smart Packages** sind eine Gruppe von [ungefähr 37 Packages](http://docs.meteor.com/#packages) (Du kannst die komplette Liste mit `meteor list` abrufen), die mit Meteor im Verbund können und die Du wahlweise in deine App importieren kannst. Du kannst sie - auch wenn du Meteorite nicht nutzt - mit dem Befehl `meteor add packagename` hinzufügen.
+-- **Lokale Packages** sind benutzerdefinierte Packages, die Du selbst erstellen und im Verzeichnis `/packages` ablegen kannst. Dazu benötigst du ebenfalls nicht Meteorite.
+- **Atmosphere Smart Packages** sind externe Meteor-Packages, die auf [Atmosphere](http://atmosphere.meteor.com) zu finden sind. Um diese zu importieren und zu nutzen wird Meteorite benötigt.
+- **NPM Packages** (Node Packaged Modules) sind Node.js-Packages. Obwohl diese nicht einfach so mit Meteor funktionieren, *können* sie von vorher genannten Typen von Packages genutzt werden.
 
 <% end %>
 
