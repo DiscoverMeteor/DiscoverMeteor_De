@@ -69,7 +69,7 @@ Da die Route nun angelegt ist, können wir nun einen Link zur Überschrift unser
 <%= caption "client/views/includes/header.html" %>
 <%= highlight "11~16" %>
 
-////
+Das Anlegen der Route bedeutet, dass wenn der Benutzer die URL `/submit` aufruft, Meteor das Template `postsubmit` anzeigen wird. Wir legen dieses Template nun an:
 
 ~~~html
 <template name="postSubmit">
@@ -106,15 +106,15 @@ Da die Route nun angelegt ist, können wir nun einen Link zur Überschrift unser
 ~~~
 <%= caption "client/views/posts/post_submit.html" %>
 
-////
+Bemerkung: Das ist eines an Markup. Das ist durch die Benutzung von Twitters Bootstrap bedingt. Während nur die Formularelemente wichtig sind, wird das restliche Markup helfen, unser App ein wenig besser aussehen zu lassen. Das gerenderte Template sollte nun wie folgt aussehen:
 
-<%= screenshot "7-1", "The post submit form" %>
+<%= screenshot "7-1", "Das Formular zum Anlegen von Beiträgen" %>
 
-////
+Das ist ein einfaches Formular. Wir brauchen uns über die Aktion des Formulars keine Gedanken zu machen. Submit-Events des Formulars werden ohnehin durch Meteor abgefangen und die Daten werden per Javascript aktualisiert. (Es macht auch keinen Sinn einen Fallback für nicht vorhandenes Javascript im Browser einzurichten, da eine Meteor-App nicht ohne JavaScript funktioniert.)
 
-### Creating Posts
+### Anlegen von Beiträgen
 
-////
+Wir verbinden nun das Formular mit einem Event-Handler. Am besten benutzen wir dafür das `submit`-Event (anstatt z.B. das click-Event des Buttons). Das hat den Vorteil, dass all möglichen Wege für das Absenden des Formulars abgedeckt werden (wie zB. das Eingeben der Return-Taste im URL-Feld).
 
 ~~~js
 Template.postSubmit.events({
