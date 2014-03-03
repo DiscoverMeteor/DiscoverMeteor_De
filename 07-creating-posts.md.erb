@@ -287,20 +287,20 @@ Router.before(requireLogin, {only: 'postSubmit'});
 
 <%= commit "7-4", "Show a loading screen while waiting to login." %>
 
-### Hiding the Link
+### Den Link verstecken
 
-////
+Der einfachste Weg, um ausgeloggte Benutzer daran zu hindern, versehentlich das Anlegeformular zu erreichen, ist es den Link zu verstecken. Das geht ziehmlich einfach:
 
 ~~~html
 <ul class="nav">
-  {{#if currentUser}}<li><a href="{{pathFor 'postSubmit'}}">Beitrag anlegen</a></li>{{/if}}
+  {{#if currentUser}}<li><a href="{{pathFor 'postSubmit'}}">Submit Post</a></li>{{/if}}
 </ul>
 ~~~
 <%= caption "client/views/includes/header.html" %>
 
 <%= commit "7-5", "Only show submit post link if logged in." %>
 
-////
+Der Helper `currentUser` wird durch das Package `accounts` und sein Handlebar-Aequivalent `Meteor.user()` zur Verfügung gestellt. Weil es evenfalls reaktiv ist, wird der Link angezeigt, sobald Du Dich einloggst. Wenn Du Dich ausloggst verschwindet er.
 
 ### Meteor Method: Better Abstraction and Security
 
