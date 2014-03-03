@@ -241,7 +241,7 @@ Wir legen auch ein Template für den verweigerten Zugriff an:
 
 <%= commit "7-3", "Denied access to new posts page when not logged in." %>
 
-Wenn du nun http://localhost:3000/submit/ aufrufst, ohne eingeloggt zu sein, solltest du folgendes sehen:
+Wenn du nun http://localhost:3000/submit/ aufrufst, ohne eingeloggt zu sein, solltest du Folgendes sehen:
 
 <%= screenshot "7-3", "Das Template für den verweigerten Zugriff" %>
 
@@ -302,23 +302,23 @@ Der einfachste Weg, um ausgeloggte Benutzer daran zu hindern, versehentlich das 
 
 Der Helper `currentUser` wird durch das Package `accounts` und sein Handlebar-Aequivalent `Meteor.user()` zur Verfügung gestellt. Weil es evenfalls reaktiv ist, wird der Link angezeigt, sobald Du Dich einloggst. Wenn Du Dich ausloggst verschwindet er.
 
-### Meteor Method: Better Abstraction and Security
+### Die Meteor-Methode: Bessere Abstraktion und Sicherheit
 
-////
+Wir haben es geschafft, den Zugriff auf das Anlegeformular für ausgeloggte Benutzer zu beschränken. Auch ist es nicht mehr möglich, auf der Konsole Beiträge anzulegen. Aber ein paar Dinge bleiben noch übrig, um die wir uns kümmern müssen:
 
-- ////
-- ////
-- ////
+- Zeitstempel für die Beiträge
+- Sicherstellen, dass keine zwei Beiträge die selbe URL benutzen
+- Details über den Author des Beitrags (id, Benutzername, usw.)
 
-////
+Du wirst dir vielleicht denken, dass wir dass alles in unserem Event-Handler `submit` erledigen können. Realistisch betrachtet, würde das allerdings zu einer Menge Probleme führen.
 
-- ////
-- ////
-- ////
+- Für den Timestamp müssten wir uns darauf verlassen, dass der Computer des Benutzers die korrekte Uhrzeit hat. Das ist aber nicht immer der Fall.
+- Clients kennen nicht immer immer alle URLS, die jemals benutzt wurden. Sie kennen nur die Beiträge, die sie derzeit sehen können (wir werden uns nachher anschauen, wie das genau funktioniert). Also gibt es keinen Weg client-seitig die Eindeutigkeit der URL zu überprüfen
+- Schließlich, obwohl wir die Benutzerdaten client-seitig hinzufügen _können_, könnten wir nicht gewährleisten, dass diese Angaben stimmen. Das könnte von entsprechenden Personnen in der Browser-Konsole missbraucht werden.
 
-////
+Aus all diesen Gründen, ist es besser, wenn wir unsere Event-Handler einfach halten - Und wenn wir mehr  als einfachste Einfüge- oder Update-Operationen benötigen, benutzen wir eine **Methode**
 
-////
+Eine Meteor-Methode ist eine serverseitige Funktion, dass vom Client aufgerufen wird. Genau genommen kennen wir sie schon -- Hinter den Kulissen sind die `insert`, `update` und `remove`-Funktionen der `Collection` allesamt Methoden. Schauen wir uns mal an, wie wir sie selber erzeugen können.
 
 ////
 
