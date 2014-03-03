@@ -405,7 +405,7 @@ Schlußendlich fügen wir den Beitrag ein und geben die ID des erzeugten Objekts
 
 ### Sortieren von Beiträgen
 
-////
+Jetzt, da wir bei allen eingereichten Beiträgen über ein Datum verfügen, macht es Sinn sie danach zu sortieren. Um das zu erreichen, können wir Mongos Operator `sort` verwenden. Dieser erwartet, dass ein Objekt aus Schlüsseln besteht, nach deren Werten sortiert werden kann. Zusätzlich gibt ein Vorzeichen an, ob wir aufsteigend oder absteigend sortieren.
 
 ~~~js
 Template.postsList.helpers({
@@ -419,6 +419,6 @@ Template.postsList.helpers({
 
 <%= commit "7-7", "Sort posts by submitted timestamp." %>
 
-////
+Es hat ein wenig Arbeit erfordert, aber wir haben nun ein Benutzerinterface, welches es erlaubt unseren Benutzer auf abgesicherte Art und Weise Daten in unsere App einzugeben.
 
-////
+Aber jede App, die den Benutzer Inhalte anlegen lässt, muss auch einen Weg anbieten diese zu ändern und zu löschen. Das werden wir im Kapitel "Ändern von Beiträgen" behandeln.
