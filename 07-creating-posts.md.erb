@@ -320,7 +320,7 @@ Aus all diesen Gründen, ist es besser, wenn wir unsere Event-Handler einfach ha
 
 Eine Meteor-Methode ist eine serverseitige Funktion, dass vom Client aufgerufen wird. Genau genommen kennen wir sie schon -- Hinter den Kulissen sind die `insert`, `update` und `remove`-Funktionen der `Collection` allesamt Methoden. Schauen wir uns mal an, wie wir sie selber erzeugen können.
 
-////
+Lass uns noch mal `post_submit.js` anschauen. Anstelle direkt in die Collection `Posts` einzufügen, rufen wir eine Methode namens `post` auf:
 
 ~~~js
 Template.postSubmit.events({
@@ -344,9 +344,9 @@ Template.postSubmit.events({
 ~~~
 <%= caption "client/views/posts/post_submit.js" %>
 
-////
+Die Funktion `Meteor.call` ruft eine Methode auf, die durch ihrem ersten Parameter spezifiziert wird. Du kannst weitere Argumente (in diesem Fall das Objekt `post`, welches wir aus dem Formular zusammengebaut haben) und einen Callback übergeben. Der Callback wird ausgeführt, wenn die Methode auf dem Server fertig ist. In diesem Fall geben wir Rückmeldung an den Benutzer, ob Probleme aufgetreten sind, oder leiten ihn auf die Diskussionsseite für den Beitrag weiter.
 
-////
+Danach definieren wir die Methode in der Datei `collections/posts.js`. Wir entfernen den Block `allow()`, weil Meteor-Methoden diesen ohnehin umgehen. Erinner Dich daran: Methoden werden auf dem Server ausgeführt und Meteor nimmt an, dass diese vertrauenswürdig sind.
 
 ~~~js
 Posts = new Meteor.Collection('posts');
@@ -388,21 +388,22 @@ Meteor.methods({
 
 <%= commit "7-6", "Use a method to submit the post." %>
 
-////
+Diese Methode ist ein wenig komplizierter, aber wir hoffen du kannst uns folgen.
 
-////
+Zuerst definieren wir die Variable `user` und überprüfen, ob ein Beitrag mit dem selben Link schon existiert. Dann wird geschaut, ob der Benutzer eingeloggt ist. Ein Fehler wird geworfen (der später im Browser angezeigt werden kann), wenn das nicht der Fall ist. Wir validieren danach den Beitrag auf einfachste Weise, um sicher zu gehen, dass der Beitrag einen Titel hat.
 
-////
+Als nächstes, falls ein weiterer Beitrag mit der selben URL existiert, werfen wir einen Fehler `302` (der einen Redirect auslöst). Dadurch teilen wir dem Benutzer mit, dass er sich den vorherigen Beitrag 
+anschauen soll.
 
-////
+Meteors Klasse `Error` nimmt drei Parameter auf. Der Erste (`error`) ist in diesem fall der numerische Code `302`. Der Zweite (`reason`) ist eine kurze menschenlesbare Fassung des Fehlers. Der Letzte (`details`) kann dazu genutzt werden hilfreiche zusätzliche Information weiterzugeben.
 
-////
+In unserem Fall, benutzen wir den dritte Parameter, um die ID des bereits existierenden Beitrags weiterzureichen. Spoiler: Wir werden dies weiter benutzen, um den Benutzer auf die Seite des vorherigen Beitrags weiterzuleiten. 
 
-////
+Wenn all diese Überprüfungen erfolgreich waren, übernehmen wir lediglich die Felder, die wir einfügen wollen (um zu vermeiden, dass der Benutzer weitere Felder in unsere Datenbank einfügen kann, z.B. in dem er die Console verwendet). Außerdem fügen wir zusätzliche Information über den Benutzer, sowie den Zeitpunkt in den Beitrag ein.
 
-////
+Schlußendlich fügen wir den Beitrag ein und geben die ID des erzeugten Objekts zurück.
 
-### Sorting Posts
+### Sortieren von Beiträgen
 
 ////
 
