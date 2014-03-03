@@ -7,9 +7,9 @@ contents: Add a form for editing your posts.|Set up edit permissions.|Restrict w
 paragraphs: 29
 ---
 
-////
+Nun, da wir Beiträge anlegen können ist der nächste Schritt, sie zu ändern und löschen. Weil der Code für die entsprechende UI einfach sein wird, nutzen wir die Gelegenheit um darüber zu sprechen wie Meteor mit Benutzerberechtigungen umgeht.
 
-////
+Zuerst verbinden wir unseren Router. Wir fügen eine Route für die Editierung des Beitrags ein und setzen den Kontext der Seite.
 
 ~~~js
 Router.configure({
@@ -50,9 +50,9 @@ Router.before(requireLogin, {only: 'postSubmit'});
 <%= caption "lib/router.js" %>
 <%= highlight "12~15" %>
 
-### The Post Edit Template
+### Das Template für die Beitragsänderung
 
-////
+Jetzt können wir uns das Template dazu anschauen. Das Template `postEdit` ist ein ziemlich gewöhnliches Formular:
 
 ~~~html
 <template name="postEdit">
@@ -87,7 +87,7 @@ Router.before(requireLogin, {only: 'postSubmit'});
 ~~~
 <%= caption "client/views/posts/post_edit.html" %>
 
-////
+Und hier ist der Manager `post_edit.js`, der dazu gehört:
 
 ~~~js
 Template.postEdit.events({
@@ -124,11 +124,11 @@ Template.postEdit.events({
 ~~~
 <%= caption "client/views/posts/post_edit.js" %>
 
-////
+Mittlerweile sollte der meiste Code dir vertraut erscheinen. Zuerst haben wir da den Template-Helper, der den derzeitigen Beitrag holt und ihn an das Template weiterleitet.
 
-////
+Dann gibt es zwei Event-Callbacks in dem Template: Eines für das Event `submit` und eines für das Event `click` des Links zum Löschen des Beitrages.
 
-////
+Der Callback zum Löschen ist sehr einfach: Das Default-Event wird verhindert. Dann wird eine Bestätigung angefordert. Wenn wir diese erhalten, wird die derzeitige Id aus dem Datenkontext des Template genommen und anhand dieser gelöscht. Am Ende wird der Benutzer zur Homepage geleitet.
 
 ////
 
