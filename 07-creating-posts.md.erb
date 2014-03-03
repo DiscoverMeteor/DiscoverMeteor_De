@@ -77,19 +77,19 @@ Das Anlegen der Route bedeutet, dass wenn der Benutzer die URL `/submit` aufruft
     <div class="control-group">
         <label class="control-label" for="url">URL</label>
         <div class="controls">
-            <input name="url" type="text" value="" placeholder="Deine URL"/>
+            <input name="url" type="text" value="" placeholder="Your URL"/>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="title">Titel</label>
+        <label class="control-label" for="title">Title</label>
         <div class="controls">
-            <input name="title" type="text" value="" placeholder="Name deines Beitrags"/>
+            <input name="title" type="text" value="" placeholder="Name your post"/>
         </div>
     </div>
 
     <div class="control-group">
-        <label class="control-label" for="message">Beitrag</label>
+        <label class="control-label" for="message">Message</label>
         <div class="controls">
             <textarea name="message" type="text" value=""/>
         </div>
@@ -97,7 +97,7 @@ Das Anlegen der Route bedeutet, dass wenn der Benutzer die URL `/submit` aufruft
 
     <div class="control-group">
         <div class="controls">
-            <input type="submit" value="Anlegen" class="btn btn-primary"/>
+            <input type="submit" value="Submit" class="btn btn-primary"/>
         </div>
     </div>
   </form>
@@ -234,7 +234,7 @@ Wir legen auch ein Template für den verweigerten Zugriff an:
 
 ~~~html
 <template name="accessDenied">
-  <div class="alert alert-error">Du kannst diese Aktion nicht ausführen ! Bitte log dich ein.</div>
+  <div class="alert alert-error">You can't get here! Please log in.</div>
 </template>
 ~~~
 <%= caption "client/views/includes/access_denied.html" %>
