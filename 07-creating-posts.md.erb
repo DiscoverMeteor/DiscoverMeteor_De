@@ -3,11 +3,11 @@ title: Posts erstellen
 slug: creating-posts
 date: 0007/01/01
 number: 7
-contents: Lerne wie man POST Daten client-seitig versendet.|Implementiere eine Sicherheitscheck.|Begrenze den Zugriff zum Formular.|Lerne wie man eine serverseitige Methode für zusätzliche Sicherheit nutzt
+contents: Lerne wie man POST Daten client-seitig versendet.|Implementiere einen Sicherheitscheck.|Begrenze den Zugriff zum Formular.|Lerne wie man eine serverseitige Methode für zusätzliche Sicherheit nutzt
 paragraphs: 60
 ---
 
-Nun haben wir gesehen, wie einfach es ist, Beiträge über die Konsole mit dem Datenbankaufruf `Posts.insert` anzulegen. Aber wir können natürlich nicht erwarten, dass unsere Benutzer die Konsole benutzen.
+Wir haben nun gesehen wie einfach es ist, Beiträge über die Konsole mit dem Datenbankaufruf `Posts.insert` anzulegen. Aber wir können natürlich nicht erwarten, dass unsere Benutzer die Konsole benutzen.
 
 Also brauchen wir ein Benutzer-Interface, um unseren Benutzern die Möglichkeit zu geben, neue Beiträge anzulegen.
 
@@ -110,11 +110,11 @@ Bemerkung: Das ist einiges an Markup. Das wird durch die Benutzung von Twitters 
 
 <%= screenshot "7-1", "Das Formular zum Anlegen von Beiträgen" %>
 
-Das ist ein einfaches Formular. Wir brauchen uns über die ´Action´ des Formulars keine Gedanken zu machen. Das Submit-Event des Formulars werden wir ohnehin abfangen und die Daten per Javascript aktualisieren. (Es macht auch keinen Sinn einen Fallback für nicht vorhandenes Javascript im Browser einzurichten, da eine Meteor-App nicht ohne JavaScript funktioniert.)
+Das ist ein einfaches Formular. Wir brauchen uns über die ´Action´ des Formulars keine Gedanken zu machen. Den Submit-Event des Formulars werden wir ohnehin abfangen und die Daten per JavaScript aktualisieren. (Es macht auch keinen Sinn einen Fallback für nicht vorhandenes JavaScript im Browser einzurichten, da eine Meteor-App nicht ohne JavaScript funktioniert.)
 
 ### Das Anlegen von Beiträgen
 
-Wir verbinden nun das Formular mit einem Event-Handler. Am besten verwenden wir dafür das `submit`-Event (anstatt z.B. das click-Event des Buttons). Das hat den Vorteil, dass all möglichen Wege für das Absenden des Formulars abgedeckt werden (wie zB. das Benutzen der Return-Taste im URL-Feld).
+Wir verbinden nun das Formular mit einem Event-Handler. Am besten verwenden wir dafür den `submit`-Event (anstatt z.B. den Click-Event des Buttons). Das hat den Vorteil, dass alle möglichen Wege für das Absenden des Formulars abgedeckt werden (wie zB. das Benutzen der Return-Taste im URL-Feld).
 
 ~~~js
 Template.postSubmit.events({
@@ -136,17 +136,17 @@ Template.postSubmit.events({
 
 <%= commit "7-1", "Added a submit post page and linked to it in the header." %>
 
-Diese Funktion verwendet [jQuery](http://jquery.com), um die Werte aus den verschiedenen Formularfeldern zu entnehmen und die ein neues Beitrags-Objekt anzulegen. Wir müssen dabei beachten, dass die Methode `preventDefault()` auf dem Parameter `event` in unserem Handler aufgerufen wird. Ansonsten würde der Browser versuchen, dass Formular abzusenden.
+Diese Funktion verwendet [jQuery](http://jquery.com), um die Werte aus den verschiedenen Formularfeldern zu entnehmen und ein neues Beitrags-Objekt anzulegen. Wir müssen dabei beachten, dass die Methode `preventDefault()` auf dem Parameter `event` in unserem Handler aufgerufen wird. Ansonsten würde der Browser versuchen, dass Formular abzusenden.
 
-Am Ende können wir per Router auf die Seite des neuen Beitrag umleiten. Die Funktion `insert()` einer Collection gibt die erzeugte `id` des Objektes zurück, welches in die Datenbank eingefügt wurde. Die Funktion `go()` des Routers erzeugt uns die URL aus ihren Parametern.
+Am Ende können wir per Router auf die Seite des neuen Beitrag umleiten. Die Funktion `insert()` einer Collection gibt die erzeugte `id` des Objektes zurück, welche in die Datenbank eingefügt wurde. Die Funktion `go()` des Routers erzeugt uns die URL aus ihren Parametern.
 
 Das Resultat ist, dass wenn der Benutzer auf den Absende-Button drückt, ein Beitrag angelegt wird und der Benutzer auf die Diskussionsseite für diesen Beitrag gelangt.
 
 ### Etwas mehr Sicherheit
 
-Das Anlegen von Beiträgen funktioniert soweit. Aber wir wollen nicht, dass jeder x-beliebige Besucher der Webseite Beiträge anlegen kann. Wir möchten, dass Benutzer dafür eingeloggt sind. Sicherlich könnten wir das Formular zum Anlegen von neuen Beiträgen vor ausgeloggten Benutzern verstecken. Aber ein findiger Benutzer könnte die Beiträge immer noch auf der Konsole anlegen. Das wollen wir natürlich nicht.
+Das Anlegen von Beiträgen funktioniert soweit. Aber wir wollen nicht, dass jeder x-beliebige Besucher der Webseite Beiträge anlegen kann. Wir möchten, dass Benutzer dafür eingeloggt sein müssen. Sicherlich könnten wir das Formular zum Anlegen von neuen Beiträgen vor ausgeloggten Benutzern verstecken. Aber ein findiger Benutzer könnte die Beiträge immer noch auf der Konsole anlegen. Das wollen wir natürlich nicht.
 
-Datensicherheit ist glücklicherweise direkt in Meteors Collections eingebaut. Sie ist nur standardmässig deaktiviert, wenn ein neues Projekt angelegt wurde. Das erlaubt es einfach mit dem Aufbau der App anzufangen und den langweiligen Teil später zu erledigen.
+Datensicherheit ist glücklicherweise direkt in den Meteor Collections eingebaut. Sie ist nur standardmässig deaktiviert, wenn ein neues Projekt angelegt wurde. Das erlaubt es einfach mit dem Aufbau der App anzufangen und den langweiligen Teil später zu erledigen.
 
 Diese Stützräder braucht unsere App jetzt nicht mehr. Wir nehmen sie nun weg. Wir entfernen das Package `insecure`:
 
@@ -241,11 +241,11 @@ Wir legen jetzt ein Template für den verweigerten Zugriff an:
 
 <%= commit "7-3", "Denied access to new posts page when not logged in." %>
 
-Wenn du nun http://localhost:3000/submit/ aufrufst, ohne eingeloggt zu sein, solltest du Folgendes sehen:
+Wenn du nun http://localhost:3000/submit/ aufrufst ohne eingeloggt zu sein, solltest du Folgendes sehen:
 
 <%= screenshot "7-3", "Das Template für den verweigerten Zugriff" %>
 
-Was Routing-Hooks richtig nett macht, ist, dass sie _reaktiv_ sind. Das bedeutet, wir können deklarativ arbeiten und müssen uns nicht um Callbacks oder Ähnliches kümmern, wenn der Benutzer sich einloggt. Wenn sich der Login-Zustand eines Benutzers ändert, wird das Seitentemplate sofort von `accessDenied` zu `postSubmit` geändert - ohne das wir explizit Code dafür schreiben müssen.
+Was Routing-Hooks richtig nett macht ist, dass sie _reaktiv_ sind. Das bedeutet, wir können deklarativ arbeiten und müssen uns nicht um Callbacks oder ähnliches kümmern, wenn der Benutzer sich einloggt. Wenn sich der Login-Zustand eines Benutzers ändert, wird das Seitentemplate sofort von `accessDenied` zu `postSubmit` geändert - ohne das wir explizit Code dafür schreiben müssen.
 
 Log dich ein und versuch dann die Seite neuzuladen. Du wirst eventuell das Template "Zugriff verweigert" für einen kurzen Moment aufflackern sehen bevor das Anlageformular erscheint. Der Grund dafür ist, dass Meteor Templates so früh wie möglich rendert. Es kann sein, dass dies so früher geschieht als der Server  mitteilen kann, ob der Benutzer eingeloggt ist. (Der Zustand wird übrigens im LocalStorage des Browsers zwischengespeichert.)
 
