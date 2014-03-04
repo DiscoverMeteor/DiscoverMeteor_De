@@ -247,9 +247,9 @@ Wenn du nun http://localhost:3000/submit/ aufrufst ohne eingeloggt zu sein, soll
 
 Was Routing-Hooks richtig nett macht ist, dass sie _reaktiv_ sind. Das bedeutet, wir können deklarativ arbeiten und müssen uns nicht um Callbacks oder ähnliches kümmern, wenn der Benutzer sich einloggt. Wenn sich der Login-Zustand eines Benutzers ändert, wird das Seitentemplate sofort von `accessDenied` zu `postSubmit` geändert - ohne das wir explizit Code dafür schreiben müssen.
 
-Log dich ein und versuch dann die Seite neuzuladen. Du wirst eventuell das Template "Zugriff verweigert" für einen kurzen Moment aufflackern sehen bevor das Anlageformular erscheint. Der Grund dafür ist, dass Meteor Templates so früh wie möglich rendert. Es kann sein, dass dies so früher geschieht als der Server  mitteilen kann, ob der Benutzer eingeloggt ist. (Der Zustand wird übrigens im LocalStorage des Browsers zwischengespeichert.)
+Log dich ein und versuch dann die Seite neu zu laden. Du wirst eventuell das Template "Zugriff verweigert" für einen kurzen Moment aufflackern sehen, bevor das Anlageformular erscheint. Der Grund dafür ist, dass Meteor Templates so früh wie möglich rendert. Es kann sein, dass dies früher geschieht als der Server mitteilen kann, ob der Benutzer eingeloggt ist. (Der Zustand wird übrigens im LocalStorage des Browsers zwischengespeichert.)
 
-Um dieses Problem zu verhindern (Es handelt sich um ein Problem, welches Du häufiger sehen wirst, wenn Du Dich mit den Eigenheiten von Latenz zwischen Server und Client beschäftigst), werden wir für eine kurze Zeit einen Ladebildschirm anzeigen und warten bis feststeht, ob der Benutzer eingeloggt ist oder nicht.
+Um dieses Problem zu verhindern (es handelt sich um ein Problem, welches Du häufiger sehen wirst, wenn Du Dich mit den Eigenheiten von Latenz zwischen Server und Client beschäftigst), werden wir für eine kurze Zeit einen Ladebildschirm anzeigen und warten bis feststeht, ob der Benutzer eingeloggt ist oder nicht.
 
 Dies ist notwendig, da wir ohne den Server nicht entscheiden können, ob der Benutzer eine korrekte Authorisierung vorgenommen hat oder nicht. Solange können wir weder das Template `accessDenied` noch das Template `postSubmit` anzeigen.
 
@@ -289,7 +289,7 @@ Router.before(requireLogin, {only: 'postSubmit'});
 
 ### Links verstecken
 
-Die einfachste Möglichkeit ausgeloggte Benutzer daran zu hindern, versehentlich das Anlegeformular zu erreichen, ist es den Link zu verstecken. Das geht ziehmlich einfach:
+Die einfachste Möglichkeit ausgeloggte Benutzer daran zu hindern, versehentlich das Anlegeformular zu erreichen, ist es den Link zu verstecken. Das geht ziemlich einfach:
 
 ~~~html
 <ul class="nav">
@@ -300,7 +300,7 @@ Die einfachste Möglichkeit ausgeloggte Benutzer daran zu hindern, versehentlich
 
 <%= commit "7-5", "Only show submit post link if logged in." %>
 
-Der Helper `currentUser` wird durch das Package `accounts` und sein Handlebar-Aequivalent `Meteor.user()` zur Verfügung gestellt. Weil der Helper evenfalls reaktiv ist, wird der Link angezeigt, sobald Du Dich einloggst. Wenn Du Dich ausloggst verschwindet er automatisch.
+Der Helper `currentUser` wird durch das Package `accounts` und sein Handlebar-Äquivalent `Meteor.user()` zur Verfügung gestellt. Weil der Helper ebenfalls reaktiv ist, wird der Link angezeigt, sobald Du Dich einloggst. Wenn Du Dich ausloggst verschwindet er automatisch.
 
 ### Die Meteor-Methode: Bessere Abstraktion und Sicherheit
 
@@ -313,12 +313,12 @@ Wir haben es geschafft, den Zugriff auf das Anlegeformular für ausgeloggte Benu
 Du wirst dir vielleicht denken, dass wir dass alles im Event-Handler `submit` erledigen können. Realistisch betrachtet, würde das allerdings zu einer Menge Probleme führen.
 
 - Für den Timestamp müssten wir uns darauf verlassen, dass der Computer des Benutzers die korrekte Uhrzeit hat. Das ist leider nicht immer der Fall.
-- Clients kennen nur einen Teil der benutzten URLS. Nämlich die, deren Beiträge sie sehen können (Wir werden uns nachher anschauen, wie das genau funktioniert). Also gibt es zuverlässigen keinen Weg client-seitig die Eindeutigkeit der URL zu überprüfen.
+- Clients kennen nur einen Teil der benutzten URLS. Nämlich die, deren Beiträge sie sehen können (wir werden uns nachher anschauen, wie das genau funktioniert). Also gibt es keinen zuverlässigen Weg, client-seitig die Eindeutigkeit der URL zu überprüfen.
 - Schließlich, obwohl wir die Benutzerdaten client-seitig hinzufügen _könnten_, können wir nicht gewährleisten, dass alle Angaben stimmen. Das könnte von findigen Personen in der Browser-Konsole missbraucht werden.
 
-Aus all diesen Gründen ist es besser, wenn wir unsere Event-Handler einfach halten - Und wenn wir mehr  als einfachste Einfüge- oder Update-Operationen benötigen, benutzen wir eine **Methode**
+Aus all diesen Gründen ist es besser, wenn wir unsere Event-Handler einfach halten - und wenn wir mehr als einfachste Einfüge- oder Update-Operationen benötigen, benutzen wir eine **Methode**
 
-Eine Meteor-Methode ist eine serverseitige Funktion, die vom Client aufgerufen wird. Genau genommen kennen wir sie schon -- Hinter den Kulissen sind die `insert`, `update` und `remove`-Funktionen der `Collection` allesamt Methoden. Schauen wir uns mal an, wie wir selber welche erzeugen können.
+Eine Meteor-Methode ist eine serverseitige Funktion, die vom Client aufgerufen wird. Genau genommen kennen wir sie schon -- hinter den Kulissen sind die `insert`, `update` und `remove`-Funktionen der `Collection` allesamt Methoden. Schauen wir uns mal an, wie wir selber welche erzeugen können.
 
 Lass uns dazu noch mal die Datei `post_submit.js` anschauen. Anstelle direkt in die Collection `Posts` einzufügen, rufen wir nun eine Methode namens `post` auf:
 
@@ -344,7 +344,7 @@ Template.postSubmit.events({
 ~~~
 <%= caption "client/views/posts/post_submit.js" %>
 
-Die Funktion `Meteor.call` ruft eine Methode auf, die durch ihrem ersten Parameter spezifiziert wird. Du kannst weitere Parameter (in diesem Fall das Objekt `post`, welches wir aus dem Formular zusammengebaut haben) und einen Callback übergeben. Der Callback wird ausgeführt, wenn die Methode auf dem Server abgearbeitet ist. In diesem Fall geben wir Rückmeldung an den Benutzer, ob Probleme aufgetreten sind oder leiten ihn auf die Diskussionsseite für den Beitrag weiter.
+Die Funktion `Meteor.call` ruft eine Methode auf, die durch ihren ersten Parameter spezifiziert wird. Du kannst weitere Parameter (in diesem Fall das Objekt `post`, welches wir aus dem Formular zusammengebaut haben) und einen Callback übergeben. Der Callback wird ausgeführt, wenn die Methode auf dem Server abgearbeitet ist. In diesem Fall geben wir Rückmeldung an den Benutzer, ob Probleme aufgetreten sind oder leiten ihn auf die Diskussionsseite für den Beitrag weiter.
 
 Danach definieren wir die neue Methode in der Datei `collections/posts.js`. Wir entfernen den Block `allow()`, weil Meteor-Methoden diesen ohnehin umgehen. Du erinnerst dich vielleicht: Methoden werden auf dem Server ausgeführt. Meteor nimmt an, dass diese deshalb vertrauenswürdig sind.
 
@@ -390,21 +390,21 @@ Meteor.methods({
 
 Diese Methode ist ein wenig komplizierter, aber wir hoffen du kannst uns folgen.
 
-Zuerst definieren wir die Variable `user`. Wir überprüfen, ob ein Beitrag mit dem selben Link schon existiert. Dann wird geschaut, ob der Benutzer eingeloggt ist. Ein Fehler wird geworfen, wenn das nicht der Fall ist (Der Fehler kann später im Browser angezeigt werden). Wir validieren danach den Beitrag auf einfache Weise, um sicher zu gehen, dass der Beitrag einen Titel hat.
+Zuerst definieren wir die Variable `user`. Wir überprüfen, ob ein Beitrag mit dem selben Link schon existiert. Dann wird geschaut, ob der Benutzer eingeloggt ist. Ein Fehler wird geworfen, wenn das nicht der Fall ist (der Fehler kann später im Browser angezeigt werden). Wir validieren danach den Beitrag auf einfache Weise, um sicher zu gehen, dass der Beitrag einen Titel hat.
 
-Als nächstes, falls ein weiterer Beitrag mit der selben URL existiert, werfen wir einen Fehler `302` (der einen Redirect entspricht). Dadurch können wir dem Benutzer mitteilen, dass er sich den vorherigen Beitrag anschauen soll.
+Als Nächstes, falls ein weiterer Beitrag mit der selben URL existiert, werfen wir einen Fehler `302` (der einen Redirect entspricht). Dadurch können wir dem Benutzer mitteilen, dass er sich den vorherigen Beitrag anschauen soll.
 
-Meteors Klasse `Error` nimmt drei Parameter auf. Der erste (`error`) ist in diesem Fall der numerische Code `302`. Der zweite (`reason`) ist eine kurze menschenlesbare Fassung des Fehlers. Der dritte (`details`) kann dazu genutzt werden hilfreiche zusätzliche Information weiterzugeben.
+Meteors Klasse `Error` nimmt drei Parameter auf. Der erste (`error`) ist in diesem Fall der numerische Code `302`. Der Zweite (`reason`) ist eine kurze menschenlesbare Fassung des Fehlers. Der dritte (`details`) kann dazu genutzt werden hilfreiche zusätzliche Information weiterzugeben.
 
 In unserem Fall, benutzen wir den dritten Parameter, um die ID des bereits existierenden Beitrags weiterzureichen. Spoiler: Wir werden dies später benutzen, um den Benutzer auf die Seite des vorherigen Beitrags weiterzuleiten. 
 
-Wenn all diese Überprüfungen erfolgreich waren, übernehmen wir lediglich die Felder des Objektes, die wir einfügen wollen (Um zu vermeiden, dass der Benutzer weitere Felder in unsere Datenbank einfügen kann, z.B. in dem er die Console verwendet). Außerdem fügen wir zusätzliche Information über den Benutzer, sowie den Zeitpunkt des Anlegens in den Beitrag ein.
+Wenn all diese Überprüfungen erfolgreich waren, übernehmen wir lediglich die Felder des Objektes, die wir einfügen wollen (um zu vermeiden, dass der Benutzer weitere Felder in unsere Datenbank einfügen kann, z.B. in dem er die Konsole verwendet). Ausserdem fügen wir zusätzliche Information über den Benutzer, sowie den Zeitpunkt des Anlegens in den Beitrag ein.
 
-Als letztes fügen wir den Beitrag ein und geben die ID des erzeugten Objekts zurück.
+Als Letztes fügen wir den Beitrag ein und geben die ID des erzeugten Objekts zurück.
 
 ### Sortieren von Beiträgen
 
-Jetzt, da wir bei allen Beiträgen über ein Datum verfügen, macht es Sinn danach zu sortieren. Um das zu erreichen, können wir Mongos Operator `sort` verwenden. Dieser erwartet, dass ein Objekt aus Schlüsseln besteht, nach deren Werten sortiert werden kann. Zusätzlich gibt ein Vorzeichen an, ob wir aufsteigend oder absteigend sortieren.
+Jetzt, da alle Beiträge über ein Datum verfügen, macht es Sinn danach zu sortieren. Um das zu erreichen, können wir Mongos Operator `sort` verwenden. Dieser erwartet, dass ein Objekt aus Schlüsseln besteht, nach deren Werten sortiert werden kann. Zusätzlich gibt ein Vorzeichen an, ob wir aufsteigend oder absteigend sortieren.
 
 ~~~js
 Template.postsList.helpers({
