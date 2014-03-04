@@ -214,9 +214,9 @@ Meteor.methods({
 
 ### Einschränkung von Änderungen
 
-////
+Nur weil du deine Beiträge ändern darfst soll das nicht heissen, dass dies für jede Eigenschaft des Beitrags gilt. Zum Beispiel wollen wir nicht, dass Benutzer das Erstellungs-Datum eines Beitrags ändern können und ihn dann jemand anders zuweisen können.
 
-////
+Wir Benutzer hierfür Meteors Callbakc `deny()` um sicherzustellen, dass Benutzer nur angegebene Felder ändern können:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
@@ -238,13 +238,13 @@ Posts.deny({
 
 <%= commit "8-3", "Only allow changing certain fields of posts." %>
 
-////
+Wir erhalten das Array `fieldNames`, dass eine Liste der Felder enthält, die geändert werden. Durch die Verwendung von [Underscore](http://underscorejs.org/)s Methode `without()` liefern wir eine Teilmenge des Arrays zurück in der Felder, die nicht `url` oder `title` heissen, fehlen
 
-////
+Im Normalfall sollte das Array leer sein und eine Länge von 0 haben. Wenn jemand etwas komisches probiert, wird die Array-Länge grösser gleich 1 sein. Dadurch liefert der Callback den Wert `true` zurück (und verhindert dadurch die Änderung).
 
 <% note do %>
 
-### Method Calls vs Client-side Data Manipulation
+### Methodenaufrufe vs. Clientseitige Datenmanipulation
 
 ////
 
