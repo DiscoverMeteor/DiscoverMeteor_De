@@ -136,7 +136,7 @@ Dieses Objekt übergeben wir dass an die Meteor-Methode `Collection.update()`. M
 
 ### Hinzufügen von Links
 
-////
+Wir sollten auch Links auf unsere Beträge anlegen. Damit haben unsere Möglichkeit die Seite für das Ändern von Beiträgen zu erreichen.
 
 ~~~html
 <template name="postItem">
@@ -155,7 +155,7 @@ Dieses Objekt übergeben wir dass an die Meteor-Methode `Collection.update()`. M
 <%= caption "client/views/posts/post_item.html" %>
 <%= highlight "5~8" %>
 
-////
+Natürlich wollen wir dem Benutzer nicht einen Link für einen Beitrag zeigen, der im nicht gehört. Das erledigen wir mit dem Helper `ownPost`:
 
 ~~~js
 Template.postItem.helpers({
@@ -172,17 +172,17 @@ Template.postItem.helpers({
 <%= caption "client/views/posts/post_item.js" %>
 <%= highlight "2~4" %>
 
-<%= screenshot "8-1", "Post edit form." %>
+<%= screenshot "8-1", "Formular für das Ändern von Beiträgen." %>
 
 <%= commit "8-1", "Added edit posts form." %>
 
-////
+Unser Änderungsformular für Beiträge sieht gut aus. Aber du kannst derzeit noch gar nicht die Beiträge ändern. Warum ist das so?
 
-### Setting Up Permissions
+### Einrichtung der Berechtigungen
 
-////
+Da wir im letztem Kapitel das Package `insecure` entfernt haben, werden alle client-seitigen Änderungen derzeit abgewiesen.
 
-////
+Um das wieder gerade zu biegen, werden wir ein paar Berechtigungsregeln anlegen. Als erstes erzeuge die neue Datei `permissions.js` im Verzeichnis `lib`. Diese soll unsere Berechtigungslogik enthalten und wird immer zuerst geladen (und ist sowohl in Server- als auch in Client-Umgebung verfügbar).
 
 ~~~js
 // check that the userId specified owns the documents
@@ -192,9 +192,9 @@ ownsDocument = function(userId, doc) {
 ~~~
 <%= caption "lib/permissions.js" %>
 
-////
+Im Kapitel [Creating Posts](/chapter/creating-posts), whaben wir die Methode `allow()` entfernt, weil wir neue Posts nur noch per ServerMethode angelegt haben (diese umgeht sowieso`allow()`). 
 
-////
+Aber jetzt, wo wir Beiträge im Client ändern und löschen, schauen wir uns noch mal die Datei `posts.js` an und fügen den folgenden Block `allow()` hinzu:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
@@ -212,7 +212,7 @@ Meteor.methods({
 
 <%= commit "8-2", "Added basic permission to check the post's owner." %>
 
-### Limiting Edits
+### Einschränkung von Änderungen
 
 ////
 
