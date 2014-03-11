@@ -1,25 +1,25 @@
 ---
-title: Errors
+title: Fehler
 slug: errors
 date: 0009/01/01
 number: 9
-contents: Create a better mechanism for displaying errors and messages.|Learn how to use `Template.rendered` to know when a user has seen an error.|Use a router filter to make sure errors are only seen once.
+contents: Ein besserer Mechanismus für die Anzeige von Fehlern und Nachrichten.| Lerne wie man `Template.rendered` einsetzt, um mitzubekommen, ob ein Benutzer den Fehler gesehen hat.| Benutze einen Router-Filter, um sicherzustellen, dass Fehler nur einmal angezeigt werden.
 paragraphs: 31
 ---
 
-////
+Die Standardfunktion des Browsers `alert()` ist, um den Benutzer zu warnen, dass ein Problem vorliegt ist eine unbefriedegende Lösung. Und es ist sicherlich aus Sicht der User-Experience suboptimal. Das können wir besser.
 
-////
+Anstelle dessen bauen wir ein flexibleres Fehler-Reporting. Es wird besser dafür geeignet sein, dem Benutzer mitzuteilen, was passiert, ohne seinen Arbeitsfluss zu unterbrechen.
 
-### Introducing Local Collections
+### Lokale Collections
 
-////
+Wir werden ein simples System aufbauen, welches den Überblick behält, welche Fehler der Benutzer gesehen hat. Zusätzlich wird es die neuen Nachrichten in einem speziellem Bereich der Seite anzeigen. Dieses UX-Pattern ist nützlich, wenn wir den Benutzer informieren wollen, dass etwas passiert ist, ohne den Arbeitfluss zu unterbrechen.
 
-////
+Was wir vorhaben ist ähnlich den Nachrichten, die man oft in Ruby on Rails-Applikationen sieht. Wir werden versuchen ein wenig geschickter zu sein, da wir zum einen die Nachrichten client-seitig implementieren und wissen, wann ein Benuzter die Nachricht gesehen hat.
 
-////
+Als Anfang erstellen wir eine Collection, die die Fehler speichert. Dadurch, dass Fehler immer nur für die aktuelle Sitzung gelten, muss diese Collection nicht persistiert werden. Deshalb machen wir etwas Neues: Wir erzeugen eine lokale Collection, die nur im Browser existiert. Es wird kein Versuch unternommen, diese mit dem Server zu synchronisieren.
 
-////
+Um das zu erreichen, erzeugen wir den Fehler in einer Datei, die nur auf dem Client verwendet wird. Der Name der Collection wird auf `null` gesetzt. Wir erstellen eine Funktion `throwError`, das den Fehler in unsere neue lokale Collection einfügt.
 
 ~~~js
 // Local (client-only) collection
@@ -27,7 +27,7 @@ Errors = new Meteor.Collection(null);
 ~~~
 <%= caption "client/helpers/errors.js" %>
 
-////
+Jetzt, da die Collection erzeugt ist, können wir die Funktion `throwError` hinzufügen. Mit dieser werden wir Fehler anlegen. Wir müssen uns nicht über `allow` oder `deny` oder ähnliches kümmern, weil die lokale Collection nicht in die Mongo-Datenbank gespeichert werden wird.
 
 ~~~js
 throwError = function(message) {
@@ -36,9 +36,9 @@ throwError = function(message) {
 ~~~
 <%= caption "client/helpers/errors.js" %>
 
-////
+Der Vorteil einer lokalen Collection um die Fehler zu speichern, ist das diese - wie allen Typen von Collections - das diese reaktive sind. Das bedeutet, dass wir Fehler auf die gleiche Art und Weise deklarativ anzeigen können, wie wir es mit anderen Daten aus Collections können.
 
-### Displaying errors
+### Das Anzeigen von Fehlern
 
 ////
 
