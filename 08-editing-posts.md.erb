@@ -246,21 +246,21 @@ Im Normalfall sollte das Array leer sein und eine Länge von 0 haben. Wenn jeman
 
 ### Methodenaufrufe vs. Clientseitige Datenmanipulation
 
-////
+Um Beiträge zu erzeugen, benutzen wir die Server-Methode `post`. Aber zum Ändern und Löschen, rufen wir die Methoden `update` und `remove` direkt auf dem Client auf und regeln die Berechtigung mit `allow` und `deny`.
 
-////
+Wann ist es sinnvoll das eine oder das andere zu verwenden?
 
-////
+Wenn der Sachverhalt einfach ist, kannst du die Regeln mit `allow` und `deny` festlegen. Auch ist es meistens einfacher, die Dinge auf dem Client zu regeln.
 
-////
+Das Manipulieren der Daten vom Client aus erzeugt den Anschein von Direktheit und kann zu einem besseren Benutzererlebnis beitragen, solange du daran denkst Fehler elegant zu behandeln (zum Beispiel, wenn der Server sich asynchron zurückmeldet und mitteilt, dass die Änderung doch nicht stattgefunden hat)
 
-////
+Sobald du aber damit anfängst, Dinge zu tun, die ausserhalb des Einflussraums der Benutzer liegen soll (zum Beispiel die Vergabe von Zeitstempeln oder die Zuordnung eines Benutzers), ist es wahrscheinlich besser eine Server-Methode zu verwenden.
 
-////
+Server-Methoden sind in folgenden Szenarien ebenfalls angebracht:
 
-- ////
-- ////
-- ////
+- Wenn Du Rückgabewerte schnell benötigst und nicht darauf warten kannst, dass diese über den Reaktivitätsmechanismus synchronisiert werden. 
+- Für Datenbankoperation, bei denen einen große Menge von Elementen geändert werden. Hierfür müssten komplette Collections hin und her übertragen werden müssen.
+- Um Daten zusammenzufassen oder zu aggregieren (z.B. Anzahl der Elemente, Mittelwerte oder Summen)
 
 <% end %>
 
