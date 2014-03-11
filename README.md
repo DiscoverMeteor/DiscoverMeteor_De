@@ -19,7 +19,7 @@ Here are a couple of comments for the current version of the (ongoing) translati
 - Package
 - Repo
 - Repository
-- UI (we use the german 'die' as definite article)
+- UI (we use the german 'das' as definite article - from germanglish 'das Interface')
 
 #### Who is 'you'?
 
