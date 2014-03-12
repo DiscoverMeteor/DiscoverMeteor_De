@@ -9,17 +9,18 @@ Here are a couple of comments for the current version of the (ongoing) translati
 
 #### A couple of english terms to stick with - even in german:
 
-- Bug
-- Code
-- Commit
-- Framework
-- Header
+- Bug (der Bug)
+- Code (der Code)
+- Commit (der Commit)
+- Framework (das Framework)
+- Header (der Header)
 - Live
-- Link
-- Package
-- Repo
-- Repository
+- Link (der Link)
+- Package (das Package)
+- Repo (das Repo)
+- Repository (das Repository)
 - UI (we use the german 'das' as definite article - from germanglish 'das Interface')
+- Callback (der Callback)
 
 #### Who is 'you'?
 

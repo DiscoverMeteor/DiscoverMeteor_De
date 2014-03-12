@@ -7,7 +7,7 @@ contents: Erstelle ein Formular für das Ändern eines Beitrags.|Richte Zugriffs
 paragraphs: 29
 ---
 
-Da wir nun Beiträge anlegen können, ist der nächste Schritt, sie änderbar und löschbar zu machen. Der Code für die UI ist relativ einfach, deshalb nutzen wir die Gelegenheit, um in diesem Kapitel darüber zu sprechen, wie Meteor mit Benutzerberechtigungen umgeht.
+Da wir nun Beiträge anlegen können, ist der nächste Schritt, sie änderbar und löschbar zu machen. Der Code für das UI ist relativ einfach, deshalb nutzen wir die Gelegenheit, um in diesem Kapitel darüber zu sprechen, wie Meteor mit Benutzerberechtigungen umgeht.
 
 Im ersten Schritt erweitern wir unseren Router. Wir fügen eine Route zur Seite zum Ändern von Beitragen ein und setzen den Kontext dieser Seite entsprechend.
 
@@ -87,7 +87,7 @@ Jetzt können wir uns auf das dazugehörige Template konzentrieren. Unser Templa
 ~~~
 <%= caption "client/views/posts/post_edit.html" %>
 
-Und hier ist der dazu gehörige `post_edit.js` Manager: 
+Und hier ist der dazu gehörige Manager `post_edit.js`: 
 
 ~~~js
 Template.postEdit.events({
