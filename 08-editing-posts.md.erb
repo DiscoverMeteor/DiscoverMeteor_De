@@ -1,5 +1,5 @@
 ---
-title: Beiträge verändern
+title: Beiträge ändern
 slug: editing-posts
 date: 0008/01/01
 number: 8
@@ -7,9 +7,9 @@ contents: Erstelle ein Formular für das Ändern eines Beitrags.|Richte Zugriffs
 paragraphs: 29
 ---
 
-Nun können wir Beiträge anlegen. Der  nächste Schritt ist, sie zu ändern und zu löschen. Der Code für die UI ist relativ einfach. Deshalb nutzen wir die Gelegenheit, um in diesem Kapitel darüber zu sprechen, wie Meteor mit Benutzerberechtigungen umgeht.
+Da wir nun Beiträge anlegen können, ist der nächste Schritt, sie änderbar und löschbar zu machen. Der Code für die UI ist relativ einfach, deshalb nutzen wir die Gelegenheit, um in diesem Kapitel darüber zu sprechen, wie Meteor mit Benutzerberechtigungen umgeht.
 
-Wir fangen damit an, unseren Router zu verbinden. Wir fügen eine Route für das Ändern von Beitragen ein und setzen den Kontext der Seite.
+Im ersten Schritt erweitern wir unseren Router. Wir fügen eine Route zur Seite zum Ändern von Beitragen ein und setzen den Kontext dieser Seite entsprechend.
 
 ~~~js
 Router.configure({
@@ -52,7 +52,7 @@ Router.before(requireLogin, {only: 'postSubmit'});
 
 ### Das Template für die Beitragsänderung
 
-Jetzt können wir uns das Template dazu anschauen. Das Template `postEdit` ist ein ziemlich gewöhnliches Formular:
+Jetzt können wir uns auf das dazugehörige Template konzentrieren. Unser Template `postEdit` wird ein ziemlich gewöhnliches Formular:
 
 ~~~html
 <template name="postEdit">
@@ -87,7 +87,7 @@ Jetzt können wir uns das Template dazu anschauen. Das Template `postEdit` ist e
 ~~~
 <%= caption "client/views/posts/post_edit.html" %>
 
-Und hier ist der dazu gehörige Manager `post_edit.js`: 
+Und hier ist der dazu gehörige `post_edit.js` Manager: 
 
 ~~~js
 Template.postEdit.events({
@@ -124,19 +124,19 @@ Template.postEdit.events({
 ~~~
 <%= caption "client/views/posts/post_edit.js" %>
 
-Mittlerweile sollte der meiste Code davon dir vertraut erscheinen. Zuerst haben wir da den Template-Helper im Router, der den derzeitigen Beitrag holt und ihn an das Template weiterleitet.
+Mittlerweile sollte dir der meiste Code bekannt vorkommen.
 
-Dann gibt es zwei Event-Callbacks in dem Template: Eines für das Event `submit` und eines für das Event `click` des Links zum Löschen des Beitrages.
+Wir haben zwei Event-Callbacks für das Template definiert: eines für das `submit` Event des Formulars und eines für das `click` Event des Löschen-Links.
 
-Der Callback zum Löschen ist sehr einfach aufgebaut: Das Default-Event wird verhindert. Dann wird eine Bestätigung angefordert. Wenn wir diese erhalten, wird die derzeitige ID aus dem Datenkontext des Template genommen und anhand dieser gelöscht. Am Ende wird der Benutzer zur Homepage geleitet.
+Der Callback zum Löschen ist sehr einfach aufgebaut: Nach dem Unterdrücken des Default-Events, wird eine Bestätigung durch den Benutzer angefordert. Wenn wir diese erhalten, holen wir die ID des aktuellen Beitrags aus dem Kontext und löschen den Beitrag unter Verwendung dieser ID. Am Ende wird der Benutzer zur Homepage geleitet.
 
-Der Callback zum Aktualisieren ist ein wenig länger, aber nicht wesentlich komplizierter: Nach dem Abschalten des Default-Events und dem Ermitteln der ID des Beitrags, entnehmen wir die Werte der neuen Felder aus dem Zielobjekt des Events und speichern diese in dem Objekt `postProperties`.
+Der Callback zum Aktualisieren ist ein wenig länger, aber nicht wesentlich komplizierter: Nach dem Unterdrücken des Default-Events und dem Ermitteln der ID des Beitrags, entnehmen wir die neuen Werte aus dem Zielobjekt des Events und speichern diese in einem Objekt namens `postProperties`.
 
-Dieses Objekt übergeben wir dass an die Meteor-Methode `Collection.update()`. Der Callback zeigt einen Fehler an, wenn die Operation fehlgeschlagen ist. Falls die Operation erfolgreich war, leitet der Callback den Benutzer auf die Seite des Beitrags zurück.
+Dieses Objekt übergeben wir an die Meteor-Methode `Collection.update()`, zusammen mit einem Callback als letzten Parameter der Methode. Der Callback wird am Ende der Operation ausgeführt. Im Fehlerfall wird der Grund für den Fehler ausgegeben. Im Falle eines Erfolgs leitet der Callback den Benutzer auf die Ansichts-Seite des Beitrags zurück.
 
 ### Hinzufügen von Links
 
-Es fehlen noch Links auf unsere Beträge. Mit diesen erste haben unsere Benutzer die Möglichkeit die Seite für das Ändern von Beiträgen zu erreichen.
+Es fehlen noch Berarbeiten-Links in unseren Beiträgen. Erst mit diesen, haben unsere Benutzer die Möglichkeit die Seite für das Ändern von Beiträgen zu erreichen.
 
 ~~~html
 <template name="postItem">
@@ -155,7 +155,7 @@ Es fehlen noch Links auf unsere Beträge. Mit diesen erste haben unsere Benutzer
 <%= caption "client/views/posts/post_item.html" %>
 <%= highlight "5~8" %>
 
-Natürlich wollen wir dem Benutzer nicht einen Link für einen Beitrag zeigen, der im nicht gehört. Das erledigen wir mit dem Helper `ownPost`:
+Natürlich wollen wir nur einen Bearbeiten-Link anzeigen, wenn dem Benutzer der Beitrag auch gehört. Das erledigen wir mit dem Helper `ownPost`:
 
 ~~~js
 Template.postItem.helpers({
@@ -176,13 +176,13 @@ Template.postItem.helpers({
 
 <%= commit "8-1", "Added edit posts form." %>
 
-Unser Änderungsformular für Beiträge sieht gut aus. Aber du kannst derzeit noch gar nicht die Beiträge ändern. Warum ist das so?
+Unser Änderungsformular für Beiträge sieht gut aus. Aber das eigentliche Ändern der Beiträge ist noch gar nicht möglich. Warum ist das so?
 
 ### Einrichtung der Berechtigungen
 
-Da wir im letztem Kapitel das Package `insecure` entfernt haben, werden alle client-seitigen Änderungen derzeit abgewiesen.
+Da wir im letzten Kapitel das Package `insecure` entfernt haben, werden alle client-seitigen Änderungen derzeit abgewiesen.
 
-Um das wieder gerade zu biegen, werden wir Berechtigungsregeln anlegen. Als erstes erzeuge die neue Datei `permissions.js` im Verzeichnis `lib`. Diese soll unsere Berechtigungslogik enthalten und wird immer zuerst geladen. Sie ist sowohl in Server- als auch in Client-Umgebung verfügbar.
+Um Änderungen wieder zu ermöglichen, werden wir Berechtigungsregeln anlegen. Zunächst erzeuge die neue Datei `permissions.js` im Verzeichnis `lib`. Diese wird unsere Berechtigungslogik als Erstes laden und ist sowohl auf dem Server als auch auf dem Client verfügbar.
 
 ~~~js
 // check that the userId specified owns the documents
@@ -192,7 +192,7 @@ ownsDocument = function(userId, doc) {
 ~~~
 <%= caption "lib/permissions.js" %>
 
-Im Kapitel [Beiträge anlegen](/chapter/creating-posts), haben wir die Methode `allow()` entfernt. Dies war möglich, weil wir neue Posts nur noch per Server-Methode angelegt haben (dieses Vorgehen umgeht sowieso den Mechanismus von `allow()`). 
+Im Kapitel [Beiträge anlegen](/chapter/creating-posts), haben wir die Methode `allow()` entfernt, da wir neue Posts nur noch per Server-Methode angelegt haben (auf diese Weise umgehen wir `allow()` sowieso). 
 
 Aber jetzt, wo wir Beiträge im Client ändern und löschen, schauen wir uns noch mal die Datei `posts.js` an. Wir fügen den folgenden Block `allow()` wieder hinzu:
 
@@ -214,7 +214,7 @@ Meteor.methods({
 
 ### Einschränkung von Änderungen
 
-Nur weil du deine Beiträge ändern darfst soll das nicht heissen, dass dies für jede Eigenschaft des Beitrags gilt. Zum Beispiel wollen wir nicht, dass Benutzer das Erstellungs-Datum eines Beitrags ändern können und ihn dann jemand anders zuweisen können.
+Nur weil du deine Beiträge ändern darfst soll das nicht heissen, dass dies für jede Eigenschaft des Beitrags gilt. Zum Beispiel wollen wir nicht, dass ein Benutzer einen Beiträg erstellen kann und ihn dann jemand anderem zuweist.
 
 Wir benutzen hierfür Meteors Callback `deny()` um sicherzustellen, dass Benutzer nur angegebene Felder ändern können:
 
@@ -238,9 +238,9 @@ Posts.deny({
 
 <%= commit "8-3", "Only allow changing certain fields of posts." %>
 
-Wir erhalten das Array `fieldNames`, dass eine Liste der Felder enthält, die geändert werden. Durch die Verwendung von [Underscore](http://underscorejs.org/)s Methode `without()` liefern wir eine Teilmenge des Arrays zurück. In dieser fehlen die Felder, die nicht `url` oder `title` heissen.
+Als Parameter erhalten wir das Array `fieldNames`, dass eine Liste der Felder enthält, die geändert werden sollen. Durch die Verwendung von [Underscore](http://underscorejs.org/)s Methode `without()` reduzieren wir das Array um die Werte `url` und `title`.
 
-Im Normalfall sollte das Array leer sein und eine Länge von 0 haben. Wenn jemand etwas komisches probiert, wird die Array-Länge grösser gleich 1 sein. Dadurch liefert der Callback den Wert `true` zurück (und verhindert dadurch die Änderung).
+Im Normalfall sollte dieses Ergebnis-Array leer sein, denn nur `url` und `title` sollen geändert werden können. Wenn jemand etwas komisches probiert, wird die Länge des Arrays grösser gleich 1 sein. Dann liefert der Callback den Wert `true` zurück (und verhindert die Änderung).
 
 <% note do %>
 
@@ -248,18 +248,18 @@ Im Normalfall sollte das Array leer sein und eine Länge von 0 haben. Wenn jeman
 
 Um Beiträge zu erzeugen, benutzen wir die Server-Methode `post`. Aber zum Ändern und Löschen, rufen wir die Methoden `update` und `remove` direkt auf dem Client auf und regeln die Berechtigung mit `allow` und `deny`.
 
-Wann ist es sinnvoll das eine oder das andere zu verwenden?
+Wann ist es sinnvoll das Eine und wann das Andere zu verwenden?
 
-Wenn der Sachverhalt einfach ist, kannst du die Regeln mit `allow` und `deny` festlegen. Es ist  meistens weniger aufwendig, diese Dinge auf dem Client zu regeln.
+Wenn der Sachverhalt unkompliziert ist und du die Regeln mit `allow` und `deny` adequat festlegen kannst, ist es normalerweise einfacher und weniger aufwendig, diese Dinge direkt auf dem Client zu regeln.
 
-Das Manipulieren der Daten vom Client aus erzeugt den Anschein von Direktheit und kann zu einem besseren Benutzererlebnis beitragen - Solange du daran denkst Fehler elegant zu behandeln (zum Beispiel, wenn der Server sich asynchron zurückmeldet und mitteilt, dass die Änderung doch nicht stattgefunden hat)
+Das Manipulieren der Daten auf dem Client trägt zum Gefühl von Direktheit und einem besseren Benutzererlebnis bei. Fehlerzustände müssen aber gesondert berücksichtigt und elegant eingeflochten werden. Zum Beispiel: der Server meldet sich asynchron zurück und teilt mit, dass die Änderung doch nicht stattgefunden hat.
 
-Sobald du aber damit anfängst, auf dem Client Dinge zu tun auf die Benutzer keinen Zugriff haben sollen (zum Beispiel die Vergabe von Zeitstempeln oder die Zuordnung eines Benutzers), ist es wahrscheinlich besser eine Server-Methode zu verwenden.
+Aber, die Erstellung und Änderung von Daten, die der Benutzer nicht direkt manipulieren darf (zum Beispiel die Vergabe von Zeitstempeln oder die Zuordnung eines Benutzers), sollten besser in einer Server-Methode erfolgen.
 
-Server-Methoden sind in folgenden Szenarien angebracht:
+Server-Methoden sind auch in folgenden Szenarien eher angebracht:
 
-- Wenn Du Rückgabewerte schnell benötigst und nicht darauf warten kannst, dass diese über den Reaktivitätsmechanismus synchronisiert werden. 
-- Für Datenbankoperationen, bei denen einen große Menge von Elementen geändert wird. Hierfür müssen komplette Collections hin und her übertragen werden.
+- Wenn du Daten und Ergebnisse direkt per Callback benötigst und nicht darauf warten willst, dass diese über den Reaktivitätsmechanismus synchronisiert werden. 
+- Für Datenbankoperationen, bei denen viele Elemente geändert werden und damit eine große Menge an Daten übertragen werden muss.
 - Um Daten zusammenzufassen oder zu aggregieren (z.B. Anzahl der Elemente, Mittelwerte oder Summen)
 
 <% end %>
