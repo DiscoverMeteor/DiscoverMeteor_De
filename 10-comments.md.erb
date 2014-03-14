@@ -1,14 +1,14 @@
 ---
-title: Comments
+title: Kommentare
 slug: comments
-complete: 100
-date: 0010/01/01
+complete: 0
+date: 2014/03/13
 number: 10
-contents: Display existing comments.|Add a comment posting form.|Learn how to load only the current post's comments.|Add a comment count property to posts.
+contents: Anzeigen von existierenden Kommentaren.|Hinzufügen eines Kommentarformulars.|Lerne wie du erreichst, dass nur Kommentare des aktuellen Beitrags geladen werden.|Füge eine Kommentaranzahl-Eigenschaft zu den Beiträgen hinzu.
 paragraphs: 34
 ---
 
-Das Ziel einer Social-Media-News-Site ist es eine aktive Benutzer-Community zu erschaffen. Damit dieses Ziel erreicht werden kann, ist es unerlässlich, dass sich die Benutzer austauschen können. Dazu lass uns in diesem Kapitel eine Kommentare hinzufügen.
+Das Ziel einer Social-Media-News-Site ist es eine aktive Benutzer-Community zu erschaffen. Damit dieses Ziel erreicht werden kann, ist es unerlässlich, dass sich die Benutzer austauschen können. Dazu lass uns in diesem Kapitel eine Kommentarfunktion hinzufügen.
 
 ~~~js
 Comments = new Meteor.Collection('comments');
@@ -73,7 +73,7 @@ if (Posts.find().count() === 0) {
 ~~~
 <%= caption "server/fixtures.js" %>
 
-////
+Wir dürfen nicht vergessen die neue Collection zu veröffentlichen (publish) und im Router zu abonnieren (subscribe):
 
 ~~~js
 Meteor.publish('posts', function() {
@@ -101,7 +101,7 @@ Router.configure({
 
 <%= commit "10-1", "Added comments collection, pub/sub and fixtures." %>
 
-////
+Damit der Fixture-Code ausgeführt wird musst du vorher die Datenbank mit: `meteor reset` entleeren. Vergiss nicht einen neuen Benutzer nach dem Resetten anzulegen.
 
 ////
 

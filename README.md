@@ -21,6 +21,7 @@ Here are a couple of comments for the current version of the (ongoing) translati
 - Repository (das Repository)
 - UI (we use the german 'das' as definite article - from germanglish 'das Interface')
 - Callback (der Callback)
+- Collection (die Collection)
 
 #### Who is 'you'?
 
