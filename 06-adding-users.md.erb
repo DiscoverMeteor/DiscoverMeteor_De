@@ -1,25 +1,25 @@
 ---
-title: Adding Users
+title: Benutzer hinzufügen
 slug: adding-users
 date: 0006/01/01
 number: 6
-contents: Learn about user accounts in Meteor.|Add all the authentication we'll need for Microscope.|Use the built-in accounts-ui package to get an instant user interface.
+contents: Etwas über Benutzerkonten in Meteor lernen.|Authentifizierung für Microscope einrichten.|Das accounts-ui package für ein Benutzer-Interface einsetzen.
 paragraphs: 27
 ---
 
-////
+Bisher haben wir es geschafft, statische fixture Daten zu kreieren und anzuzeigen und diese in Form eines einfachen Prototypen zusammenzubauen. 
 
-////
+Wir haben auch gesehen, dass unser User Interface sich reaktiv gegenüber Datenänderungen verhält und wie eingefügte or geänderte Daten sofort erscheinen. Weil wir selber aber keine Daten einfügen können, ist unsere Site mehrheitlich nutzlos.
 
-////
+Lass uns sehen wie wir das Problem lösen können.
 
-### Accounts: users made simple
+### Accounts: Benutzerkonten einfach gemacht
 
-////
+In den meisten Web Frameworks ist das Hinzufügen von Benutzerkonten ein mühseliger Vorgang, der jedoch in fast jedem Projekt von Nöten ist. Sobald man sich mit OAuth oder anderen Authentifizierungs-Methoden auseindandersetzen muss, findet man sich schnell im Chaos wieder.
 
-////
+Zum Glück hält Meteor hierfür eine Lösung parat. Dank der Art und Weise wie Meteor packages dem Server (JavaScript) und dem Client (Javascript, HTML und CSS) Code zur Verfügung stellt, erhalten wir ein Benutzerkonten-Sytem zum Nulltarif.
 
-////
+Wir könnten hierfür Meteor's hausgeigenes UI für Benutzerkonten einsetzen (`mrt add accounts-ui`), aber da wir unsere ganze App mit Bootstrap aufgebaut haben, werden wir das `accounts-ui-bootstrap-deopdown` package dafür verwenden. (Keine Bange, der einzige Unterschied ist das unterschiedliche Styling). In der Kommandozeile gebe Folgendes ein:
 
 ~~~bash
 $ mrt add accounts-ui-bootstrap-dropdown
@@ -27,9 +27,9 @@ $ mrt add accounts-password
 ~~~
 <%= caption "Terminal" %>
 
-////
+Diese zwei Befehle stellen uns die Benutzerkonten Templates zur Verfügung. Wir können diese in userer Site mit dem `{{loginButtons}}` helper einfügen. Dazu ein nützlicher Tip: Du kannst kontrollieren, auf welcher Seite das Log-in Dropdown angezeigt wird, nämlich indem du das `align` Attribut dem helper mitgibst. (Zum Beispiel: `{{loginButtons align="right"}}`)
 
-////
+Wir fügen die Buttons in unseren Header ein. Da dieser immer grösser wird, lagern wir ihn in sein eigenes Template aus (`client/views/includes`). Weiter benutzen wir zusätzlichen Markup und ein paar Bootstrap Klassen um alles schön anschaubar zu machen.
 
 ~~~html
 <template name="layout">
@@ -65,13 +65,13 @@ $ mrt add accounts-password
 ~~~
 <%= caption "client/views/includes/header.html" %>
 
-////
+Wenn wir jetzt zu unserer App browsen sehen wir die Login-Buttons in der oberen rechten Ecke unserer Site erscheinen.
 
 <%= screenshot "6-1", "Meteor's built-in accounts UI" %>
 
-////
+Wir können sie für folgende Aktionen benutzen: Anmelden, Einloggen, Passwortänderung und alles was eine einfache Site für Benutzerauthentifizierung braucht.
 
-////
+Um unser Benutzersystem so zu konfigurieren, dass Benutzer sich mit einem Benutzernamen auf unserer Site anmelden müssen, brauchen wir einen `Accounts.ui` Konfigurationsblock in die Datei `config.js` (`client/helpers/`) einzufügen:
 
 ~~~js
 Accounts.ui.config({
@@ -82,20 +82,21 @@ Accounts.ui.config({
 
 <%= commit "6-1", "Added accounts and added template to the header" %>
 
-### Creating Our First User
+### Unseren ersten Benutzer erstellen
 
-////
+Melde nun ein neues Benutzerkonto an: Sobald erfolgt, ändert der Button und zeigt deinen Benutzernamen. Das zeigt auf, dass ein Benutzer für dich angelegt wurde. Aber woher kommt dieses Benutzerkonto?
 
-////
+Mit dem Hinzufügen des `accounts` packages, hat Meteor eine neue spezielle Collection erzeugt, welche mit `Meteor.users` aufgerufen werden kann. Um diese zu überprüfen, öffne die Browser-Konsole und tippe: 
 
 ~~~js
 ❯ Meteor.users.findOne();
 ~~~
 <%= caption "Browser console" %>
 
-////
+Die Konsole sollte ein Objekt mit deinem User enthaltend zurückgeben. Wenn du näher hinschaust, kannst du sehen dass sowohl dein Benutzernamen, als auch eine `_id` zur eindeutigen Identifizierung darin enthalten sind. Den gegenwärtig eingeloggten User kannst du auch mit dem Befehl `Meteor.user()` ermitteln.
 
-////
+
+Logge dich aus und melde ein zweites Benutzerkonto mit einem anderem Benutzernamen an. `Meteor.user()` sollte jetzt einen zweiten Benutzer zurückgeben. Lass uns das überprüfen:
 
 ~~~js
 ❯ Meteor.users.find().count();
@@ -103,9 +104,9 @@ Accounts.ui.config({
 ~~~
 <%= caption "Browser console" %>
 
-////
+Die Konsole gibt 1 zurück. Sollten das nicht 2 sein? Wurde der erste Benutzer etwa gelöscht? Wenn du versuchst mit dem ersten Benutzer einzuloggen, siehst du das dies nicht der Fall ist.
 
-////
+Lass uns das verifizieren, indem wir den anerkannten Datenspeicher, die Mongo DB anschauen. Wir loggen in die Mongo DB ein (`meteor mongo` in der Konsole) und überprüfen: 
 
 ~~~bash
 > db.users.count()
@@ -113,21 +114,21 @@ Accounts.ui.config({
 ~~~
 <%= caption "Mongo console" %>
 
-////
+Es sind also tatsächlich zwei Benutzer vorhanden. Weshalb können wir im Browser dann nur Einen zur selben Zeit sehen?
 
-### A Mystery Publication!
+### Eine ''Mystery Publication''!
 
-////
+Wenn du zurück an Kapitel 4 denkst, erinnerst du dich vielleicht daran, dass wir mit dem Ausschalten von `autopublish` allen Collections mitteilten, dass sie aufhören sollen automatisch alle Daten vom Server an jeden verbundenen Client in dessen lokale Version der Collection zu senden. Wir mussten eine Publication und eine Subscription erstellen um den Datenaustausch aufrecht zu erhalten.
 
-////
+Doch die Tatsache dass wir nie eine Benutzer Publication erstellt haben, wirft die Frage auf, wie wir dann Benutzerdaten empfangen und darstellen können?
 
-////
+Die Antwort hierfür liegt im accounts package versteckt. Dieses macht eine "Auto-Publikation" des aktuell eingeloggten Benutzers. Würde es dies nicht tun, könnte der Benutzer sich gar nicht erst einloggen.
 
-////
+Das accounts package publiziert allerdings nur den aktuell eingeloggten Benutzer. Das erklärt, wieso ein eingeloggter Benutzer nicht Benutzerkonten-Details eines anderen Benutzers einsehen kann.
 
-////
+Die Publication publiziert also nur ein Benutzer-Objekt (und nichts, wenn du nicht eingeloggt bist).
 
-////
+Weiter noch: Dokumente in unserer Benutzer Collection scheinen nicht dieselben Felder auf dem Server, wie auf dem Client zu beinhalten. In der Mongo-DB hat ein Benutzer viele Datenfelder, welche dem Benutzer-Objekt auf dem Client fehlen. Um dies zu sehen gehe zurück in das Mongo Terminal und tippe:
 
 ~~~bash
 > db.users.findOne()
@@ -156,7 +157,7 @@ Accounts.ui.config({
 ~~~
 <%= caption "Mongo console" %>
 
-////
+Auf dem Client im Browser ist das Benutzer-Objekt aufs Wesentliche gekürzt. Gib folgende ein:
 
 ~~~js
 ❯ Meteor.users.findOne();
@@ -164,7 +165,6 @@ Object {_id: "kYdBd9hr3fWPGPcii", username: "tmeasday"}
 ~~~
 <%= caption "Browser console" %>
 
-////
+Dieses Beispiel zeigt uns wie eine lokale Collection ein sicheres Subset einer Datenbank Collection sein kann. Der eingeloggt Benutzer sieht gerade genug Daten seines gesamten Datensets, um eine Aktion auszuführen (in diesem Fall das Einloggen). Wie wir später noch sehen werden, ist dies ein nützliches Muster von dem du noch viel Lernen kannst.
 
-////
-
+Dies heisst allerdings nicht, dass es unmöglich ist mehr Benutzerdaten zu publizieren, sofern du das möchtest. Konsultiere die Meteor docs um zu sehen wie du zusätzliche Felder aus der `Meteor.users` Collection publizieren kannst.
