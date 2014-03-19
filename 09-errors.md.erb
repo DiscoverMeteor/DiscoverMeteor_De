@@ -40,7 +40,7 @@ Der Vorteil einer lokalen Collection um die Fehler zu speichern, ist das diese -
 
 ### Das Anzeigen von Fehlern
 
-////
+Wir werden die Fehler im oberen Teil unseres Hauptlayouts anzeigen:
 
 ~~~html
 <template name="layout">
@@ -56,7 +56,7 @@ Der Vorteil einer lokalen Collection um die Fehler zu speichern, ist das diese -
 <%= caption "client/views/application/layout.html" %>
 <%= highlight "7" %>
 
-////
+Nun legen wird die Templates `errors` und `error` in der Datei `errors.html` an.
 
 ~~~html
 <template name="errors">
@@ -78,15 +78,15 @@ Der Vorteil einer lokalen Collection um die Fehler zu speichern, ist das diese -
 
 <% note do %>
 
-### Twin Templates
+### Doppel-Templates
 
-////
+Dir wird vielleicht aufgefallen sein, dass wir zwei Templates in eine Datei gelegt haben. Bisher haben wir uns an eine "Eine Datei - ein Template"-Konvention gehalten. Aber was Meteor betrifft, würde eine einzelne Datei genausogut funktionieren (wobei das eine sehr unübersichtliche Template-Datei wäre).
 
-////
+In diesem Fall machen wir eine Ausnahme, da beide Templates sehr kurz sind. Dadurch wird unser Repository ein wenig übersichtlicher.
 
 <% end %>
 
-////
+Jetzt schreiben wir unseren Template-Helper und schon können wir loslegen!
 
 ~~~js
 Template.errors.helpers({
@@ -99,11 +99,11 @@ Template.errors.helpers({
 
 <%= commit "9-1", "Basic error reporting." %>
 
-### Creating errors
+### Das Anlegen von Fehlern
 
-////
+Wir wissen jetzt, wie man Fehler anzeigt. Aber wir müssen sie erst anlegen, bevor wir etwas sehen werden. Fehler werden im allgemeinen dadurch ausgelöst, dass die Benutzer neuen Content anlegen. Also werden wir im Callback der Beitragserzeugung auf Fehler überprüfen. Wenn diese eintreten wird eine entsprechende Nachricht angezeigt.
 
-////
+Zusätzlich, falls wir den Fehler mit Code `302` erhalten (Dieser bedeutet, dass ein Beitrag mit der gewünschten URL schon existiert), werden wir den Benutzer zu dem bereits existierenden Beitrag weiterleiten. Wir können die `_id` des existierenden Beitrags aus dem Attribut `error.details` auslesen (Du erinnerst Dich bestimmt: Wir haben die `_id` des Beitrags als das dritte Argument `details` von unserer Klasse `Error` in Kapitel 7 übergeben).
 
 ~~~js
 Template.postSubmit.events({
@@ -139,13 +139,13 @@ Template.postSubmit.events({
 
 <%= screenshot "9-1", "Triggering an error" %>
 
-### Clearing Errors
+### Fehlermeldungen wieder Entfernen
 
-////
+Du wirst vielleicht versucht haben, den Close-Button des Fehler anzuklicken. Falls ja, wirst Du sehen, dass die Fehlermeldung verschwindet - nur um wiederzu kehren sobald eine weitere Seite geladen wird. Was geht da vor sich?
 
-////
+Der Close-Button löst das von Bootstrap eingebettete Javascript aus: Es hat allerdings nichts mit Meteor zu tun. Was also passiert ist das Bootstrap lediglich das Element `div` aus dem DOM entfernt - aber nicht aus der Meteor-Collection. Das bedeutet, dass der Fehler natürlich wieder angezeigt wird, sobald Meteor die Seite neu rendert.
 
-////
+Wenn wir also nicht wollen, dass der Fehler unerbittlich immer wieder von den Toten aufersteht, um den Benutzer an längst vergangene 
 
 ////
 
