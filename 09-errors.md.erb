@@ -145,11 +145,11 @@ Du wirst vielleicht versucht haben, den Close-Button des Fehler anzuklicken. Fal
 
 Der Close-Button löst das von Bootstrap eingebettete Javascript aus: Es hat allerdings nichts mit Meteor zu tun. Was also passiert ist das Bootstrap lediglich das Element `div` aus dem DOM entfernt - aber nicht aus der Meteor-Collection. Das bedeutet, dass der Fehler natürlich wieder angezeigt wird, sobald Meteor die Seite neu rendert.
 
-Wenn wir also nicht wollen, dass der Fehler unerbittlich immer wieder von den Toten aufersteht, um den Benutzer an längst vergangene 
+Wenn wir also nicht wollen, dass die Fehlermeldung unerbittlich immer wieder von den Toten aufersteht, um den Benutzer an längst vergangene Irrtümer zu errinnern, sollten wir einen Weg finden das Fehler-Objekt wieder aus der Collection zu entfernen.
 
-////
+Als Erstes erweitern wie die Funktion `throwError` um die Property `seen`. Das wird später nützlich, wenn wir wissen wollen, ob ein Fehler auch wirklich vom Benutzer gesehen wurde.
 
-////
+Wenn das erledigt ist, schreiben wir die simple Funktion `clearErrors`, die die bereits gezeigten Fehlermeldungen markiert:
 
 ~~~js
 // Local (client-only) collection
@@ -166,7 +166,7 @@ clearErrors = function() {
 <%= caption "client/helpers/errors.js" %>
 <%= highlight "5,8~10" %>
 
-////
+Als nächstes werden wir die Fehlerobjekte im Router entfernen. Sobald eine andere Seite aufgerufen wird, verschwinden diese Objekte für alle Ewigkeit.
 
 ~~~js
 // ...
@@ -177,15 +177,15 @@ Router.before(function() { clearErrors() });
 <%= caption "lib/router.js" %>
 <%= highlight "4" %>
 
-////
+Damit unsere Funktion `clearErrors()` ihre Aufgabe erledigen kann, müssen die Fehlerobjekte als gesehen (`seen`) markiert werden. Damit nichts schief geht müssen wir einen Grenzfall besonders beachten: Wenn wir einen Fehler anlegen und dann den Benutzer irgendwoanders hin umleiten (wie es beim Eingeben eines Linkduplikats geschieht), erfolgt die Umleitung sofort. Das bedeutet, dass der Benutzer niemals die Chance hatte, die Fehlermeldung zu sehen.
 
-////
+Hier kommt die Property `seen` ins Spiel: Wir müssen sicherstellen, dass sie nur auf `true` gesetzt wird, wenn der Benutzer die Fehlermeldung wirklich gesehen hat.
 
-////
+Um das zu erreichen, verwenden wir `Meteor.defer()`. Diese Funktion weist Meteor an, ihren Callback erst nachdem aufzurufen, was derzeit abgearbeitet wird. Du kannst dir in etwa vorstellen, dass `defer()` dem Browser sagt, eine Millisekunde zu warten, bis es weitergeht.
 
-////
+Wir werden also Meteor sagen, eine Millisekunde zu warten, nachdem das Fehlertemplate gerendert wurde. Dann wird `seen` auf `true` gesetzt. Aber haben wir nicht gesagt, dass der Redirect sofort erfolgt? Das bedeutet, dass der Redirect umgesetzt wird, bevor der Callback ausgeführt werden kann.
 
-////
+Aber das ist genau das, was wir bezwecken wollen. Die Fehlermeldung wird nicht als gesehen markiert. Das wiederum bedeutet, er wird nicht gelöscht und wird auf der Seite erscheinen, auf die der Benutzer umgeleitet wird. Genau wie wir es wollten.
 
 ~~~js
 Template.errors.helpers({
