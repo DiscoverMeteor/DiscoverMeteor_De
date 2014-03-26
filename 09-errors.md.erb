@@ -206,16 +206,18 @@ Template.error.rendered = function() {
 
 <%= commit "9-3", "Monitor which errors have been seen, and clear on routing." %>
 
-////
+Der Callback `rendered` wird aufgerufen, sobald unser Template im Browser gerendered wurde. In diesem Callback verweist `this` auf die derzeitige Template-Instanz. `this.data` erlaubt es uns auf die Daten des Objekts zuzugreifen, welches gerade gerendert wird (in unserem Fall handelt es sich um ein Fehlerobjekt).
 
-////
+Puh! Das war eine Menge Arbeit für etwas, was die Benutzer hoffentlich niemals sehen werden!
 
 <% note do %>
 
-### The `rendered` callback
+### Der Callback `rendered`
 
-////
+Der Callback `rendered` eines Template wird immer dann aufgerufen, wenn das Template im Browser
+angezeit wird. Das beinhaltet natürlich das erste Mal, wenn das Template auf dem Bildschirm erscheint. Aber es ist wichtig, zu beachten, dass der Callback auch danach noch aufgerufen wird: Jedes Mal, wenn sich seine Daten ändern.
 
-////
+Callbacks für das Rendering werden typischerweise mindestens zwei Mal aufgerufen: Zuerst, wenn die Appp
+das erste Mal lädt und ein zweites Mal, wenn die Daten der Collections geladen wurden. Also solltest Du aufpassen, dass du keinen Code dort anlegst, der nicht mehrmals aufgerufen werden kann (z.B. ein Alert oder das Absenden eines Tracking-Codes für die Analyse von Benutzerverhalten).
 
 <% end %>
