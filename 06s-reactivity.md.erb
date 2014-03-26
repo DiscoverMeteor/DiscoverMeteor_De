@@ -4,17 +4,18 @@ slug: reactivity
 date: 0006/01/02
 number: 6.5
 sidebar: true
-contents: Learn about Meteor's reactive code dependency system.|Understand the motivations and how it makes code declarative.|Learn to use advanced code that uses reactive data.
+contents: Lerne Meteor's reaktives Code-Abhängigkeits System kennen.|Verstehe die Gründe dafür und wie der Code dadurch deklarativ wird.|Lerne fortgeschrittene Methoden um Code für reaktive Daten zu schreiben.
+
 paragraphs: 20
 ---
 
-////
+Wenn Collections Meteor's Kernfeature sind, dann ist Reaktivität die Hülle die den Kern nützlich macht.
 
-////
+Collections verändern die Art und Weise wie deine Applikation mit Datenänderungen umgeht radikal. Anders als Datenänderungen manuell zu überprüfen (z.B. mit einem AJAX Aufruf) und danach in das HTML einzufügen, können Datenänderungen in Meteor jederzeit reflektiert und im UI angezeigt werden.
 
-////
+Nimm dir kurz Zeit und denke nach, was das bedeutet: Hinter der Kulisse kann Meteor jede Änderung im UI anzeigen, sobald die dazugehörige Collection einer Änderung unterzogen wird. 
 
-////
+Der unumgängliche Weg dies zu tun wäre die `.observe()` Funktion zu benutzen; eine Cursor Funktion die callbacks aufruft, sobald Dokumente ändern, die dem Cursor angehören. Wir könnten dann mit diesen callbacks Änderungen am DOM vornehmen. Der daraus resultierende Code würde etwa so aussehen:
 
 ~~~js
 Posts.find().observe({
@@ -33,25 +34,26 @@ Posts.find().observe({
 });
 ~~~
 
-////
+Vielleicht kannst du jetzt schon sehen, dass solcher Code ziemlich schnell ziemlich komplex werden kann. Stell dir vor alle Attributänderungen eines Post's müssten observiert und innerhalb seines `<li>`-Elements komplizierte HTML Änderungen vornehmen. Ganz zu schweigen von den Grenzfällen, die auftreten können, wenn wir beginnen uns darauf zu verlassen, dass unterschiedliche Daten-Quellen zu Echtzeit geändert werden.
 
 <% note do %>
 
-### When *Should* We Use `observe()`?
+### Wann *sollten* wir `observe()` benutzen?
 
-////
+Manchmal jedoch ist es notwendig, das oben erwähnte Pattern zu verwenden, speziell im Umgang mit 3rd-part Widgets. Zum Beispiel beim Hinzufügen und Entfernen von Pins (aus Collection Datensätzen) auf Karten (beispielsweise um den Standort von gegenwärtig eingeloggten Benutzern anzuzeigen).
 
-////
+Um zu wissen wie auf Datenänderungen zu reagieren ist, brauchst du in solchen Fällen die `observe()` callbacks zur Sicherstellung der Kommunikation zwischen der Karte und der Meteor Collection. Zum Beispiel musst du auf die `added` und `removed` callbacks referenzieren um die API-eigenen `dropPin() `oder `removePin()` -Methoden aufzurufen.
 
 <% end %>
 
-### A Declarative Approach
+### Ein Deklaratives Vorgehen
 
-////
+Meteor stellt uns eine bessere Option zur Verfügung: **Reactivity**, welche in ihrem Kern ein  **deklaratives** Vorgehen ist.
+Anstelle einer Beschreibung von Verhalten für jede möglich Änderung, definieren wir mittels der Deklaration die Beziehung zwischen den Objekten einmal und können uns von nun an darauf Verlassen, dass ihr Zustand synchron bleibt.
 
-////
+Dies ist ein mächtiges Konzept, denn ein Echtzeit-System hat verschiedene Zugänge, die alle zu unvorhersagbarer Zeit Änderungen unterzogen werden können. Meteor löst für uns die Aufgabe diese Quellen zu überwachen und übernimmt die fehleranfällige Aufgabe das UI up to date zu halten.
 
-////
+Anstelle von Denken an `observe` callback Funktionen, lässt Meteor uns schreiben:
 
 ~~~html
 <template name="postsList">
@@ -63,7 +65,7 @@ Posts.find().observe({
 </template>
 ~~~
 
-////
+Und dann hol die Liste mit Posts so:
 
 ~~~js
 Template.postsList.helpers({
@@ -73,23 +75,24 @@ Template.postsList.helpers({
 });
 ~~~
 
-////
+Hinter den Kulissen, hört Meteor die `observe()` callbacks für uns ab und passt die von reaktiven Datenänderungen betroffenen HTML-Stellen im Dokument an.
 
-### Dependency Tracking in Meteor: Computations
+### Abhängigkeits Tracking in Meteor: Computations
 
-////
+Auch wenn Meteor ein Echtzeit-Framework ist, ist nicht jeder Code in einer Meteor Application auch reaktiv. Wenn dies der Fall wäre, würde die ganze Applikation jedesmal neu ausgeführt wenn eine Datenänderung vorliegt. Stattdessen wird Meteor's Reaktivität nur auf einzelne Gebiete des Codes angewendet. Diese nennen wir **Computations**.
 
-////
+Oder anders ausgedrückt: Eine Computation ist ein Code-Block, der jedesmal ausgeführt wird wenn eine in Abhängigkeit stehende Datenquelle ändert. Wenn du eine reaktive Datenquelle hast (zum Beispiel eine Session-Variabel) und möchtest dass diese reaktiv reagiert, musst du eine Computation dafür aufsetzen.
 
-////
+Wichtig: Normalerweise musst du diese Computation nicht explizit erstellen, da Meteor im Hintergrund für jedes gerenderte Template eine eigene Computation kreiert (das heisst dass Code in Template Helperfunktionen und Callbacks schon standartmässig reaktiv sind).
 
-////
 
-////
+Jede reaktive Datenquelle verfolgt alle Computations die sich auf sie selber beziehen, damit sie die Computation wissen lassen kann, wann seine eigenen Werte geändert werden. Dies geschieht indem auf der zugehörigen Computation die `invalidate()` Methode aufgerufen wird.
 
-### Setting Up a Computation
+Computations sind in der Regel so aufgebaut, dass sie ihren Inhalt immer dann neu evaluieren, wenn ihre `invalidate()` Funktion aufgerufen wird. Genau das passiert mit den Template Computations (Zusätzlich machen Template Computations noch weitere Magic um die Seite schneller neu aufzubauen). Auch wenn du bei Bedarf mehr Kontrolle über die Computations und deren Verhalten bei Invalidierung nehmen kannst, ist dies selten nötig, da in der Praxis das gewünschte Verhalten schon entsprechend eingebaut ist.
 
-////
+### Eine Computation aufsetzen
+
+Da wir jetzt die Theorie hinter Computations verstehen, können wir mit verhältnismässig wenig Aufwand solche erstellen. Wir brauchen einfach den Code Block einer Computation in die `Deps.autorun` Funktion zu packen um diesen reaktiv zu machen.
 
 ~~~js
 Deps.autorun(function() {
@@ -97,11 +100,11 @@ Deps.autorun(function() {
 });
 ~~~
 
-////
+Hinter den Kulissen kreiert autorun eine Computation und übergibt ihr Verantwortung zur Neu-Evaluierung, wann immer die abhängige Datenquelle ändert. Wir haben es beim obigen Beispiel mit einer sehr simplen Computation zu tun, die bloss die Anzahl von Posts in der Konsole ausgibt. Da `Posts.find()` eine reaktive Datenquelle ist, kümmert sie sich selber darum, der Computation mitzuteilen dass sie sich immer dann neu evaluiert, wenn ein Post ändert.
 
 ~~~js
 > Posts.insert({title: 'New Post'});
 There are 4 posts.
 ~~~
 
-////
+Dies führt dazu, dass wir Code welcher reaktive Daten verwendet, mit relativ wenig Aufwand schreiben können. Wir wissen dass im Hintergrund das Abhängigkeitssystem sich um die erneute Ausführung zur richtigen Zeit kümmern wird.
