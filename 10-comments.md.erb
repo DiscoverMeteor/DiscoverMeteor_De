@@ -283,7 +283,7 @@ Template.commentSubmit.events({
 ~~~
 <%= caption "client/views/comments/comment_submit.js" %>
 
-////
+Genau wie wir vorher die serverseitige Meteor-Methode `post` definiert haben, legen wir nun die Meteor-Methode `comment` an, wir überprüfen die übermittelten Daten, erzeugen einen Kommentar-Objekt und fügen dieses in die Kommentar-Collection ein.
 
 ~~~js
 Comments = new Meteor.Collection('comments');
@@ -317,11 +317,11 @@ Meteor.methods({
 
 <%= commit "10-3", "Created a form to submit comments." %>
 
-////
+Es passieren nicht wirklich komplizierte Dinge: wir prüfen, dass ein Benutzer angemeldet ist, dass der Kommentar einen `body` hat und dass der Kommentar auf einen existierenden Beitrag verweist.
 
 ### Controlling the Comments Subscription
 
-////
+Momentan veröffentlichen wir alle Kommentare aller Beiträge an alle verbundenen Clients. Das erscheint etwas verschwenderisch. Denn eigentlich verwenden wir ja nur einen kleinen Anteil der Daten zu jedem gegebenen Zeitpunkt. Nachfolgend werden wir unsere Publication und Subscription anpassen, um genau zu kontrollieren welche Kommentare veröffentlicht werden. 
 
 ////
 
