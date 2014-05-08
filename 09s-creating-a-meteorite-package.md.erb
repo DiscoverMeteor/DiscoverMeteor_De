@@ -4,15 +4,15 @@ slug: creating-a-meteorite-package
 date: 0009/01/02
 number: 9.5
 sidebar: true
-contents: Write a local in-app package.|Write some tests for your package.|Release your package on Atmosphere.
+contents: Ein lokales in-App Package schreiben.| Tests für dein Package schreiben.|Das Package auf Atmosphere publizieren.
 paragraphs: 22
 ---
 
-////
+Wir haben ein wiederverwendbares Pattern in unserer Error-Anzeige, deshalb wollen wir das in ein Smartpackage verpacken und mit der Meteor Community teilen.
 
-////
+Zuerst müssen wir eine Struktur für unser Package kreieren. Wir legen das Package in ein Ordner namens `packages/errors/`. Dies kreiert ein custom Package das automatisch von der App benutzt wird. (Vielleicht ist dir aufgefallen dass Meteorite Packages via Symlinks in den `packages/` Ordner hineinspeichert).
 
-////
+Dann speichern wir eine `package.js` in diesen Ordner ab. Dieses File gibt Meteor Auskunft darüber, wie das Package benutzt werden soll.
 
 ~~~js
 Package.describe({
@@ -30,7 +30,7 @@ Package.on_use(function (api, where) {
 ~~~
 <%= caption "packages/errors/package.js" %>
 
-////
+Nun fügen wir drei Files dem Package hinzu. Wir können diese Files ohne grosse Änderungen aus der bestehenden Microscope App hinausziehen, lediglich den Namespace und die API müssen wir leicht anpassen:
 
 ~~~js
 Errors = {
@@ -80,9 +80,9 @@ Template.meteorError.rendered = function() {
 ~~~
 <%= caption "packages/errors/errors_list.js" %>
 
-### Testing the package out with Microscope
+### Das Package in Microscope ausprobieren
 
-////
+Wir werden nun das Ganze lokal mit Microscope ausprobieren, um sicherzustellen, dass unser geänderter Code auch funktioniert. Um das Package in das Projekt zu linken müssen wir `meteor add errors` ausführen. Dann müssen wir die existierenden Files die in der Zwischenzeit redundant geworden sind entfernen: 
 
 ~~~bash
 $ rm client/helpers/errors.js
@@ -91,7 +91,7 @@ $ rm client/views/includes/errors.js
 ~~~
 <%= caption "removing old files on the bash console" %>
 
-////
+Was wir auch noch machen müssen, ist unsere API leicht anpassen:
 
 ~~~js
 Router.before(function() { Errors.clearSeen(); });
@@ -123,13 +123,13 @@ Posts.update(currentPostId, {$set: postProperties}, function(error) {
 
 <%= scommit "9-5-1", "Created basic errors package and linked it in." %>
 
-////
+Sobald diese Änderungen vorgenommen sind, sollten wir unsere ursprüngliche Funktionalität wieder haben.
 
-### Writing tests
+### Tests schreiben
 
-////
+Der erste Schritt beim Development ist das Package in eine App zu integrieren. Der nächste Schritt ist dann, einen Test zu Schreiben, um das Package und sein Verhalten zu testen. Meteor hat eine built-in Testing Suite (Tynitest), die es einfach macht, solche Tests auszuführen und uns mit gutem Gewissen unseren Code mit anderen teilen lässt.
 
-////
+Lass uns einen Test mit Tinytest schreiben, der die "Errors"-Codebase testet.
 
 ~~~js
 Tinytest.add("Errors collection works", function(test) {
@@ -163,11 +163,11 @@ Tinytest.addAsync("Errors template works", function(test, done) {
 ~~~
 <%= caption "packages/errors/errors_tests.js" %>
 
-////
+In diesen Tests überprüfen wir die grundsätzlichen `Meteor.Errors` Funktionen und als Doppelcheck, dass der Code im Template immer noch funktioniert.
 
-////
+Wir beschäftigen uns hier nicht mit den Spezifikationen wie man Meteor Packages testet (die API ist noch nicht ganz fertiggestellt und ändert zur Zeit täglich), aber hoffentlich ist das Arbeitsprinzip zu weiten Graden selbsterklärend.
 
-////
+Um Meteor mitzuteilen wie es die Tests in `package.js` ausführen soll, benützen wir folgenden Code:
 
 ~~~js
 Package.on_test(function(api) {
@@ -181,7 +181,7 @@ Package.on_test(function(api) {
 
 <%= scommit "9-5-2", "Added tests to the package." %>
 
-////
+Dann können wir die eigentlichen Tests wie folgt laufen lassen:
 
 ~~~bash
 $ meteor test-packages errors
@@ -190,11 +190,11 @@ $ meteor test-packages errors
 
 <%= screenshot "s7-1", "Passing all tests" %>
 
-### Releasing the package
+### Das Package publizieren
 
-////
+Jetzt wollen wir das Package publizieren, um es mit der Meteor Welt zu teilen. Dies machen wir über die Meteor Package Plattform Atmosphere.
 
-////
+Zuerst müssen wir ein `smart.json` hinzufügen, damit Atmosphere die wichtigen Details unseres Packages kennt.
 
 ~~~json
 {
@@ -212,11 +212,11 @@ $ meteor test-packages errors
 
 <%= scommit "9-5-3", "Added a smart.json" %>
 
-////
+Wir schreiben einige grundsätzliche Metadaten, um Informationen über das Package zur Verfügung zu stellen. Dies wären: Informationen über was es tut, die git location wo wir es hosten und eine initiale Verisonsnummer. Wenn unser Package Abhängigkeiten zu anderen Atmosphere Packages hat, könnten wir auch die "packages" section benützen, um diese Abhängigkeiten festzulegen.
 
-////
+Wenn das alles an Ort und Stelle ist, ist das Publizieren einfach. Wir müssen ein Git Repository erstellen, zu einem Remote Git pushen und auf diese location in der smart.json verlinken.
 
-////
+Der Prozess dafür auf [GitHub](http://github.com) ist: Zuerst das neue Repository erstellen und dann dem Standard Workflow zum Zurverfügungstellen des Codes im Repository folgen. Dann können wir den `mrt release` Befehl brauchen um es zu Publizieren.
 
 ~~~bash
 $ git init
@@ -229,11 +229,11 @@ Done!
 ~~~
 <%= caption "Terminal (run from within `packages/errors`)" %>
 
-////
+Bemerkung: Package Namen müssen einzigartig sein. Wenn du bisher Wort-für-Wort gefolgt bist und denselben Package Namen benutzt, wird es einen Konflikt geben. In Zukunft wird Atmosphere allerdings einen Autoren-Namespace haben. Du kannst also damit rechnen, dass es da noch Änderungen gibt.
 
-////
+Zweite Bemerkung: Du musst auf http://atmosphere.meteor.com/accounts einloggen und einen Usernamen und Password erstellen. Diese brauchst du wenn du auf der Command Line `mrt release` aufrufst.
 
-////
+Jetzt wenn das Package publiziert ist, können wir es aus dem Projekt löschen und wieder über Meteorite als offizielles Package einfügen:
 
 ~~~bash
 $ rm -r packages/errors
@@ -243,4 +243,4 @@ $ mrt add errors
 
 <%= scommit "9-5-4", "Removed package from development tree." %>
 
-////
+Jetzt sollte Meteorite unser Package zum ersten mal herunterladen. Herzliche Gratulation!
