@@ -3,23 +3,23 @@ title: Fehler
 slug: errors
 date: 0009/01/01
 number: 9
-contents: Ein besserer Mechanismus für die Anzeige von Fehlern und Nachrichten.| Lerne wie man `Template.rendered` einsetzt, um mitzubekommen, ob ein Benutzer den Fehler gesehen hat.| Benutze einen Router-Filter, um sicherzustellen, dass Fehler nur einmal angezeigt werden.
+contents: Ein besserer Mechanismus für die Anzeige von Fehlern und Nachrichten.| Finde heraus wie man `Template.rendered` einsetzt, so dass der Benutzer Fehler auf jeden Fall sieht.| Benutze einen Router-Filter, damit ein Fehler nur einmal angezeigt wird.
 paragraphs: 31
 ---
 
-Die Standardfunktion des Browsers `alert()` ist, um den Benutzer zu warnen, dass ein Problem vorliegt ist eine unbefriedegende Lösung. Und es ist sicherlich aus Sicht der User-Experience suboptimal. Das können wir besser.
+Die Standardfunktion des Browsers `alert()` ist eine unbefriedegende Lösung um den Benutzer zu warnen, dass ein Problem vorliegt ist . Und sie ist sicherlich aus Sicht der User-Experience suboptimal. Das können wir besser.
 
-Anstelle dessen bauen wir ein flexibleres Fehler-Reporting. Es wird besser dafür geeignet sein, dem Benutzer mitzuteilen, was passiert, ohne seinen Arbeitsfluss zu unterbrechen.
+Wir bauen ein flexibleres Fehler-Reporting. Ohne seinen Arbeitsfluss zu unterbrechen wird es dem Benutzer mitteilen was passiert.
 
 ### Lokale Collections
 
-Wir werden ein simples System aufbauen, welches den Überblick behält, welche Fehler der Benutzer gesehen hat. Zusätzlich wird es die neuen Nachrichten in einem speziellem Bereich der Seite anzeigen. Dieses UX-Pattern ist nützlich, wenn wir den Benutzer informieren wollen, dass etwas passiert ist, ohne den Arbeitfluss zu unterbrechen.
+Wir werden dazu ein simples System aufbauen, welches sicht merkt, welche Fehler der Benutzer gesehen hat. Zusätzlich wird es die neuen Nachrichten in einem speziellem Bereich der Seite anzeigen. Dieses UX-Pattern ist nützlich, wenn wir den Benutzer informieren wollen, dass etwas passiert ist, ohne seinen Arbeitfluss zu unterbrechen.
 
-Was wir vorhaben ist ähnlich den Nachrichten, die man oft in Ruby on Rails-Applikationen sieht. Wir werden versuchen ein wenig geschickter zu sein, da wir zum einen die Nachrichten client-seitig implementieren und wissen, wann ein Benuzter die Nachricht gesehen hat.
+Was wir vorhaben ähnelt den Nachrichten, wie man sie oft in Ruby on Rails-Applikationen sieht. Wir werden versuchen ein wenig geschickter zu sein, da wir die Nachrichten client-seitig implementieren und wissen, wann ein Benuzter die Nachricht gesehen hat.
 
-Als Anfang erstellen wir eine Collection, die die Fehler speichert. Dadurch, dass Fehler immer nur für die aktuelle Sitzung gelten, muss diese Collection nicht persistiert werden. Deshalb machen wir etwas Neues: Wir erzeugen eine lokale Collection, die nur im Browser existiert. Es wird kein Versuch unternommen, diese mit dem Server zu synchronisieren.
+Wir erstellen eine Collection, die unsere Fehlermeldungen speichert. Dadurch, dass Fehlermeldungen immer nur für die aktuelle Sitzung gelten, muss diese Collection nicht persistiert werden. Deshalb machen wir etwas Neues: Wir erzeugen eine lokale Collection, die nur im Browser existiert. Es wird kein Versuch unternommen, diese mit dem Server zu synchronisieren.
 
-Um das zu erreichen, erzeugen wir den Fehler in einer Datei, die nur auf dem Client verwendet wird. Der Name der Collection wird auf `null` gesetzt. Wir erstellen eine Funktion `throwError`, das den Fehler in unsere neue lokale Collection einfügt.
+Das geht ganz einfach: Wir erzeugen die Fehlermeldungen in einer Datei, die nur auf dem Client verwendet wird. Dabei wird der Name der Collection auf `null` gesetzt. Wir legen die Funktion `throwError` an, die den Fehler in unsere neue lokale Collection einfügt.
 
 ~~~js
 // Local (client-only) collection
@@ -206,16 +206,18 @@ Template.error.rendered = function() {
 
 <%= commit "9-3", "Monitor which errors have been seen, and clear on routing." %>
 
-////
+Der Callback `rendered` wird aufgerufen, sobald unser Template im Browser gerendered wurde. In diesem Callback verweist `this` auf die derzeitige Template-Instanz. `this.data` erlaubt es uns auf die Daten des Objekts zuzugreifen, welches gerade gerendert wird (in unserem Fall handelt es sich um ein Fehlerobjekt).
 
-////
+Puh! Das war eine Menge Arbeit für etwas, was die Benutzer hoffentlich niemals sehen werden!
 
 <% note do %>
 
-### The `rendered` callback
+### Der Callback `rendered`
 
-////
+Der Callback `rendered` eines Template wird immer dann aufgerufen, wenn das Template im Browser
+angezeit wird. Das beinhaltet natürlich das erste Mal, wenn das Template auf dem Bildschirm erscheint. Aber es ist wichtig, zu beachten, dass der Callback auch danach noch aufgerufen wird: Jedes Mal, wenn sich seine Daten ändern.
 
-////
+Callbacks für das Rendering werden typischerweise mindestens zwei Mal aufgerufen: Zuerst, wenn die Appp
+das erste Mal lädt und ein zweites Mal, wenn die Daten der Collections geladen wurden. Also solltest Du aufpassen, dass du keinen Code dort anlegst, der nicht mehrmals aufgerufen werden kann (z.B. ein Alert oder das Absenden eines Tracking-Codes für die Analyse von Benutzerverhalten).
 
 <% end %>

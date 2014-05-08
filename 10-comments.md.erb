@@ -73,7 +73,7 @@ if (Posts.find().count() === 0) {
 ~~~
 <%= caption "server/fixtures.js" %>
 
-Wir dürfen nicht vergessen die neue Collection zu veröffentlichen (publish) und im Router zu abonnieren (subscribe):
+Wir dürfen nicht vergessen die neue Collection im Server zu veröffentlichen (publish) und im Router zu abonnieren (subscribe):
 
 ~~~js
 Meteor.publish('posts', function() {
@@ -101,15 +101,15 @@ Router.configure({
 
 <%= commit "10-1", "Added comments collection, pub/sub and fixtures." %>
 
-Damit der Fixture-Code ausgeführt wird musst du vorher die Datenbank mit: `meteor reset` entleeren. Vergiss nicht einen neuen Benutzer nach dem Resetten anzulegen.
+Damit der Fixture-Code ausgeführt wird, musst du vorher die Datenbank mit: `meteor reset` entleeren. Denk daran einen neuen Benutzer nach dem Reset anzulegen.
 
-////
+Im Fixture-Code legen wir als Erstes ein paar Dummy-Benutzer an, fügen sie zur Datenbank hinzu und verwenden die generierten `id`s um sie anschließend wieder aus der Datenbank abzurufen. Anschließend fügen wir für jeden Benutzer einen Kommentar am ersten Beitrag hinzu. Die Verbindung vom Kommentar zum Beitrag stellen wir mit dem Attribut `postId` her und die Verbindung zum Benutzer analog mit dem Attribut `userId`. Weiterhin bekommen unsere Komentare ein Anlagedatum (`submitted`), ein Attribut für den Kommentartext (`body`) und den Namen des Authors (ein denormalisiertes Feld).
 
-////
+Bleibt anzumerken, dass wir unseren Router so erweitert haben, dass nun auf die Initialisierung der `posts` als auch der `comments` gewartet wird.
 
 ### Displaying comments
 
-////
+Wir schreiben die Kommentare nun erfolgreich in die Datenbank, aber wir müssen sie auch auf der Diskussions-Seite zur Anzeige bringen. Die notwendigen Schritte um dies zu erreichen, sollten dir inzwischen ziemlich vertraut sein. 
 
 ~~~html
 <template name="postPage">
@@ -135,9 +135,9 @@ Template.postPage.helpers({
 <%= caption "client/views/posts/post_page.js" %>
 <%= highlight "2~4" %>
 
-////
+Im Template `postPage` fügen wir den Block `{{#each comments}}` ein. Innerhald des Helpers `comments` entspricht `this` damit einem Beitrag. Um die zugehörigen Kommenentare zu finden selektieren wir die Kommentare nach der ID des Beitrags.
 
-////
+Berücksichtigen wir, was wir über Helpers und Handlebars gelernt haben, gestaltet sich das Rendering eines Kommentars als ziemlich unkompliziert. Wir legen ein neues Verzeichnis namens `comments` im `views` Verzeichnis an. Dort werden alle Informationen zu unseren Kommentaren gespeichert.
 
 ~~~html
 <template name="comment">
@@ -152,7 +152,7 @@ Template.postPage.helpers({
 ~~~
 <%= caption "client/views/comments/comment.html" %>
 
-////
+Lass uns einen einfachen Template-Helper definieren, der dazu dient das Anlagedatum in einem menschenlesbaren Format auszugeben (es sei denn, du gehörst zu denen, die UNIX-Timestamps und hexadezimale Farbencodes flüssig lesen und schreiben können.)
 
 ~~~js
 Template.comment.helpers({
@@ -205,15 +205,15 @@ Template.postItem.helpers({
 
 <%= commit "10-2", "Display comments on `postPage`." %>
 
-////
+Die Fixture-Kommentare solltest du nun zur Anzeige bringen können. Das Ganze sollte in etwa so aussehen:
 
 <%= screenshot "10-1", "Displaying comments" %>
 
 ### Submitting Comments
 
-////
+Lass uns einen Weg bereitstellen, der es den Benutzern erlaubt neue Kommentare hinzuzufügen. Dies gestaltet sich ziemlich ähnlich zur Vorgehensweise, die wir angewandt haben, um das Anlegen neue Beiträgen zu ermöglichen. 
 
-////
+Wir beginnen mit dem Hinzufügen eines Kommentarbereichs am Ende eines jeden Beitrags.
 
 ~~~html
 <template name="postPage">
@@ -235,7 +235,7 @@ Template.postItem.helpers({
 <%= caption "client/views/posts/post_page.html" %>
 <%= highlight "11~15" %>
 
-////
+Und erzeugen dann das Formular-Template zur Anlage eines Kommentars.
 
 ~~~html
 <template name="commentSubmit">
@@ -258,7 +258,7 @@ Template.postItem.helpers({
 
 <%= screenshot "10-2", "The comment submit form" %>
 
-////
+Zum Übermitteln unseres Kommentars wird die Methode `comment` im Manager `commentSubmit` aufgerufen. Dieser arbeitet analog zu dem Manager `postSubmit`:
 
 ~~~js
 Template.commentSubmit.events({
@@ -283,7 +283,7 @@ Template.commentSubmit.events({
 ~~~
 <%= caption "client/views/comments/comment_submit.js" %>
 
-////
+Genau wie wir vorher die serverseitige Meteor-Methode `post` definiert haben, legen wir nun die Meteor-Methode `comment` an, wir überprüfen die übermittelten Daten, erzeugen einen Kommentar-Objekt und fügen dieses in die Kommentar-Collection ein.
 
 ~~~js
 Comments = new Meteor.Collection('comments');
@@ -317,21 +317,21 @@ Meteor.methods({
 
 <%= commit "10-3", "Created a form to submit comments." %>
 
-////
+Es passieren nicht wirklich komplizierte Dinge: wir prüfen, dass ein Benutzer angemeldet ist, dass der Kommentar einen `body` hat und dass der Kommentar auf einen existierenden Beitrag verweist.
 
 ### Controlling the Comments Subscription
 
-////
+Momentan veröffentlichen wir alle Kommentare aller Beiträge an alle verbundenen Clients. Das erscheint etwas verschwenderisch. Denn eigentlich verwenden wir ja nur einen kleinen Anteil der Daten zu jedem gegebenen Zeitpunkt. Nachfolgend werden wir unsere Publication und Subscription anpassen, um genau zu kontrollieren welche Kommentare veröffentlicht werden. 
 
-////
+Wenn wir darüber nachdenken, dann ist der einzige Zeitpunkt an dem wir überhaupt auf Kommentare zugreifen müssen, der Moment in dem wir einen individuellen Beitrag anzeigen. Und wir müssen nur die Kommentare laden, die zu diesem Beitrag gehören.
 
-////
+Im ersten Schritt werden wir die Art und Weise ändern, wie wir Kommentare abonnieren (subscribe). Bisher haben wir die Kommentare auf der *Router*-Ebene abonniert, was bedeutet, dass wir die gesamten Daten laden, wenn wir den Router initialisieren.
 
-////
+Aber jetzt wollen wir, dass die Subscription abhängig von einem Pfad-Parameter ist. Dieser Parameter kann sich offensichtlich zu jedem Zeitpunkt ändern. Also müssen wir unsere Subscription von der *Router*-Ebene auf die *Route*-Ebene verschieben.
 
-////
+Daraus ergibt, dass wir unsere Daten nicht mehr beim Initialisieren unserer App laden, sondern wenn die *Route* aufgerufen wird. Daraus resultieren Wartezeiten beim Browsen innerhalb unsere Anwendung. Was jedoch unvermeidlich ist, wenn wir nicht sämtliche Daten bereits beim Initialiesern unserer App laden wollen.
 
-////
+So sieht der Code unserer neuen *Route*-Level-Funktion `waitOn` aus:
 
 ~~~js
 Router.map(function() {
@@ -353,7 +353,7 @@ Router.map(function() {
 <%= caption "lib/router.js" %>
 <%= highlight "7~9" %>
 
-////
+Dir ist sicher aufgefallen, dass wir `this.params._id` als Argument an die Subscription übergeben. Also lass uns nun diese Information benutzen um die Menge der Kommentare auf die einzuschränken, die zum aktuellen Beitrag gehören.
 
 ~~~js
 Meteor.publish('posts', function() {
@@ -369,17 +369,17 @@ Meteor.publish('comments', function(postId) {
 
 <%= commit "10-4", "Made a simple publication/subscription for comments." %>
 
-////
+Es gibt eigentlich nur ein Problem: wenn wir wieder auf die Homepage zurückkehren, behauptet unsere App, dass alle Beiträge null Kommentare haben:
 
 <%= screenshot "10-3", "Our comments are gone!" %>
 
 ### Counting Comments
 
-////
+Der Grund dafür wird schnell klar: wir haben zu jedem Zeitpunkt die Kommentare von maximal einem unserer Beiträge geladen. Wenn wir also `Comments.find({postId: this._id})` im Helper `commentsCount` im Manager `post_item` aufrufen, kann Meteor die notwendigen client-seitigen Daten nicht finden und damit auch nicht als Resultat zur Verfügung stellen.
 
-////
+Der beste Weg damit umzugehen ist die Anzahl der Kommentare zu *denormalisieren*, also als Attribut des Beitrags zu speichern (keine Sorge, falls Du nicht sicher bist was damit gemeint ist, die nächste Sidebar hilft Dir weiter.) Auch wenn wir, wie wir gleich sehen werden, eine geringfügig höhere Komplexität in Kauf nehmen, so gewinnen wir doch erhebliche Performancevorteile, dadurch, dass wir nicht _alle_ Kommentare veröffentlichen müssen um die Liste der Beiträge anzuzeigen.
 
-////
+Wir erreichen dies in dem wir das Attribut `commentsCount` zur Datenstruktur `post` hinzufügen. Wir beginnen beim Aktualisieren des Fixture-Codes unseres Beitrags (und `meteor reset` um die Beiträge erneut zu laden -- denk daran die Benutzerkennung wiederherzustellen):
 
 ~~~js
 var telescopeId = Posts.insert({
@@ -402,7 +402,7 @@ Posts.insert({
 ~~~
 <%= caption "server/fixtures.js" %>
 
-////
+Dann stellen wir sich, dass allen neuen Beiträge mit 0 Kommentaren erstellt werden:
 
 ~~~js
 // pick out the whitelisted keys
@@ -417,7 +417,7 @@ var postId = Posts.insert(post);
 ~~~
 <%= caption "collections/posts.js" %>
 
-////
+Und dann aktualisieren wir den `commentsCount` wenn wir einen neuen Kommentar erstellen, indem wir Mongo's `$inc` Operator (welcher ein numerisches Feld um den Wert eins erhöht) verwenden:
 
 ~~~js
 // update the post with the number of comments
@@ -427,8 +427,8 @@ return Comments.insert(comment);
 ~~~
 <%= caption "collections/comments.js "%>
 
-////
+Schlussendlich können wir den Helper `commentsCount` aus `client/views/posts/post_item.js` entfernen, da das Feld nun direkt am Beitrag verfügbar ist.
 
 <%= commit "10-5", "Denormalized the number of comments into the post." %>
 
-////
+Nun, da die Benutzer miteinander sprechen können, wäre es eine Schande wenn sie neue Kommentare verpassen würden. Tja, jetzt kannst Du vielleicht den Inhalt des nächsten Kapitels erraten: wir werden Benachrichtigungen implementieren.
