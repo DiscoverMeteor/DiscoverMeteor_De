@@ -4,47 +4,49 @@ slug: allow-and-deny
 date: 0008/01/02
 number: 8.5
 sidebar: true
-contents: Learn about Allow and Deny callbacks.|Understand in which order callbacks are called.
+contents: Allow and Deny Callbacks kennnenlernen.|Die Reihenfolge wann die Callbacks aufgerufen werden verstehen.
 paragraphs: 16
 ---
 
-////
+Meteors Security System gibt uns die Kontrolle über Datenbankmodifikationen, ohne jedesmal Methoden zu definieren, wenn wir Änderungen machen.
 
-////
+Es machte viel Sinn, Helferaufgaben für Posts, wie Duplikatskontrolle von URLs oder das Hinzufügen von Zusatzeigenschaften, bei der Erstellung von Posts zu implementieren.
 
-////
+Auf der anderen Seite haben wir nicht wirklich neue Methoden für das Aktualisieren oder das Löschen von Posts geschrieben. Wir mussten nur überprüfen, ob der Benutzer die Berechtigung besitzt, diese Aktionen auszuführen. Dies wurde uns einfach gemacht mit der Benutzung der `allow` und `deny` Callbacks.
 
-////
+Wenn wir diese Callbacks benutzen, sind wir explizit bezüglich Datenbank-Änderungen und definieren welche Arten von Aktualisierungen benutzt werden dürfen. Die Tatsache dass sie im Accounts-System integriert sind, ist ein zusätzliches Plus.
 
-### Multiple callbacks
+### Mehrfach Callbacks
 
-////
+Wir können so viele `allow` Callbacks definieren wie wir brauchen. Nur einer von Ihnen muss `true` zurückgeben. Wenn also `Posts.insert()` im Browser aufgerufen wird (egal ob von unserer App's Client Code oder von der Console), ruft der Server alle `allow` Definitionen auf, bis er eine findet die `true` zurückgibt. Wenn er keine findet, erlaubt er den Insert nicht und wirft eine `403` Fehlermeldung.
 
-////
+Ähnlich dazu können wir eine oder mehrere `deny` Callbacks definieren. Wenn ein Callback `true` zurückgibt, wird die Änderung abgebrochen und eine `403` Fehlermeldung zurückgegeben. Die Logik dazu lautet wie folgt: Für eine erfolgreiche Änderung werden alle `allow` `insert` Callbacks sowie alle `deny` `insert` Callbacks ausgeführt.
 
 <%= diagram "allow_deny", "Note: n/e stands for Not Executed" %>
 
-////
+In anderen Worten: Meteor geht die callback-Liste von oben nach unten durch, zuerst die `deny` Callbacks, dann die `allow` Callbacks und führt jeden callback solange aus bis einer `true` zurückgibt?!
 
-////
+Ein praktisches Beispiel dafür könnte so aussehen: Wir haben zwei `allow()` callbacks, einer der prüft ob der post dem Benutzer gehört und einen zweiten der prüft ob der Benutzer Administratorenrechte hat. Wenn der Benutzer Administratorenrechte besitzt, kann er alle posts aktualisieren, da zumindest einer der Callbacks `true` zurückgibt.
 
-### Latency Compensation
+### Latenz-Kompensation
 
-////
+Erinnere dich daran dass Datenbank-Mutationen, wie alle Methoden, latenz-kompensiert sind. Wenn du also via Browser-Console versuchst einen post zu löschen, der nicht dir gehört, siehst du den post kurz verschwinden (da er aus der lokalen Collection rausgelöscht wird), dann aber wieder auftauchen, da der Server den Client informiert, dass das Dokument nicht gelöscht wurde.
 
-////
 
-////
+Dieses Verhalten ist natürlich kein Problem, wenn es von der Browser-Console aus ausgelöst wird (Wenn User versuchen mit der Console zu experimentieren ist das nicht unser Problem, was in ihrem Browser geschieht). Wir sollten jedoch solche Aktionen im UI unterbinden, indem wir den Löschen Knopf gar nicht erst einblenden, sollte ein Benutzer nicht über die nötigen Rechte verfügen.
 
-### Server-side permissions
+Da der Code der die Rechte regelt zwischen Client und Server geteilt wird, könnten wir zum Beispiel eine library Funktion `canDeletePost(user, post)` schreiben und diese in den shared Folder /lib legen. Solche Praktiken generieren in der Regel nicht all zuviel Zusatzcode.
 
-////
 
-////
+### Server-seitige Rechte
 
-### Using deny as a callback
+Erinnere dich, dass das Rechte-System nur für Datenbankmutationen welche vom Client ausgelöst werden gültig sind. Auf dem Server geht Meteor davon aus, dass alle Operationen erlaubt sind.
 
-////
+Das heisst, dass wenn du auf dem Server eine `deletePost` Meteor Methode schreibst, die vom Client her aufgerufen werden kann, kann jedermann jeden post löschen. Dies ist höchstwahrscheinlich nicht in deinem Sinne, es sei denn die Benutzerrechte werden in dieser Methode mitgeprüft.
+
+### Deny als Callback verwenden
+
+Ein Trick den du mit `deny` machen kannst, ist es als "onX" callback einzusetzen. Zum Beispiel könntest du einen `lastModified` Timestamp mit folgendem Code integrieren:
 
 ~~~js
 Posts.deny({
@@ -56,6 +58,8 @@ Posts.deny({
 });
 ~~~
 
-////
+Da `deny` Callbacks bei jedem erfolgreichen update ausgeführt werden, wissen wir, dass dieser Callback ausgeführt wird und am Dokument Änderungen in einer strukturierten Art und Weist vornimmt.
 
-////
+Zugegebenermassen ist diese Technik ein Hack, so wäre es wohl schöner eine Methode bei Updates auszuführen. Nichtsdestotrotz ist es nützlich zu wissen und in Zukunft hoffen wir, dass ein `beforeUpdate` Callback in Meteor verfügbar sein wird.
+
+
