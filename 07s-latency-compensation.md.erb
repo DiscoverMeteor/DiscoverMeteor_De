@@ -4,46 +4,45 @@ slug: latency-compensation
 date: 0007/01/02
 number: 7.5
 sidebar: true
-contents: Understand latency compensation.|Slow your app down and see what's going on.|Learn how Meteor Methods call each other.
+contents:  Verstehe das Konzept der Latenz-Kompensation.|Die Applikation künstlich verlangsamen und sehen was passiert.| Lerne wie Meteor Methoden sich gegenseitig aufrufen.
 paragraphs: 28
 ---
 
-////
+ Im letzten Kapitel führten wir ein neues Konzept der Meteor-Welt ein: Methoden.
 
 <%= diagram "latency1", "Without latency compensation", "pull-right" %>
 
-////
+Eine Meteor Methode ist die Möglichkeit, eine Abfolge von Befehlen auf dem Server in einer strukturierten Weise auszuführen. In unserem Beispiel brauchten wir eine Methode, weil wir sicherstellen wollten, dass dem neuen Post auch der Name des Autors und die aktuelle Serverzeit hinzugefügt wird.
 
-////
+ Wenn eine Meteor Methode allerdings einfach ausgeführt wird, haben wir ein Problem. Stelle dir folgenden Ablauf vor: (Anmerkung: Die Timestamps sind zufällig generiert und nur für illustrative Zwecke gedacht)
 
-- *+0ms:* ////
-- *+200ms:* ////
-- *+500ms:* ////
+- *+0ms:*  Der Benutzer klickt den Senden-Button und der Browser feuert einen Methodenaufruf.
+- *+200ms:* Der Server macht Änderungen an der Mongo Datenbank.
+- *+500ms:* Der Client erhält diese Änderungen und aktualisiert das UI.
 
-If this were the way Meteor operated, then there'd be a short lag between performing such actions and seeing the results (that lag being more or less noticeable depending on how close you were to the server). We can't have that in a modern web application!
+ Wenn Meteor so operieren würde, dann wäre da eine kurze Verzögerung zwischen der Ausführung solcher Aktionen und der Abbildung der Änderungen (Diese Verzögerung wäre je nach geografischer Nähe zum Server grösser oder kleiner). Für eine moderne Webapplikation ist dies nicht akzeptabel.
 
-### Latency Compensation
+### Latenz Kompensierung
 
 <%= diagram "latency2", "With latency compensation", "pull-right" %>
 
-////
+Um diese Probleme zu vermeiden, führt Meteor das Konzept der Latenz-Kompensation ein. Die Definition der `post` Methode wurde in einer Datei im `collection/` Ordner gemacht. Das heisst, dass der Code auf dem Server und dem Client verfügbar ist und auf beiden Seiten zur selben Zeit ausgeführt wird.
 
-////
+Wenn du eine Methode aufrufst, sendet der Client diesen Aufruf an den Server, simuliert aber simultan dazu die Aktion auch auf der Client Collection aus. Somit sieht unser Workflow wie folgt aus:
 
-- *+0ms:* ////
-- *+0ms:* ////
-- *+200ms:* ////
-- *+500ms:* ////
+- *+0ms:*  Der Benutzer klickt auf den Senden Knopf und der Browser feuert den Methodenaufruf ab.
+- *+0ms:* Der Client simuliert die Aktion des Methodenaufrufs auf der Client Collection und ändert das UI entsprechend.
+- *+200ms:* Der Server macht Änderungen an der Mongo Datenbank.
+- *+500ms:* Der Client erhält diese Änderungen unmittelbar vom Server zurück, macht die simulierten Änderungen rückgängig und ersetzt sie mit denen vom Server (In der Regel sind diese identisch). Das UI ändert dementsprechend.
 
-////
 
-### Observing Latency Compensation
+### Latenz-Kompensation beobachten
 
-////
+Wir können eine kleine Änderung an der `post` Methode vornehmen, um das Konzept in Aktion zu beobachten. Dafür müssen wir fortgeschrittene Coding-Technik im npm `futures` Package anwenden, damit das Einfügen von Objekten in die Server Collection in unserer Methode künstlich verzögert wird.
 
-////
+Wir benützen `isSimulation` um Meteor zu fragen, ob die Methode im aktuellen Kontext als "stub" ausgeführt wird. Ein [stub](http://docs.meteor.com/#methods_header) ist eine Methodensimulation, welche Meteor auf dem Client ausführt, während die "wirkliche" Methode auf dem Server ausgeführt wird.
 
-////
+So werden wir Meteor fragen, ob der Code gerade auf dem Client ausgeführt wird. Wenn ja fügen wir den String am Ende des Titels vom Post hinzu, wenn nicht, fügen wir den String auf dem Server hinzu:
 
 ~~~js
 Meteor.methods({
@@ -77,11 +76,11 @@ Meteor.methods({
 <%= caption "collections/posts.js" %>
 <%= highlight "6, 7, 13~22" %>
 
-////
+Bemerkung: Für den Fall dass es dich wundert, das `this` in `this.isSimulation` ist ein [Methodenaufruf-Objekt](http://docs.meteor.com/#meteor_methods) das Zugriff auf verschiedene nützliche Variablen zur Verfügung stellt.
 
-////
+Wie genau [Futures](https://npmjs.org/package/future) funktioniert, ist ausserhalb des Scopes dieses Buches, wir haben einfach ausgedrückt Meteor mitgeteilt, 5 Sekunden Pause zu machen bevor die Daten in die Server-Collection eingefügt werden.
 
-////
+Wir machen auch einen redirect zur Post Liste:
 
 ~~~js
 Template.postSubmit.events({
@@ -107,27 +106,26 @@ Template.postSubmit.events({
 
 <%= scommit "7-5-1", "Demonstrate the order that posts appear using a sleep." %>
 
-////
+Wenn wir jetzt einen neuen Post kreieren, sehen wir die Latenz-Kompensation eindeutig. Zuerst wird ein Post clientseitig eingefügt (client) im Titel (als erster Post, linkt zu github)
 
 <%= screenshot "s5-1", "Our post as first stored in the client collection" %>
 
-////
+Dann 5 Sekunden später wird dieser sauber mit dem Dokument vom Server ersetzt:
 
 <%= screenshot "s5-2", "Our post once the client receives the update from the server collection" %>
 
-### Client Collection Methods
+### Client Collection Methoden
 
-////
+Man könnte denken Methoden seien kompliziert, aber in der Tat sind sie ziemlich simpel. Wir haben nämlich schon drei sehr einfache Methoden kennengelernt: Die Collection Mutations-Methoden: `insert`, `update` und `remove`.
 
-////
+Wenn du eine Server-Collection namens `posts` kreierst, definierst du automatisch drei Methoden: `posts/insert`, `posts/update` und `posts/delete`. Mit anderen Worten: Wenn du `Posts.insert()` in einer Client-Collection aufrufst, rufst du eine latenz-kompensierte Methode auf, die zwei Dinge macht:
 
-1. ////
-2. ////
+1. Sie überprüft, ob wir die Mutation vornehmen dürfen (mittels `allow` und `deny` feedback (dies braucht in der Simulation allerdings nicht passieren))
+2. Sie führt die eigentliche Modifikation auf dem Data-Store aus.
   
-### Methods Calling Methods
+### Methoden rufen Methoden auf
 
-////
+Wenn du aufgepasst hast, hast du vielleicht festgestellt, dass unsere `post` Methode eine andere Methode (`posts/insert`) aufruft, sobald wir unseren `post` einfügen. Wie funktioniert das?
  
-////
+Wenn die Simulation (Client-side Version der Methode) ausgeführt ist, führen wir insert's Simulation aus (also wir fügen den `post` in unsere Client Collection ein), wenn die Server-side post Methode insert aufgerufen wird, brauchen wir uns nicht um die Simulation zu kümmern und das Einfügen findet lautlos statt.
 
-////
