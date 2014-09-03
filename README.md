@@ -9,6 +9,7 @@ Here are a couple of comments for the current version of the (ongoing) translati
 
 #### A couple of english terms to stick with - even in german:
 
+- App (die App)
 - Bug (der Bug)
 - Code (der Code)
 - Commit (der Commit)
