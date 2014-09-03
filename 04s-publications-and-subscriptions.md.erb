@@ -16,27 +16,27 @@ Ein Großteil der Verwirrung geht auf das Konto der "Magie", die Meteor für uns
 
 ### In grauer Vorzeit
 
-////
+Lasst uns zunächst auf die gute alte Zeit von 2011 zurückblicken, als es Meteor noch nicht gab. Nehmen wir an, du entwickelst eine einfache Rails-App. Wenn ein User auf deine Seite kommt, dann sendet der Client (z. B. der Browser) eine Anfrage (request) an deine App, die sich auf dem Server befindet.
 
-////
+Das erste, was die App unternimmt, ist, herauszufinden, was der User sehen möchte. Das könnte Seite 12 von einer Menge von Suchergebnissen sein, die Profildaten von Mary, Bobs 20 neueste Tweets und so weiter. Stell dir einen Angestellten in einem Buchladen vor, der durch die Regalreihen geht, um das Buch, nach dem du gefragt hast, herauszusuchen.
 
-////
+Sobald die richtigen Daten ermittelt sind, ist die zweite Aufgabe der App, diese in hübsches, lesbares HTML umzuformen (oder JSON, wenn ein API im Spiel ist).
 
-////
+Im Bild des Buchladens würde das gewünschte Buch eingepackt und in eine Tüte gesteckt. Das entspricht dem "View"-Teil des bekannten Entwurfsmusters Model-View-Controller.
 
-////
+Schließlich nimmt die App den HTML-Code und schickt ihn an den Browser. Die App hat damit ihre Arbeit getan und nun, wo sie ihre virtuellen Hände wieder frei hat, kann sie sich mit einem Bier zurücklehnen während sie auf die nächste Anfrage wartet.
 
-### The Meteor Way
+### Wie Meteor es macht
 
-////
+Schauen wir uns nun an, was Meteor im Vergleich dazu so besonders macht. Wie wir gesehen haben, besitzt Meteor im Gegensatz zur Rails-App, die nur **auf dem Server** existiert, auch einen Anteil **auf dem Client** (dem Browser). Das ist die grundlegende Innovation, die Meteor mitbringt.
 
 <%= diagram "client-server", "Pushing a subset of the database to the client.", "pull-right" %>
 
-////
+Das ist wie der Angestellte, der dir nicht nur das richtige Buch heraussucht, sondern dich auch nach Hause begleitet um es dir abends vorzulesen (zugegeben, das klingt etwas gruselig).
 
-////
+Diese Architektur lässt Meteor viele erstaunliche Dinge tun, hauptsächlich das, was Meteor [database everywhere](http://docs.meteor.com/#sevenprinciples) nennt. Vereinfacht gesagt nimmt Meteor einen Teil der Datenbank und *kopiert ihn auf den Client*.
 
-////
+Daraus folgt zweierlei: erstens überträgt eine Meteor-App anstatt HTML-Code die **eigentlichen, unformatierten Daten** zum Client und überlässt es diesem, wie damit umzugehen ist ([data on the wire](http://docs.meteor.com/#sevenprinciples)). Zweitens hast du **unmittelbaren Zugriff** auf diese Daten, ohne erst auf eine Server-Antwort zu warten ([latency compensation](http://docs.meteor.com/#sevenprinciples)).
 
 ### Publishing
 
