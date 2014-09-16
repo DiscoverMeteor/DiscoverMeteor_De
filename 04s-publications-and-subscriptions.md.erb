@@ -30,7 +30,7 @@ Schließlich nimmt die App den HTML-Code und schickt ihn an den Browser. Die App
 
 Schauen wir uns nun an, was Meteor im Vergleich dazu so besonders macht. Wie wir gesehen haben, besitzt Meteor im Gegensatz zur Rails-App, die nur **auf dem Server** existiert, auch einen Anteil **auf dem Client** (dem Browser). Das ist die grundlegende Innovation, die Meteor mitbringt.
 
-<%= diagram "client-server", "Pushing a subset of the database to the client.", "pull-right" %>
+<%= diagram "client-server", "Eine Untermenge der Datenbank zum Client senden.", "pull-right" %>
 
 Das ist wie der Angestellte, der dir nicht nur das richtige Buch heraussucht, sondern dich auch nach Hause begleitet um es dir abends vorzulesen (zugegeben, das klingt etwas gruselig).
 
@@ -40,21 +40,21 @@ Daraus folgt zweierlei: erstens überträgt eine Meteor-App anstatt HTML-Code di
 
 ### Publishing
 
-////
+Die Datenbnk einer App kann zehntausende von Dokumenten enthalten, von denen einige auch privater oder vertraulicher Natur sein mögen. Deshalb ist es offensichtlich, dass wir nicht einfach den gesamten Datenbankinhalt auf den Client spiegeln – aus Gründen der Sicherheit und der Stabilität.
 
-////
+Wir brauchen daher eine Methode, wie wir Meteor mitteilen, welche **Untermenge** des Datenbestandes zum Client zu schicken ist. Das erreichen wir duch eine **Veröffentlichung**.
 
-////
+Gehen wir noch einmal zu Microscope zurück. Hier sind alle Beiträge unserer App in der Datenbank gespeichert:
 
-<%= diagram "collections-1", "All the posts contained in our database.", "pull-center" %>
+<%= diagram "collections-1", "Alle Beiträge in der Datenbank.", "pull-center" %>
 
-////
+Auch wenn diese Möglichkeit, wie wir zugeben, in Microscope nicht existiert, stellen wir uns einmal vor, dass einige unserer Beiträge wegen darin verwendeter Schimpfworte markiert worden sind. Auch wenn wir sie in der Datenbank behalten wollen, sollten die für die User nicht verfügbar sein, also nicht zum Client gesendet werden.
 
-////
+Unsere erste Aufgabe wir sein, Meteor klarzumachen, was wir zum Client senden wollen. Wir sagen Meteor, nur nicht markierte Beiträge zu **veröffentlichen**.
 
-<%= diagram "collections-2", "Excluding flagged posts.", "pull-center" %>
+<%= diagram "collections-2", "Markierte Beiträge ausschließen.", "pull-center" %>
 
-////
+Hier ist der entsprechende Code, der auf dem Server sitzen würde:
 
 ~~~js
 // on the server
@@ -63,15 +63,15 @@ Meteor.publish('posts', function() {
 });
 ~~~
 
-////
+Damit ist sichergestellt, dass ein Client **auf keinen Fall** auf einen markierten Beitrag zugreifen kann. Genau so wird eine Meteor-App sicher gemacht: Stelle sicher, dass nur die Daten veröffentlicht werden, der der Client auch sehen soll.
 
 <% note do %>
 
 ### DDP
 
-////
+Im Grunde ist das System, das hinter dem Veröffentlichen und Abonnieren (publication/subscription) steht, wie ein Trichter, durch den von einer serverseitigen Collection zu einer clientseitigen Collection transportiert werden.
 
-////
+Das Protokoll, mit dem dieser Trichter arbeitet heißt **DDP**. Das steht für Distributed Data Protocol, auf deutsch etwa Protokoll für verteilte Daten. Um mehr darüber zu erfahren, schaue dir diesen [Vortrag von Matt DeBergalis auf der Real-time-Konferenz](http://2012.realtimeconf.com/video/matt-debergalis) an oder diesen [Screencast von Chris Mather](http://www.eventedmind.com/posts/meteor-subscriptions-and-ddp), die das Konzept von DDP näher beleuchten.
 
 <% end %>
 
