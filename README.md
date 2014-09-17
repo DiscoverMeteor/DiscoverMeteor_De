@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/DiscoverMeteor/DiscoverMeteor_De.png?label=ready&title=Ready)](https://waffle.io/DiscoverMeteor/DiscoverMeteor_De)
 See it live at: http://de.discovermeteor.com/
 
 Here are a couple of comments for the current version of the (ongoing) translation:
