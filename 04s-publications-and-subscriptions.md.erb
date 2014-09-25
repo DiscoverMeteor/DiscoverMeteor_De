@@ -75,17 +75,17 @@ Das Protokoll, mit dem dieser Trichter arbeitet heißt **DDP**. Das steht für D
 
 <% end %>
 
-### Subscribing
+### Abonnieren
 
-////
+Selbst wenn wir jeden nicht markierten Beitrag auf dem Client verfügbar machen wollten, können wir nicht einfach tausende Beiträge auf einmal versenden. Wir brauchen eine Methode, mittels derer der Client bestimmen kann welche Teilmenge der Daten in einem bestimmten Augenblick benötigt wird. Genau dafür gibt es das **Abonnieren**.
 
-////
+Jegliche abonnierte (*subscribed*) Daten werden auf den Client **gespiegelt**. Das ist Minimongo zu verdanken, Meteors Clientseitige Implementierung der MongoDB.
 
-////
+Wir schauen uns beispielsweise gerade die Profilseite von Bob Smith an und da wollen wir nur *seine* Beiträge sehen.
 
 <%= diagram "collections-3", "Subscribing to Bob's posts will mirror them on the client.", "pull-center" %>
 
-////
+Zunächst würden wir unsere Veröffentlichung (*publication*) um einen Parameter erweitern:
 
 ~~~js
 // on the server
@@ -94,14 +94,14 @@ Meteor.publish('posts', function(author) {
 });
 ~~~
 
-////
+Und anschließend würden wir diesen Parameter benutzen, wenn wir die Veröffentlichung im clientseitigen Code abonnieren:
 
 ~~~js
 // on the client
 Meteor.subscribe('posts', 'bob-smith');
 ~~~
 
-////
+Auf diese Weise wird eine Meteor-App auf der Clientseite skalierbar: anstatt *alle* verfügbaren Daten zu abonnieren, wählen wir die Teile aus, die wir gerade brauchen. So wird vermieden, dass der Speicher des Browsers überlastet wird, egal wie groß die serverseitige Datenbank ist.
 
 ### Finding
 
