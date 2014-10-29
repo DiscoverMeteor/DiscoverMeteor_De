@@ -38,9 +38,9 @@ Diese Architektur lässt Meteor viele erstaunliche Dinge tun, hauptsächlich das
 
 Daraus folgt zweierlei: erstens überträgt eine Meteor-App anstatt HTML-Code die **eigentlichen, unformatierten Daten** zum Client und überlässt es diesem, wie damit umzugehen ist ([data on the wire](http://docs.meteor.com/#sevenprinciples)). Zweitens hast du **unmittelbaren Zugriff** auf diese Daten, ohne erst auf eine Server-Antwort zu warten ([latency compensation](http://docs.meteor.com/#sevenprinciples)).
 
-### Publishing
+### Veröffentlichen
 
-Die Datenbnk einer App kann zehntausende von Dokumenten enthalten, von denen einige auch privater oder vertraulicher Natur sein mögen. Deshalb ist es offensichtlich, dass wir nicht einfach den gesamten Datenbankinhalt auf den Client spiegeln – aus Gründen der Sicherheit und der Stabilität.
+Die Datenbank einer App kann zehntausende von Dokumenten enthalten, von denen einige auch privater oder vertraulicher Natur sein mögen. Deshalb ist es offensichtlich, dass wir nicht einfach den gesamten Datenbankinhalt auf den Client spiegeln – aus Gründen der Sicherheit und der Stabilität.
 
 Wir brauchen daher eine Methode, wie wir Meteor mitteilen, welche **Untermenge** des Datenbestandes zum Client zu schicken ist. Das erreichen wir duch eine **Veröffentlichung**.
 
@@ -83,7 +83,7 @@ Jegliche abonnierte (*subscribed*) Daten werden auf den Client **gespiegelt**. D
 
 Wir schauen uns beispielsweise gerade die Profilseite von Bob Smith an und da wollen wir nur *seine* Beiträge sehen.
 
-<%= diagram "collections-3", "Subscribing to Bob's posts will mirror them on the client.", "pull-center" %>
+<%= diagram "collections-3", "Abonnieren von Bobs Beiträgen spiegelt diese auf den Client.", "pull-center" %>
 
 Zunächst würden wir unsere Veröffentlichung (*publication*) um einen Parameter erweitern:
 
