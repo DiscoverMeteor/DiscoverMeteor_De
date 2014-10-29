@@ -3,7 +3,10 @@ title: Deployment
 slug: deploying
 date: 0002/01/02
 number: 2.5
+points: 1
 sidebar: true
+photoUrl: http://www.flickr.com/photos/monomaniacgarage/10703829133/
+photoAuthor: Monomaniacgarage
 contents: Lerne auf Meteor.com zu deployen.|Lerne auf Modulus zu deployen|Lerne auf deinen eigenen Server mit Meteor Up zu deployen.
 paragraphs: 46
 ---
@@ -12,7 +15,7 @@ Manche Leute arbeiten gerne an einem Projekt, bis es perfekt ist. Andere wiederu
 
 Wenn du zum ersten Typ gehörst und lieber lokal arbeitest, kannst du dieses Kapitel auch überspringen. Du kannst dir aber auch die Zeit nehmen, um zu lernen, wie du mit deiner Meteor App online gehst.
 
-Du wirst verschiedene Arten kennenlernen, um eine Meteor App zu deployen (veröffentlichen). Du kannst jede dieser Arten an jedem Punkt in deinem Entwicklungsprozess nutzen, egal ob du an Microscope oder einer anderen Meteor App arbeitest. Let's get started!
+Du wirst verschiedene Arten kennenlernen, um eine Meteor App zu deployen (veröffentlichen). Du kannst jede dieser Arten an jedem Punkt in deinem Entwicklungsprozess nutzen, egal ob du an Microscope oder einer anderen Meteor App arbeitest. Lass uns anfangen!
 
 
 <% note do %>
@@ -22,13 +25,13 @@ Du wirst verschiedene Arten kennenlernen, um eine Meteor App zu deployen (veröf
 Dies ist ein **Sidebar** Kapitel. Sidebars geben, unabhängig vom Rest des Buches, einen tieferen Einblick in allgemeine Meteor Themen.
 
 
-Möchtest du lieber an Microscope weiterentwickeln, kannst du dieses Kapitel auch vorerst überspringen und es später lesen.
+Möchtest du lieber an Microscope weiterentwickeln, kannst du dieses Kapitel auch zunächst überspringen und es später lesen.
 
 <% end %>
 
 ###Deployen auf Meteor
 
-Auf eine Meteor Subdomain zu deployen (z.B. `http://myapp.meteor.com`) ist die einfachste und erste Möglichkeit, die wir versuchen werden. Dies kann nützlich sein, um die App in einem frühen Stadium anderen zu zeigen oder um schnell einen Staging Server einzurichten.
+Auf eine Meteor Subdomain zu deployen (z.B. `http://myapp.meteor.com`) ist die einfachste und erste Möglichkeit, die wir versuchen werden. Dies kann nützlich sein, um die App in einem frühen Stadium anderen zu zeigen oder um schnell einen Staging Server einzurichten (ein Staging Server ist ein Server, auf dem eine Entwicklungsversion unter Live-Bedingungen getestet werden kann).
 
 Auf Meteor zu deployen ist ziemlich einfach. Öffne dein Terminal, wechsle in dein Meteor App Verzeichnis und tippe:
 
@@ -36,31 +39,21 @@ Auf Meteor zu deployen ist ziemlich einfach. Öffne dein Terminal, wechsle in de
 $ meteor deploy myapp.meteor.com
 ~~~
 
-Natürlich musst du "myapp" mit einem Namen deiner Wahl ersetzen, möglichst einem der noch nicht vergeben ist. Ist der gewählte Name schon vergeben, fragt dich Meteor nach dem Kennwort. In diesem Fall kannst du mit `ctrl+c` abbrechen und mit einem anderen Namen nochmals versuchen.
+Natürlich musst du "myapp" mit einem Namen deiner Wahl ersetzen, möglichst einem der noch nicht vergeben ist. 
 
-Funktioniert alles, kannst du deine App nach einigen Sekunden unter `http://myapp.meteor.com` abrufen.
+Wenn du zum ersten mal eine App deployst, wirst du aufgefordert, einen Meteor Account zu erstellen. Wenn alles funktioniert, kannst du deine App nach einigen Sekunden unter `http://myapp.meteor.com` aufrufen.
 
-### Kennwortschutz
-
-Per Standard gibt es keine Einschränkungen bezüglich Meteor Subdomains. Jeder kann jeden gewünschten Domainnamen nutzen und jede existierende App überschreiben. Deshalb solltest du deine Domain mit der `-p` Option mit einem Kennwort schützen. Dies funktioniert wie folgt: 
-
-~~~~bash
-$ meteor deploy myapp.meteor.com -p
-~~~~
-
-Meteor fragt dich, welches Kennwort du setzen möchtest. Ab diesem Zeitpunkt wird das Kennwort jedes Mal benötigt, um diese App zu deployen.
-
-In der [offiziellen Dokumentation](http://docs.meteor.com/#deploying) findest du weitere Informationen zu Themen wie direktem Zugriff zu der gehosteten Datenbankinstanz oder Konfigurieren einer eigenen Domain für deine App.
+In der [offiziellen Dokumentation](http://docs.meteor.com/#deploying) findest du weitere Informationen zu Themen wie direktem Zugriff zu der gehosteten Datenbankinstanz oder dem Konfigurieren einer eigenen Domain für deine App.
 
 ### Deployen auf Modulus
 
-[Modulus](https://modulus.io/) ist eine grossartige Möglichkeit, um NodeJS Apps zu deployen. Es ist eine der wenigen PaaS (platform-as-a-service) Anbieter, welche offiziell Meteor unterstützt und es gibt bereits einige Leute, die ihre Meteor App darauf produktiv nutzen.
+[Modulus](https://modulus.io/) ist eine grossartige Möglichkeit, um Node.js Apps zu deployen. Es ist eine der wenigen PaaS (platform-as-a-service) Anbieter, welche offiziell Meteor unterstützt und es gibt bereits einige Leute, die ihre Meteor App auf Modulus im Produktionsbetrieb bereitstellen.
 
 <% note do %>
 
 ### Demeteorizer
 
-Modulus bietet ein open-source Tool namens [demeteorizer](https://github.com/onmodulus/demeteorizer) an, welches deine Meteor App in eine standard NodeJS App konvertiert.
+Modulus bietet ein Open-Source Werkzeug namens [demeteorizer](https://github.com/onmodulus/demeteorizer) an, welches deine Meteor App in eine Standard Node.js App konvertiert.
 
 <% end %>
 
@@ -102,13 +95,13 @@ Wir haben nun erfolgreich unsere App auf Modulus deployed. In der [Modulus Dokum
 
 ### Meteor Up
 
-Obwohl täglich neue Cloud Lösungen auftauchen, haben alle ihre eigenen Probleme und Beschränkungen. Aktuell ist das Deployen auf den eigenen Server die beste Möglichkeit, um eine Meteor Applikation produktiv einzusetzen. Nur ist dies nicht ganz so einfach, vor allem wenn du nach einem production-quality Deployment suchst.
+Obwohl täglich neue Cloud Lösungen auftauchen, haben alle ihre eigenen Probleme und Beschränkungen. Aktuell ist das Deployen auf den eigenen Server die beste Möglichkeit, um eine Meteor Applikation im Produktionsbetrieb einzusetzen. Nur ist dies nicht ganz so einfach, vor allem wenn du professionell deployen willst.
 
-[Meteor Up](https://github.com/arunoda/meteor-up) (kurz `mup`) ist ein weiterer Versuch, dieses Problem zu beheben. Dies funktioniert mit einem Kommandozeilen-Tool, welches die Installation und Deployment für dich übernimmt. Sehen wir uns an, wie Microscope mit Meteor Up deployet werden kann. 
+[Meteor Up](https://github.com/arunoda/meteor-up) (kurz `mup`) ist ein weiterer Versuch, dieses Problem zu beheben. Dies funktioniert mit einem Kommandozeilen-Tool, welches die Installation und das Deployment für dich übernimmt. Sehen wir uns an, wie Microscope mit Meteor Up deployet werden kann. 
 
-Als Allererstes benötigen wir einen Server, auf welchen wir deployen können. Wir empfehlen entweder [Digital Ocean](http://digitalocean.com), kostet ab 5$ pro Monat oder [AWS](http://aws.amazon.com/) das Micro Instanzen gratis anbietet (du wirst schnell an Skalierungsprobleme stossen, aber um mit Meteor Up herumzuspielen sollte es genügen).
+Als Allererstes benötigen wir einen Server, auf welchen wir deployen können. Wir empfehlen entweder [Digital Ocean](http://digitalocean.com), auf denen man ab 5$ pro Monat deployen kann oder [Amazon Webservices (AWS)](http://aws.amazon.com/), die Micro Instanzen gratis anbieteen (damit wirst du schnell an Skalierungsprobleme stossen, aber um mit Meteor Up herumzuspielen sollte es genügen).
 
-Unabhängig vom gewählten Service solltest du nun drei Sachen haben: Eine Server IP-Adresse, ein Login (normalerweise `root` oder `ubuntu`) und ein Kennwort. Bewahre diese sicher auf, wir werden sie bald benötigen.
+Unabhängig vom gewählten Service solltest du nun drei Sachen haben: eine Server IP-Adresse, ein Login (normalerweise `root` oder `ubuntu`) und ein Kennwort. Bewahre diese sicher auf, wir werden sie bald benötigen.
 
 
 ### Meteor Up initialisieren
@@ -173,7 +166,7 @@ Der nächste Schritt ist deine `mup.json` Datei zu konfigurieren. Standardmässi
 ~~~
 <%= caption "mup.json" %>
 
-Gehen wir duch jede dieser Einstellungen.
+Gehen wir durch jede dieser Einstellungen.
 
 **Server Authentifikation**
 
@@ -185,16 +178,13 @@ Du wirst sehen, dass Meteor Up kennwortbasierte und private-key (PEM) basierte A
 
 Der nächste Schritt ist eine MongoDB Datenbank für die App zu konfigurieren. Wir empfehen [MongoHQ](https://www.mongohq.com/home) oder einen anderen Cloud MongoDB Anbieter zu nutzen, da diese professionellen Support und bessere Management Tools anbieten.
 
-Entscheidest du dich für MongoDB, setze `setupMongo` zu `false` and füge die `MONGO_URL` bei den Umgebungsvariablen in `mup.json`'s `env` Block hinzu.
-
+Entscheidest du dich für MongoDB, setze `setupMongo` zu `false` and füge die `MONGO_URL` bei den Umgebungsvariablen in `mup.json`'s `env` Block hinzu. Wenn du dich dafür entscheidest, MongoDB mit Meteor Up zu hosten, setze einfach `setupMongo` als `true` and Meteor Up wird sich um den Rest kümmern.
 
 **Meteor App Pfad**
 
-Da unsere Meteor Up Konfiguration in zwei unterschiedlichen Verzeichnissen existiert, müssen wir Meteor Up zu unserer App mit der `app` Einstellung verweisen. Gib deinen absoluten lokalen Pfad an, den du mit dem `pwd` Befehl im App-Verzeichnis herausfinden kannst.
+Da unsere Meteor Up Konfiguration in zwei unterschiedlichen Verzeichnissen existiert, müssen wir Meteor Up zu unserer App mit der `app` Einstellung verweisen. Gib deinen absoluten lokalen Pfad an, den du mit dem `pwd` Befehl im Termin herausfinden kannst, wenn du dich im App-Verzeichnis befindest.
 
 **Umgebungsvariablen**
-
-You can specify all of your app's environment variables (such as `ROOT_URL`, `MAIL_URL`, `MONGO_URL`, etc.) inside the `env` block.
 
 Hier kannst du alle Umgebungsvariablen für deine App (wie `ROOT_URL`, `MAIL_URL`, `MONGO_URL`, etc.) im `env` Block definieren.
 
@@ -212,7 +202,7 @@ Dies dauert einige Minuten, abhängig von der Server Performance und der Netzwer
 $ mup deploy
 ~~~
 
-Dies bündelt die Meteor App und deployet sie zum eben eingerichteten Server.
+Dies bündelt die Meteor App und deployt sie zum eben eingerichteten Server.
 
 ### Anzeigen von Logs
 
