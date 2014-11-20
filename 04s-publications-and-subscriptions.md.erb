@@ -22,7 +22,7 @@ Das erste, was die App unternimmt, ist, herauszufinden, was der User sehen möch
 
 Sobald die richtigen Daten ermittelt sind, ist die zweite Aufgabe der App, diese in hübsches, lesbares HTML umzuformen (oder JSON, wenn ein API im Spiel ist).
 
-Im Bild des Buchladens würde das gewünschte Buch eingepackt und in eine Tüte gesteckt. Das entspricht dem "View"-Teil des bekannten Entwurfsmusters Model-View-Controller.
+Im Bild des Buchladens würde das gewünschte Buch eingepackt und in eine Tüte gesteckt. Das entspricht dem „View“-Teil des bekannten Entwurfsmusters Model-View-Controller.
 
 Schließlich nimmt die App den HTML-Code und schickt ihn an den Browser. Die App hat damit ihre Arbeit getan und nun, wo sie ihre virtuellen Hände wieder frei hat, kann sie sich mit einem Bier zurücklehnen während sie auf die nächste Anfrage wartet.
 
@@ -105,7 +105,7 @@ Auf diese Weise wird eine Meteor-App auf der Clientseite skalierbar: anstatt *al
 
 ### Finden
 
-Jetzt ist es so, dass Bobs Beiträge über mehrere Kategoien verteilt sind (z. B.: „JavaScript“, „Roby“ und „Python“). Angenommen, wir wollen jetzt zwar alle Beiträge von Bob im Speicher haben aber nur die der Kategorie „JavaScript“ anzeigen. Hier kommt das „Finden“ ins Spiel.
+Jetzt ist es so, dass Bobs Beiträge über mehrere Kategoien verteilt sind (z. B.: „JavaScript“, „Ruby“ und „Python“). Angenommen, wir wollen jetzt zwar alle Beiträge von Bob im Speicher haben aber nur die der Kategorie „JavaScript“ anzeigen. Hier kommt das „Finden“ ins Spiel.
 
 <%= diagram "collections-4", "Eine Teilmenge von Dokumenten vom Client aus selektieren.", "pull-center" %>
 
@@ -174,7 +174,7 @@ Wenn Meteor erkennt, dass die Veröffentlichung `somePosts` einen Cursor zurück
 
 Hier ist, was `_publishCursor()` tut:
 
-- Prüfen des Namens der Serverseitigen Collection
+- Prüfen des Namens der serverseitigen Collection
 - Holen aller passenden Dokumente aus dem Cursor und senden dieser an die *gleichnamige* clientseitige Collection. (Mittels `.added()`)
 - Wann immer ein Dokument dazukommt, entfernt wird oder verändert: Senden dieser Veränderungen an die clientseitige Collection. (Mittels `.observe()` am Cursor bzw. `.added()`, `.changed()` und `removed()`)
 
