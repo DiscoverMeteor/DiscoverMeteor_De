@@ -3,15 +3,18 @@ title: Templates
 slug: templates
 date: 0003/01/01
 number: 3
+points: 1
+photoUrl: http://www.flickr.com/photos/73449134@N04/8194499092/
+photoAuthor: Mike Lewinski
 contents: Learn about Meteor's templating language, Handlebars.|Create your first three templates.|Learn how Meteor managers work.|Get a basic prototype working with static data.
 paragraphs: 46
 ---
+„“
+Um den Einstieg in die Entwicklung mit Meteor zu erleichtern, verfolgen wir einen Outside-In-Ansatz. In anderen Worten: wir bauen zuerst eine „dumme“ äußere Schale aus HTML/JavaScript und hängeerknüpfen sie dann später mit der inneren Logik unserer App.
 
-////
+Das bedeutet, dass wir uns in diesem Kapitel nur mit dem beschäftigen werden, was in dem Verzeichnis `/client` vor sich geht.
 
-////
-
-////
+Wenn das noch nicht geschehen ist, dann erzeuge im Verzeichnis `/client` eine neue Datei mit dem Namen `main.html` und fülle sie mit dem folgenden Code: 
 
 ~~~html
 <head>
@@ -32,25 +35,25 @@ paragraphs: 46
 ~~~
 <%= caption "client/main.html" %>
 
-////
+Dies wird unser Haupt-Template. Wie du siehst ist es reines HTML bis auf ein einzelnes Tag, das das Template einführt: `{{> postsList}}`. Es dient als Einfügepunkt für das zukünftige Template `postsList`. Für den Moment werden wir einige weitere Templates erzeugen.
 
 ### Meteor Templates
 
-////
+In ihrem Kern besteht eine Soziale News-Site aus Postings, die in Listen organisiert sind und genau so werden wir unsere Templates organisieren.
 
-////
+Lass' uns ein Verzeichnis `/templates` unterhalb von `/client` anlegen. Dort werden wir alle unsere Templates einfügen und um die Dinge schön geordnet zu halten, legen wir noch ein Verzeichnis `/posts` unterhalb von `/templates` an. Das dient als Speicherort für die Templates für Postings.
 
 <% note do %>
 
-### Finding Files
+### Dateien finden
 
-////
+Meteor ist gut im Finden von Dateien. Unabhängig davon, wo im Verzeichnis `/client` dein Code lagert, wird Meteor ihn finden und korrekt kompilieren. Das heißt, dass du keine Include-Pfade für JavaScript- oder CSS-Dateien von Hand festlegen brauchst. 
 
-////
+Es heißt auch, dass du genauso gut alle Dateien in das selbe Verzeichnis legen könntest oder sogar den ganzen Code in eine einzige Datei. Weil Meteor jedoch ohnehin alles in eine einzige minifizierte Datei kompiliert halten wir die Dinge lieber gut organisiert und verwenden eine saubere Dateistruktur. 
 
 <% end %>
 
-////
+Wir sind nun so weit, unser zweites Template anzulegen. In `client/templates/posts`, erzeuge `posts_list.html`:
 
 ~~~html
 <template name="postsList">
@@ -63,7 +66,7 @@ paragraphs: 46
 ~~~
 <%= caption "client/views/posts/posts_list.html" %>
 
-////
+und `post_item.html`: 
 
 ~~~html
 <template name="postItem">
@@ -76,35 +79,33 @@ paragraphs: 46
 ~~~
 <%= caption "client/views/posts/post_item.html" %>
 
-////
+Beachte das Attribut `name="postsList"` des Elementes `template`. Das ist der name, der von meteor verwendet wird, um nachzuhalten welches Template wo eingesetzt ist (beachte auch, dass der eigentliche *Dateiname* keine Bedeutung hat).
 
-////
+Nun ist es an der Zeit, Meteors Template-System **Spacebars** vorzustellen. Spacebars besteht aus HTML mit drei zusätzlichen Dingen: *inclusions* (manchmal auch „partials“ genannt), *expressions* (Ausdrücke) und *block helpers*.
 
-////
+*Inclusions* verwenden die Syntax `{{> templateName}}` und teilen Meteor lediglich mit, dass die inclusion durch das Template gleichen Namens ersetzt werden soll.
 
-////
+*Expressions*, wie `{{title}}` rufen entweder eine property des aktuellen Objekts ider den Rückgabewert eines Template-Helpers, wie er in dem aktuellen Template-Manager definier ist. Doch davon wird später die Rede sein.
 
-////
+Scließlich sind *block helpers* besondere Tags, die den Ablauf innerhalb des Templates steuern, wie `{{#each}}…{{/each}}` oder `{{#if}}…{{/if}}`.
 
 <% note do %>
 
-### Going Further
+### Weitere Informationen
 
-////
+Um mehr über Spacebars zu lernen, lies die [Spacebars-Documentation](https://github.com/meteor/meteor/blob/devel/packages/spacebars/README.md) 
 
 <% end %>
 
-////
+Mit dieser Kenntnis konnen wir anfangen, zu verstehen, was hier passiert.
 
-////
+Erstens, wir iterieren im Template `postsLists` mittels des Block-Helpers `{{#each}}…{{/each}}` über ein Objekt `posts`. Dann fügen wir für jede Iteration das Template `postItem` ein. 
 
-////
+Woher kommt dieses Objekt `posts`? Gute Frage. Eigentlich ist es ein **Template-Helper** und du kannst es als einen Platzhalter für einen dynamischen Wert ansehen.
 
-////
+Das Template `postItem` selbst ist ziemlich geradlinig: Es benutzt lediglich drei Expressions: `{{url}}` und `{{title}}`liefern Properties des Dokuments und `{{domain}}` ruft einen Template-Helper auf.
 
-////
-
-### Template Managers
+### Template-Helper
 
 ////
 
@@ -114,7 +115,7 @@ paragraphs: 46
 
 <% note do %>
 
-### Managers?
+### Controllers?
 
 ////
 
