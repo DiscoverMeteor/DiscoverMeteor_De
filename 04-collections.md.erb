@@ -3,23 +3,19 @@ title: Collections
 slug: collections
 date: 0004/01/01
 number: 4
-contents: Learn about Meteor's core feature, realtime collections.|Understand how Meteor's data synchronization works.|Integrate collections with our templates.|Turn our basic prototype into a functioning realtime application!
+contents: Meteor's Kernfeature kennenlernen, Realtime Collections.|Lernen, wie Meteors Datensynchronisation funktioniert.|Lernen, wie du Collections mit deinen Templates integrierst.|Unseren einfachen Prototypen in eine funktionierende Realtime Application verwandeln!
 paragraphs: 72
 ---
 
-////
+Im ersten Kapitel sprachen wir über Meteor's Kernfeature, die automatische Synchronisierung von Daten zwischen dem Client und dem Server.
 
-////
+In diesem Kapitel schauen wir uns genauer an wie das funktioniert, und beobachten die Operation des technologischen Schlüsselstücks welches dies ermöglicht, der Meteor Collection.
 
-////
+Eine Collection ist eine spezielle Datenstruktur, welche sich um das Speichern deiner Daten in der permanenten, Serverseitigen MongoDB Datenbank, sowie deren Synchronisation mit dem Browser jedes verbundenen Users in Echtzeit kümmert.
 
-////
+Wir wollen, dass unsere Posts permanent sind und zwischen Usern geteilt werden. Wir beginnen also mit der Erstellung einer Collection mit dem Namen Posts, um sie darin zu speichern.
 
-////
-
-////
-
-////
+Collections sind ein zentraler Bestandteil jeder App, um also sicherzustellen, dass sie immer zu Beginn definiert werden, erstellen wir sie in der lib directory. Solltest du nicht bereits so weit sein, erstelle eine collections/ Directory in der lib Directory und darin ein File posts.js. Dann füge diesem File folgende Zeile hinzu:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
