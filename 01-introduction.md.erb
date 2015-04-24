@@ -10,11 +10,11 @@ contents: Was macht Meteor so besonders.|Lies die Geschichte dieses Buches.|Lern
 paragraphs: 35
 ---
 
-Laß uns ein kleines Gedankenexperiment durchführen. Stell dir vor du öffnest denselben Ordner in zwei unterschiedlichen Fenstern auf deinem Computer.
+Lass uns ein kleines Gedankenexperiment durchführen. Stell dir vor du öffnest denselben Ordner in zwei unterschiedlichen Fenstern auf deinem Computer.
 
 Jetzt löschst du eine Datei in einem der beiden Fenster. Ist diese Datei im zweiten Fenster ebenfalls verschwunden?
 
-Du mußt diese beiden Schritte nicht ausführen, um das Ergebnis zu kennen. Wenn wir auf dem lokalen Dateisystem etwas ändern, werden diese Änderungen überall übernommen - ohne dass zusätzliche Schritte oder Aktualisierungen notwendig sind. Es passiert einfach.
+Du musst diese beiden Schritte nicht ausführen, um das Ergebnis zu kennen. Wenn wir auf dem lokalen Dateisystem etwas ändern, werden diese Änderungen überall übernommen - ohne dass zusätzliche Schritte oder Aktualisierungen notwendig sind. Es passiert einfach.
 
 Aber wie würde dies im Web funktionieren? Nimm mal an, du öffnest die Administrations-Oberfläche einer WordPress-Installation in zwei Browser-Fenstern und erstellst einen neuen Blog-Eintrag in einem der beiden Fenster. Anders als beim ersten Beispiel mit dem lokalen Dateisystems, wird die Änderung im zweiten Fenster nicht angezeigt - egal wie lange du wartest. Es sei denn, du aktualisierst das Fenster.
 
@@ -26,23 +26,23 @@ Aber Meteor ist Teil einer neuen Art von Frameworks und Technologien, die versuc
 
 Meteor ist eine Plattform, die auf Node.js aufsetzt, um Echtzeit-Web-Apps zu ermöglichen. Meteor sitzt zwischen der Datenbank deiner App und dem Benutzer-Interface und stellt dabei sicher, dass beide synchron sind.
 
-Da es auf Node.js aufsetzt, verwendet Meteor sowohl auf dem Server als auch auf dem Client Javascript. Besser noch - Meteor kann denselben Code sogar mit beiden Seiten teilen.
+Da es auf Node.js aufsetzt, verwendet Meteor sowohl auf dem Server als auch auf dem Client JavaScript. Besser noch - Meteor kann denselben Code sogar mit beiden Seiten teilen.
 
-Das Ergebniss ist eine Plattform die sehr leistungsfähig und dabei doch einfach ist. Sie erspart dir viele Schwierigkeiten und Fallstricke der Echtzeit-Web-App-Entwicklung.
+Das Ergebnis ist eine Plattform die sehr leistungsfähig und dabei doch einfach ist. Sie erspart dir viele Schwierigkeiten und Fallstricke der Echtzeit-Web-App-Entwicklung.
 
 ### Warum Meteor?
 
 Aber warum solltest du Zeit aufwenden, um Meteor - statt einem anderen Web-Framework - zu lernen? Einmal abgesehen von den verschiedenen Funktionen von Meteor selbst glauben wir, dass es auf eines besonders ankommt: Meteor ist einfach zu lernen.
 
-Mehr als jedes andere Framework, ermöglicht es Meteor, eine Echtzeit-Web-Anwendung in wenigen Stunden zu erstellen. Und falls du schon mal eine Benutzer-Schnittstelle für Webbrowser erstellt hast, kennst du Javascript sowieso - du musst also nicht einmal etwas Neues lernen.
+Mehr als jedes andere Framework, ermöglicht es Meteor, eine Echtzeit-Web-Anwendung in wenigen Stunden zu erstellen. Und falls du schon mal eine Benutzer-Schnittstelle für Webbrowser erstellt hast, kennst du JavaScript sowieso - du musst also nicht einmal etwas Neues lernen.
 
 Meteor könnte also das ideale Framework für deine Zwecke sein - oder auch nicht. Aber da man mit Meteor nach ein paar Abenden oder einem Wochenende bereits gut arbeiten kann, kann man es doch wenigstens mal ausprobieren, oder nicht?!
 
 ### Warum dieses Buch?
 
-In den letzten Jahren haben wir an zahlreichen Meteor Projekten gearbeit, sowohl Web-Apps also auch mobile Anwendugen, kommerziell und Open-Source.
+In den letzten Jahren haben wir an zahlreichen Meteor Projekten gearbeitet, sowohl Web-Apps also auch mobile Anwendungen, kommerziell und Open-Source.
 
-Dabei haben wir einen Haufen gelernt, aber es war  nicht immer einfach  gleich eine passende Antwort auf unsere Fragen zu finden. Oft mussten wir viele kleine Teile aus unterschiedlichen Quellen zusammenstückeln. Oder manchmal auch was ganz neues erfinden. Mit diesem Buch wollen wir genau diese Erfahrungen teilen und eine einfach zu benutzende Anleitung geben, wie man eine komplette Meteor-App ganz von Anfang an erstellen kann.
+Dabei haben wir einen Haufen gelernt, aber es war nicht immer einfach  gleich eine passende Antwort auf unsere Fragen zu finden. Oft mussten wir viele kleine Teile aus unterschiedlichen Quellen zusammenstückeln. Oder manchmal auch was ganz neues erfinden. Mit diesem Buch wollen wir genau diese Erfahrungen teilen und auf Basis einer einfachen Schritt-für-Schritt-Anleitung eine vollwertige Meteor App von Grund auf erstellen.
 
 Die App die wir hier bauen, ist eine etwas vereinfachte Version von Social News Websites wie [Hacker News](http://news.ycombinator.com) der [Reddit](http://reddit.com), die wir 'Microscope' nennen (dieser Name nimmt Bezug auf den 'großen Bruder' dieser Anwendung, die Meteor-basierte Open-Source Anwendung [Telescope](http://telesc.pe)). Während wir diese erstellen, zeigen wir alle Elemente, die am Ende eine Meteor-App ausmachen; wie z.B. Benutzer-Konten, Meteor-Collections, Routing und mehr. 
 
@@ -50,15 +50,15 @@ Die App die wir hier bauen, ist eine etwas vereinfachte Version von Social News 
 
 Eines unserer Ziele beim Schreiben dieses Buches war, die Dinge zugänglich und verständlich zu machen. Du solltest auch ohne Erfahrung mit Meteor, node.js, MVC frameworks oder serverseitiger Programmierung folgen können.
 
-Die einzigen Vorkenntnisse, die wir voraussetzen, sind einge gewisse Vertrautheit mit grundlegender JavaScript Syntax und Konzepten. Aber wenn du jemals irgendetwas mit ein paar Zeilen jQuery Code zusammengebastelt hast oder ein wenig mit der Entwickler-Konsole eines Web-Browser herumgespielt hast, solltest du keine Probleme haben. 
+Die einzigen Vorkenntnisse, die wir voraussetzen, sind eine gewisse Vertrautheit mit grundlegender JavaScript Syntax und Konzepten. Aber wenn du jemals irgendetwas mit ein paar Zeilen jQuery Code zusammengebastelt hast oder ein wenig mit der Entwickler-Konsole eines Web-Browser herumgespielt hast, solltest du keine Probleme haben. 
 
 ### Über die Autoren
 
-Falls du dich fragst, wer wir eigentlich sind und warum du uns glauben sollst, gibt's hier noch ein paar Infos über uns beide.
+Falls du dich fragst, wer wir eigentlich sind und warum du uns glauben sollst, gibt's hier noch ein paar Hintergrundinformationen über uns beide.
 
 <%= image "tom-photo.jpg", "portrait" %>
 
-**Tom Coleman** ist Mitbetreiber von [Percolate Studio](http://percolatestudio.com/), einer Web-Entwicklungs-Agentur mit Fokus auf Qualität und Bedienbarkeit. He's one of the maintainers of the [Atmosphere](http://atmosphere.meteor.com) package repository, and is also one of the brains behind many other Meteor open-source projects (such as [Iron Router](https://github.com/EventedMind/iron-router)).
+**Tom Coleman** ist Mitbetreiber von [Percolate Studio](http://percolatestudio.com/), einer Web-Entwicklungs-Agentur mit Fokus auf Qualität und Benutzerfreundlichkeit. Er betreut das [Atmosphere](http://atmosphere.meteor.com) Pakete-Repository und zählt zu den Köpfen vieler anderer Open-Source-Projekte von Meteor (wie beispielsweise [Iron Router](https://github.com/EventedMind/iron-router)).
 
 <%= image "sacha-photo.jpg", "portrait" %>
 
@@ -72,7 +72,7 @@ Wir wollen, dass dieses Buch sowohl für neue Meteor-Anwender, wie auch für erf
 
 Die normalen Kapitel führen Dich durch die Erstellung der App und versuchen, dass alles so schnell wie möglich läuft, ohne dich mit lästigen Details zu blockieren.
 
-Darüberhinaus tauchen die Seitenleisten tiefer in Meteors Innereien ab und helfen dir, ein besseres Verständnis dafür zu geben, was hinter dem Vorhang abläuft. 
+Die Seitenleisten gehen mehr ins Detail und helfen dir, ein besseres Verständnis dafür zu bekommen, was hinter den Kulissen passiert.
 
 Wenn du also Neuling bist, dann kannst du zunächst die Seitenleisten überspringen und später dein Wissen vertiefen.
 
@@ -92,7 +92,7 @@ Das soll aber jetzt nicht heißen, dass du einfach von einem `git checkout` zum 
 
 Möchtest du mehr über die einzelnen Aspekt von Meteor wissen, dann ist die [offizielle Meteor Dokumentation](http://docs.meteor.com/) der beste Ort um nachzuschlagen.
 
-Für Fragen und Problemlösungen empfehlen wir auch [Stack Overflow](http://stackoverflow.com/questions/tagged/meteor) und den  [IRC Kanal](https://webchat.freenode.net/) #meteor, solltest du schnelle Hilfe benötigen. 
+Für Fragen und Problemlösungen empfehlen wir auch [Stack Overflow](http://stackoverflow.com/questions/tagged/meteor) und den [IRC Kanal](https://webchat.freenode.net/) #meteor, solltest du schnelle Hilfe benötigen. 
 
 
 <% note do %>
@@ -103,7 +103,7 @@ Es ist nicht nötig, sich mit Git und Versions-Kontrolle auszukennen, um mit die
 
 Für einen schnellen Einstieg empfehlen wir Nick Farinas [Git Is Simpler Than You Think](http://nfarina.com/post/9868516270/git-is-simpler). 
 
-Den Git-Neulingen empfehlen wir außerdem die [GitHub for Mac](http://mac.github.com/) App. Mit dieser kann man Repositories auch ohne die Kommandozeile verwalten. 
+Den Git-Neulingen empfehlen wir außerdem die [GitHub for Mac](http://mac.github.com/) App. Mit dieser kann man Repositorien auch ohne die Kommandozeile verwalten. 
 
 
 <% end %>
@@ -111,6 +111,6 @@ Den Git-Neulingen empfehlen wir außerdem die [GitHub for Mac](http://mac.github
 ### Getting in Touch
 
 - Willst du mit uns Kontakt aufnehmen, dann schicke uns eine Email an [hello@discovermeteor.com](mailto:hello@discovermeteor.com).
-- Falls du Rechtschreibfehler oder Sonstiges findest, [trage doch bitte einen Bug in dieses GitHub repo](https://github.com/DiscoverMeteor/book/issues) ein. 
-- Bei Problemen mit dem Microscope-Code,[trage bitte einen Bug in das Microscope Repository](https://github.com/DiscoverMeteor/Microscope/issues) ein.
+- Falls du Rechtschreibfehler findest oder auf inhaltliche Fehler im Buch stößt, dann [trage doch bitte einen Bug in dieses GitHub repo](https://github.com/DiscoverMeteor/book/issues) ein. 
+- Bei Problemen mit dem Microscope-Code [trage bitte einen Bug in das Microscope Repository](https://github.com/DiscoverMeteor/Microscope/issues) ein.
 - Und schließlich kannst du bei anderen Fragen auch einen Kommentar hier hinterlassen. 
