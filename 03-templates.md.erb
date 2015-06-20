@@ -177,76 +177,57 @@ Da wir den Helper `postsList` definiert haben, steht er nun im Template zur Verf
 
 ### Der `domain` Helper
 
-
-
-
-
-////
-
-~~~html
-<template name="postsList">
-  <div class="posts">
-    {{#each posts}}
-      {{> postItem}}
-    {{/each}}
-  </div>
-</template>
-~~~
-<%= caption "client/views/posts/posts_list.html" %>
-
-////
-
-### The Value of "this"
-
-////
+Ähnlich wie zuvor, erstellen wir nun die Datei `post_item.js`, die die Logik des Templates `postItem` enthalten soll:
 
 ~~~js
 Template.postItem.helpers({
-  domain: function() {
+  domain: function(){
     var a = document.createElement('a');
     a.href = this.url;
     return a.hostname;
   }
+
 });
 ~~~
-<%= caption "client/views/posts/post_item.js" %>
+<%= caption "client/templates/posts/post_item.js" %>
 
-<%= commit "3-2", "Setup a `domain` helper on the `postItem`." %>
+Dieses mal ist der Wert des Helpers `domain` kein Array, sondern eine anonyme Funktion. Im Vergleich zu unserem vorigen Beispiel mit den statischen Beispieldaten, ist dieses Muster viel gebräuchlicher (und nützlicher).
 
-////
+<%= screenshot "3-2", "Domains für jeden Link darstellen" %>
 
-<%= screenshot "3-2", "Displaying domains for each links." %>
+Durch ein bisschen JavaScript Magie, nimmt der Helper `domain` eine URL und gibt deren Domain zurück. Aber woher nimmt er diese URL überhaupt?
 
-////
+Um diese Frage zu beantworten, müssen wir uns noch einmal unser Template `posts_list.html` ansehen. Der Block-Helper `{{#each}}` iteriert nicht nur über unser Array, sondern er **setzt auch den Wert von `this` inerhalb des Blocks auf das aktuell zurückgegebene Objekt.**
 
-////
+Das bedeutet, dass zwischen beiden `{{#each}}` Tags, jeder Post nacheinander `this` zugewiesen wird und das setzt sich auch in der inkludierten Template-Logik `post_item.js` fort.
 
-////
+Jetzt verstehen wir warum `this.url`, die URL des aktuellen Posts zurückgibt. Desweiteren weiß Meteor, dass wenn wir `{{title}}` oder `{{url}}` in unserem Template `post_item.html` benutzen, wir eigentlich `this.title` und `this.url` meinen und gibt so die korrekten Werte zurück.
 
-////
+<%= commit "3-2", "Setup a `domain` helper on the `postItem` " %>
 
 <% note do %>
 
 ### JavaScript Magic
 
-////
+Obwohl nicht Meteor-spezifisch, findest du hier eine kurze Erklärung der oben stehenden "JavaScript Magie". Zuerst erstellen wir einen leeres HTML-Link Element `(a)` und speichern es in einer Variable.
 
-////
+Dann setzen wir das `href` Attribut gleich der URL des aktuellen Posts. (wie wir gerade gesehen haben, repräsentiert `this` in einem Helper das Objekt, mit dem gerade gearbeitet wird).
 
-////
+Zum Schluss machen wir uns die spezielle Eigenschaft `hostname` des `a` Elements zu nutzen und erhalten so die Domain ohne den Rest der URL.
 
 <% end %>
 
-////
+Wenn man bis hier korrekt mitgearbeitet hat, sollte man eine Liste von Posts im Browser angezeigt bekommen. Diese Liste ist statisch und nutzt noch keine von Meteors echtzeit Features. Wie du das ändern kannst, zeigen wir dir im nächsten Kapitel!
+
 
 <% note do %>
 
 ### Hot Code Reload
 
-////
+Vielleicht ist dir schon aufgefallen, dass du deine Seite im Browser nicht manuell neu laden musst, nachdem du eine Änderung an der Datei vorgenommen hast.
 
-////
+Das liegt daran, dass Meteor ständig alle Dateien im Projekt-Verzeichnis überwacht und automatisch den Browser neu läd, sobald eine Datei verändert wird.
 
-////
+Meteors hot code reload ist ziemlich intelligent, so dass es sogar den Zustand deiner App zwischen zwei Aktualisierungen der Seite aufrecht erhält!
 
 <% end %>
