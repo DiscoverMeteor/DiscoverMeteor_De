@@ -3,49 +3,47 @@ title: Routing
 slug: routing
 date: 0005/01/01
 number: 5
-contents: Learne über das Routing in Meteor.|Erstelle Post Diskussionsseiten mit eindeutigen URLs.|Lerne wie Du fachgerecht die URLs verlinkst.
+contents: mehr über das Routing in Meteor erfahren|die Post Diskussionsseiten mit eindeutigen URLs erstellen|lernen wie man diese URLs korrekt verlinkt.
 paragraphs: 72
 ---
 
-Nun, da wir eine Liste von Posts haben (welche letztendlich vom User eingereicht werden), brauchen wir für jeden dieser Posts eine Seite, wo unsere User über eben jenen diskutieren können.
+Da wir jetzt eine Liste von Posts (die am Ende von Benutzern erstellt werden) haben, brauchen wir eine eigene Post Seite, auf der Nutzer die Möglichkeit haben über jeden Post zu diskutieren.
 
-Wir möchten diese Seiten via *Permalink* erreichbar machen, das ist eine URL mit der Form `http://myapp.com/posts/xyz` (`xyz` ist eine MongoDB `_id`) welche jedem Post zuordbar ist.
+Wir möchten diese Seiten via *Permalink* erreichbar machen, das ist eine URL der Form `http://myapp.com/posts/xyz` (`xyz` ist eine MongoDB `_id`) welche jeden Post eindeutig identifiziert.
 
-Das bedeutet, dass wir irgend eine Art *Routing* benötigen, um die URL auszulesen und den richtigen Inhalt anzuzeigen.
+Das bedeutet, dass wir eine Art *Routing* benötigen, um die URL aus dem Browser auszulesen und den zugehörigen Inhalt anzuzeigen.
 
 ### Hinzufügen des Iron Router Packages
 
-[Iron Router](https://github.com/EventedMind/iron-router) ist ein Routing Package, welches speziell für Meteor-Apps konzipiert wurde.
+[Iron Router](https://github.com/EventedMind/iron-router) ist ein Routing Package, das speziell für Meteor-Apps konzipiert wurde.
 
-Es hilft nicht nur beim Routing (Pfade aufsetzen), sondern es kümmert sich auch um Filter (Zuweisung von Aktionen auf eben jene Pfade) und managt sogar Subscriptions (Steuerung welche Routen auf welche Daten zugreifen dürfen). (Notiz: Iron Router wurde teilweise von *Discover Meteor* co-author Tom Coleman entwickelt.)
+Es hilft nicht nur beim Routing (Pfade aufsetzen), sondern es kümmert sich auch um Filter (Zuweisung von Aktionen auf eben jene Pfade) und verwaltet sogar Subscriptions (Steuerung welche Route auf welche Daten zugreifen darf). (Notiz: Iron Router wurde teilweise von *Discover Meteor* co-author Tom Coleman entwickelt.)
 
-Lass uns zerst das Package von Atmosphere installieren:
+Zunächst installieren wir das Package von Atmosphere:
 
 ~~~bash
-$ mrt add iron-router
+$ meteor add iron:router
 ~~~
 <%= caption "Terminal" %>
 
-Dieser Befehl lädt und installiert das iron-router Package, vollständig einsatzbereit, in deine App. Beachte, dass du gegebenenfalls Deine Meteor-App neustarten musst, (mit `strg+c` um den Prozess zu killen, dann `mrt` zum starten der App) bevor das Package benutzt werden kann.
-
-Beachte ebenfalls, dass Iron Router ein third-party Package ist. Das bedeutet, dass du Meteorite brauchst um es zu installieren (`meteor add iron-router` funktioniert nicht).
+Dieser Befehl lädt das iron-router Package in unsere App herunter und installiert es vollständig einsatzbereit. Beachte, dass du manchmal deine Meteor-App neustarten musst, (mit `strg+c` um den Prozess zu beenden, dann `meteor` zum starten) bevor ein Package benutzt werden kann.
 
 <% note do %>
 
 ### Router Vokabular
 
-Wir schneiden in diesem Kapitel eine menge verschiedener Features des Routers an. Falls du Erfahrung mit solchen Frameworks wie Rails hast, bist Du mit den meisten dieser Konzepte vertraut. Jedoch falls nicht, ist hier ein kleines Glossar um dir den Start zu erleichtern:
+Wir schneiden in diesem Kapitel eine Menge verschiedener Features des Routers an. Falls du Erfahrung mit einem Framework wie z.B. Rails hast, wirst du mit den meisten Konzepten bereits vertraut sein. Falls nicht, befindet sich hier ein kleines Glossar um dir den Start zu erleichtern:
 
-- **Routes**: Eine Route ist der Basisbaustein des Routing. Es ist im Grunde genommen ein Set von Instruktionen, welche der App mitteilen, wo es hingeht und was zu tun ist, wenn sie auf eine URL trifft.
-- **Paths**: Ein Path (Pfad) ist eine URL innerhalb deiner App. Sie kann statisch sein (`/terms_of_service`) oder dynamisch (`/posts/xyz`), und sogar Query-Parameter beinhalten (`/search?keyword=meteor`).
-- **Segments**: Die einzelnen teile des Pfades, getrennt mit Slashes (`/`).
-- **Hooks**: Hooks sind Aktionen, welche du vor, nach, oder selbst während des Routing-Prozesses ausführen möchtest. Ein typisches Beispiel wäre das Überprüfen der Userrechte vor dem Anzeigen einer Seite.
-- **Filter**: Filter sind einfache Hooks die du global für eine oder mehrere Routes definierst.
-- **Route Templates**: Jede Route muss auf ein Template verweisen. Wenn Du keines angibst, wird der Router nach eine Template mit dem gleichen Namen wie der Route suchen.
-- **Layouts**: Du kannst dir Layouts als digitale Bilderrahmen vorstellen. Sie enthalten den gesamten HTML-Code welche das aktuelle Template umgeben, und ändern sich nicht, selbst wenn das Template sich ändert.
+- **Routes**: Eine Route ist der Basisbaustein des Routing. Es ist im Grunde genommen die Reihe von Anweisungen, die der App mitteilt, wohin die Route zeigt und was zu tun ist, wenn sie auf eine URL trifft.
+- **Paths**: Ein Pfad ist eine URL innerhalb der App. Sie kann statisch sein (`/terms_of_service`) oder dynamisch (`/posts/xyz`), und sogar Query-Parameter beinhalten (`/search?keyword=meteor`).
+- **Segments**: Die einzelnen Teile des Pfades, getrennt durch Slashes (`/`).
+- **Hooks**: Hooks sind Aktionen, welche du vor, nach, oder sogar während des Routing-Prozesses ausführen möchtest. Ein typisches Beispiel ist das Überprüfen der Userrechte vor dem Anzeigen einer Seite.
+- **Filter**: Filter sind Hooks die global für eine oder mehrere Routen definiert werden.
+- **Route Templates**: Jede Route muss auf ein Template verweisen. Wenn Du keines definierst, wird der Router nach einem Template mit dem Namen der Route suchen.
+- **Layouts**: Man kann sich Layouts als Rahmen für den Inhalt vorstellen. Sie enthalten den gesamten HTML-Code welche das aktuelle Template umgeben und ändern sich nicht, selbst wenn das Template sich verändert.
 - **Controller**: Manchmal wird dir auffallen, dass viele deiner Templates die gleichen Parameter benutzen. Anstelle deinen Code zu kopieren, kannst du diese Routen von einem *Routing Controller* erben lassen, welcher die gesamte Routinglogik enthält.
 
-Für mehr Informationen über den Iron Router, schau dir [die volle Dokumentation auf GitHub](https://github.com/EventedMind/iron-router) an.
+Für weitere Informationen zum Iron Router, schau dir [die volle Dokumentation auf GitHub](https://github.com/EventedMind/iron-router) an.
 
 <% end %>
 
