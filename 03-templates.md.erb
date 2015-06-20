@@ -110,43 +110,36 @@ Das Template `postItem` selbst ist ziemlich einfach: Es benutzt lediglich drei E
 Bis jetzt haben wir uns mit Spacebars beschäftigt, was kaum mehr als HTML mit ein paar zusätzlichen Tags ist. Anders als andere Sprachen wie PHP (oder sogar gewöhnliche HTML-Seiten, die JavaScript einbinden können), separiert Meteor Templates
 und deren Logik, so dass Templates selbst nicht viel machen.
 
-Um zum Leben erweckt zu werden, braucht ein Template **helper**. Man kann sich diese helper wie Köche vorstellen, die rohe Zutaten (deine Daten) nehmen und verarbeiten, bevor
+Um zum Leben erweckt zu werden, braucht ein Template **helper**. Man kann sich diese Helper wie Köche vorstellen, die rohe Zutaten (deine Daten) nehmen und verarbeiten, bevor
 sie das fertige Gericht (das Template) and den Kellner übergeben, der es dir präsentiert.
 
-In anderen Worten: während die Aufgabe des Templates darauf beschränkt ist, Variablen anzuzeigen oder darüber zu itterieren, sind es die helper, die den Hauptteil der Arbeit erledigen
+In anderen Worten: während die Aufgabe des Templates darauf beschränkt ist, Variablen anzuzeigen oder darüber zu iterieren, sind es die Helper, die den Hauptteil der Arbeit erledigen
 indem sie jeder Variable einen Wert zuweisen.
-
-////
 
 <% note do %>
 
-### Controllers?
+### Controller?
 
-////
+Man könnte meinen, dass die Datei mit den Template-Helpern eine Art Controller darstellt. Doch dies ist missverständlich (zumindest im Sinne von MVC), da Controller sonst eine etwas andere Rolle spielen.
 
-////
-
-////
+Wir haben uns deshalb entschieden, diesen Begriff zu vermeiden und einfach auf "Template-Helper" oder "Template-Logik" zu verweisen, wenn es um den, mit Templates verknüpften, JavaScript Code geht.
 
 <% end %>
 
-////
+Um die Dinge zu vereinfachen, übernehmen wir die Konvention und benennen die Datei mit den Helpern nach dem zugehörigen Template, aber mit einer **.js** Endung. Also erstellen wir jetzt die Datei `posts_list.js` im Verzeichnis `client/templates/posts` und beginnen darin unseren ersten Helper zu erstellen:
 
 ~~~js
 var postsData = [
   {
     title: 'Introducing Telescope',
-    author: 'Sacha Greif',
-    url: 'http://sachagreif.com/introducing-telescope/'
-  }, 
+    url: 'http://sachagreif.com/introducing-telescope'
+  },
   {
     title: 'Meteor',
-    author: 'Tom Coleman',
     url: 'http://meteor.com'
-  }, 
+  },
   {
     title: 'The Meteor Book',
-    author: 'Tom Coleman',
     url: 'http://themeteorbook.com'
   }
 ];
@@ -154,17 +147,39 @@ Template.postsList.helpers({
   posts: postsData
 });
 ~~~
-<%= caption "client/views/posts/posts_list.js" %>
+<%= caption "client/templates/posts/posts_list.js" %>
 
-////
+Wenn man alles richtig gemacht hat, sollte das im Browser ungefähr so aussehen:
 
-<%= screenshot "3-1", "Our first templates with static data" %>
+<%= screenshot "3-1", "Unser erstes Template mit statischen Daten" %>
 
-<%= commit "3-1", "Added basic posts list template and static data." %>
+Wir machen hier zwei Dinge: zuerst schreiben wir Beispieldaten in das Array `postsData`. Diese Daten würden normalerweise aus einer Datenbank kommen, aber da wir noch nicht gelernt haben wie das funktioniert (kommt im nächsten Kapitel!), bedienen wir uns dieses "Tricks" und benutzen statische Daten.
 
-////
+Dann benutzen wir Meteors Funktion `Template.postsList.helpers()` um einen Template-Helper namens `posts` zu erstellen, der das Array `postsData` zurückgibt, dasss wir gerade definiert haben.
 
-////
+Wie du dich vielleicht erinnern kannst, benutzen wir den Helper `posts` bereits in unserem `postsList` Template:
+
+~~~html
+<template name="postsList">
+  <div class="posts page">
+    {{#each posts}}
+      {{> postItem}}
+    {{/each}}
+  </div>
+</template>
+~~~
+<%= caption "client/templates/posts/posts_list.html" %>
+
+Da wir den Helper `postsList` definiert haben, steht er nun im Template zur Verfügung, wo wir nun über unser Array`postsData` iterieren und jedes Objekt, das darin enthalten ist, an das Template `postItem` übergeben lassen können.
+
+<%= commit "3-1", "Added basic posts list template and static data" %>
+
+
+### Der `domain` Helper
+
+
+
+
 
 ////
 
