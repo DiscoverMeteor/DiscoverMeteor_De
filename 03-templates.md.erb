@@ -79,15 +79,15 @@ und `post_item.html`:
 ~~~
 <%= caption "client/templates/posts/post_item.html" %>
 
-Beachte das Attribut `name="postsList"` des Elementes `template`. Das ist der name, der von meteor verwendet wird, um nachzuhalten welches Template wo eingesetzt ist (beachte auch, dass der eigentliche *Dateiname* keine Bedeutung hat).
+Beachte das Attribut `name="postsList"` des Elementes `template`. Das ist der Name, der von Meteor verwendet wird, um nachzuverfolgen, welches Template wo eingesetzt ist (beachte, dass der eigentliche *Dateiname* keine Bedeutung hat).
 
 Nun ist es an der Zeit, Meteors Template-System **Spacebars** vorzustellen. Spacebars besteht aus HTML mit drei zusätzlichen Dingen: *inclusions* (manchmal auch „partials“ genannt), *expressions* (Ausdrücke) und *block helpers*.
 
-*Inclusions* verwenden die Syntax `{{> templateName}}` und teilen Meteor lediglich mit, dass die inclusion durch das Template gleichen Namens ersetzt werden soll.
+*Inclusions* verwenden die Syntax `{{> templateName}}` und teilen Meteor lediglich mit, dass die inclusion durch das Template gleichen Namens ersetzt werden soll (in unserem Fall `postItem`).
 
-*Expressions*, wie `{{title}}` rufen entweder eine property des aktuellen Objekts ider den Rückgabewert eines Template-Helpers, wie er in dem aktuellen Template-Manager definier ist. Doch davon wird später die Rede sein.
+*Expressions*, wie `{{title}}` rufen entweder eine property des aktuellen Objekts oder den Rückgabewert eines Template-Helpers, wie er in dem aktuellen Template-Manager definiert ist (dazu später mehr).
 
-Scließlich sind *block helpers* besondere Tags, die den Ablauf innerhalb des Templates steuern, wie `{{#each}}…{{/each}}` oder `{{#if}}…{{/if}}`.
+Schließlich sind *block helpers* besondere Tags, die den Ablauf innerhalb des Templates steuern, wie `{{#each}}…{{/each}}` oder `{{#if}}…{{/if}}`.
 
 <% note do %>
 
@@ -97,13 +97,13 @@ Um mehr über Spacebars zu lernen, lies die [Spacebars-Documentation](https://gi
 
 <% end %>
 
-Mit dieser Kenntnis konnen wir anfangen, zu verstehen, was hier passiert.
+Mit diesem Wissen konnen wir anfangen, zu verstehen, was hier passiert.
 
-Erstens, wir iterieren im Template `postsLists` mittels des Block-Helpers `{{#each}}…{{/each}}` über ein Objekt `posts`. Dann fügen wir für jede Iteration das Template `postItem` ein. 
+Zuerst iterieren wir im Template `postsLists` mittels des Block-Helpers `{{#each}}…{{/each}}` über ein Objekt `posts`. Dann fügen wir für jede Iteration das Template `postItem` ein. 
 
 Woher kommt dieses Objekt `posts`? Gute Frage. Eigentlich ist es ein **Template-Helper** und du kannst es als einen Platzhalter für einen dynamischen Wert ansehen.
 
-Das Template `postItem` selbst ist ziemlich geradlinig: Es benutzt lediglich drei Expressions: `{{url}}` und `{{title}}`liefern Properties des Dokuments und `{{domain}}` ruft einen Template-Helper auf.
+Das Template `postItem` selbst ist ziemlich einfach: Es benutzt lediglich drei Expressions: `{{url}}` und `{{title}}`liefern Properties des Dokuments und `{{domain}}` ruft einen Template-Helper auf.
 
 ### Template-Helper
 
