@@ -35,21 +35,21 @@ Wenn das noch nicht geschehen ist, dann erzeuge im Verzeichnis `/client` eine ne
 ~~~
 <%= caption "client/main.html" %>
 
-Dies wird unser Haupt-Template. Wie du siehst ist es reines HTML bis auf ein einzelnes Tag, das das Template einführt: `{{> postsList}}`. Es dient als Einfügepunkt für das zukünftige Template `postsList`. Für den Moment werden wir einige weitere Templates erzeugen.
+Dies wird unser Haupt-Template. Wie du siehst, ist es reines HTML bis auf ein einzelnes Tag, das das Template einführt: `{{> postsList}}`. Es dient als Einfügepunkt für das zukünftige Template `postsList`. Für den Moment werden wir einige weitere Templates erzeugen.
 
 ### Meteor Templates
 
 In ihrem Kern besteht eine Soziale News-Site aus Postings, die in Listen organisiert sind und genau so werden wir unsere Templates organisieren.
 
-Lass' uns ein Verzeichnis `/templates` unterhalb von `/client` anlegen. Dort werden wir alle unsere Templates einfügen und um die Dinge schön geordnet zu halten, legen wir noch ein Verzeichnis `/posts` unterhalb von `/templates` an. Das dient als Speicherort für die Templates für Postings.
+Lass' uns ein Verzeichnis `/templates` unterhalb von `/client` anlegen. Dort werden wir alle unsere Templates einfügen und um die Dinge schön geordnet zu halten, legen wir noch ein Verzeichnis `/posts` unterhalb von `/templates` an, um die Templates für Postings zu speichern.
 
 <% note do %>
 
 ### Dateien finden
 
-Meteor ist gut im Finden von Dateien. Unabhängig davon, wo im Verzeichnis `/client` dein Code lagert, wird Meteor ihn finden und korrekt kompilieren. Das heißt, dass du keine Include-Pfade für JavaScript- oder CSS-Dateien von Hand festlegen brauchst. 
+Meteor ist gut im Finden von Dateien. Unabhängig davon, wo im Verzeichnis `/client` sich dein Code befindet, wird Meteor ihn finden und korrekt kompilieren. Das heißt, dass du keine Include-Pfade für JavaScript- oder CSS-Dateien von Hand festlegen brauchst. 
 
-Es heißt auch, dass du genauso gut alle Dateien in das selbe Verzeichnis legen könntest oder sogar den ganzen Code in eine einzige Datei. Weil Meteor jedoch ohnehin alles in eine einzige minifizierte Datei kompiliert halten wir die Dinge lieber gut organisiert und verwenden eine saubere Dateistruktur. 
+Es heißt auch, dass du genauso gut alle Dateien in das selbe Verzeichnis legen könntest oder sogar den ganzen Code in eine einzige Datei. Weil Meteor jedoch ohnehin alles in eine einzige minifizierte Datei kompiliert, halten wir die Dinge lieber gut organisiert und verwenden eine saubere Dateistruktur. 
 
 <% end %>
 
