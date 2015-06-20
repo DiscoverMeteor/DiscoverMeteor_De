@@ -107,9 +107,14 @@ Das Template `postItem` selbst ist ziemlich einfach: Es benutzt lediglich drei E
 
 ### Template-Helper
 
-////
+Bis jetzt haben wir uns mit Spacebars beschäftigt, was kaum mehr als HTML mit ein paar zusätzlichen Tags ist. Anders als andere Sprachen wie PHP (oder sogar gewöhnliche HTML-Seiten, die JavaScript einbinden können), separiert Meteor Templates
+und deren Logik, so dass Templates selbst nicht viel machen.
 
-////
+Um zum Leben erweckt zu werden, braucht ein Template **helper**. Man kann sich diese helper wie Köche vorstellen, die rohe Zutaten (deine Daten) nehmen und verarbeiten, bevor
+sie das fertige Gericht (das Template) and den Kellner übergeben, der es dir präsentiert.
+
+In anderen Worten: während die Aufgabe des Templates darauf beschränkt ist, Variablen anzuzeigen oder darüber zu itterieren, sind es die helper, die den Hauptteil der Arbeit erledigen
+indem sie jeder Variable einen Wert zuweisen.
 
 ////
 
