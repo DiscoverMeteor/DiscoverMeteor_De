@@ -7,20 +7,20 @@ contents: Meteor's Kernfeature kennenlernen, Realtime Collections.|Lernen, wie M
 paragraphs: 72
 ---
 
-Im ersten Kapitel sprachen wir über Meteor's Kernfeature, die automatische Synchronisierung von Daten zwischen dem Client und dem Server.
+Im ersten Kapitel haben wir über Meteor's Kernfeature gesprochen, die automatische Synchronisierung von Daten zwischen Client und Server.
 
-In diesem Kapitel schauen wir uns genauer an wie das funktioniert, und beobachten die Operation des technologischen Schlüsselstücks welches dies ermöglicht, der Meteor Collection.
+In diesem Kapitel werfen wir einen genaueren Blick darauf, wie das funktioniert und betrachten die Arbeitsweise der wichtigsten Technologie, die dies ermöglicht, der Meteor **Collection**.
 
-Eine Collection ist eine spezielle Datenstruktur, welche sich um das Speichern deiner Daten in der permanenten, Serverseitigen MongoDB Datenbank, sowie deren Synchronisation mit dem Browser jedes verbundenen Users in Echtzeit kümmert.
+Eine Collection ist eine spezielle Datenstruktur, die sich um das Speichern von Daten in der permanenten, serverseitigen MongoDB Datenbank, sowie deren Synchronisation mit dem Browser jedes verbundenen Users in Echtzeit kümmert.
 
-Wir wollen, dass unsere Posts permanent sind und zwischen Usern geteilt werden. Wir beginnen also mit der Erstellung einer Collection mit dem Namen Posts, um sie darin zu speichern.
+Wir wollen, dass unsere Posts dauerhaft gepsichert sind und zwischen Usern geteilt werden, also beginnen wir damit eine Collection namens `Posts` zu erstellen um sie dort zu speichern.
 
-Collections sind ein zentraler Bestandteil jeder App, um also sicherzustellen, dass sie immer zu Beginn definiert werden, erstellen wir sie in der lib directory. Solltest du nicht bereits so weit sein, erstelle eine collections/ Directory in der lib Directory und darin ein File posts.js. Dann füge diesem File folgende Zeile hinzu:
+Collections sind ein zentraler Bestandteil jeder App, um also sicherzustellen, dass sie immer zu Beginn definiert werden, erstellen wir sie in der lib directory. Sofern noch nicht geschehen, erstelle im Ordner `lib` einen Unterordner `collections/` und darin eine Datei posts.js. Dann füge dieser Datei folgende Zeile hinzu:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
 ~~~
-<%= caption "collections/posts.js" %>
+<%= caption "lib/collections/posts.js" %>
 
 <%= commit "4-1", "Added a posts collection" %>
 
@@ -30,54 +30,80 @@ Posts = new Meteor.Collection('posts');
 
 ### To Var Or Not To Var?
 
-////
+In Meteor wird das Schlüsselwort `var` benutzt um den Geltungsbereich eines Objekts auf die aktuelle Datei zu beschränken. In unserem Beispiel, wollen wir die Collection `Posts` aber in unserer ganzen App verfügbar machen, weshalb wir `var` *nicht* benutzen.
 
 <% end %>
 
-////
+### Daten speichern
+
+Webanwendungen verfügen über drei grundsätzliche Möglichkeiten ihre Daten zu speichern, jede hat dabei eine andere Aufgabe:
+
+ - **Browser (Memory):** Dinge wie JavaScript Variablen werden im temporären Speicher (Memory) des Browsers gespeichert, diese Daten sind *nicht* permanent: sie sind lokal im aktuellen Browser-Tab und gehen verloren, sobald man es schließt
+ - **Browser (Storage):** Browser können Daten auch dauerhaft speichern indem sie z.B.Cookies oder den permanenten Speicher ([Local Storage](http://diveintohtml5.info/storage.html)) benutzen. Auch wenn diese Daten von Session zu Session bestehen bleiben, sind sie *lokal* beim jeweiligen Benutzer (aber über alle Tabs verfügbar) und können deshalb nur schwer mit anderen Nutzern geteilt werden.
+ - **Serverseitige Datenbank:** der beste Ort um Daten dauerhaft zu speichern, die man mehr als einem Benutzer zugänglich machen möchte, ist eine gute alte Datenbank. (MongoDB ist die Standardlösung bei Meteor)
+ 
+ Meteor benutzt alle drei Varianten und synchronisiert zeitweise von einem zum anderen Speicherort (wie wir bald sehen werden). Davon abgesehen, bleibt die Datenbank die "kanonische" Quelle, die den Stamm der Daten enthält.
+
+### Client & Server
+
+Code, der sich in anderen Ordnern als `clients/` oder `server/` befindet, wird in beiden Kontexten ausgeführt. Damit ist beispielsweise die Collection `Posts` für Client und Server verfügbar. Nichtsdestotrotz kann das was die Collection tut, in beiden Umgebungen sehr unterschiedlich sein.
+
+Auf dem Server ist es die Aufgabe der Collection mit der MongoDB Datenbank zu kommunizieren und Änderungen zu lesen oder zu schreiben. In dieser Hinsicht kann sie mit einer Standard Datenbank-Bibliothek verglichen werden.
+
+Beim Client hingegen ist die Collection eine Kopie einer Teilmenge der realen originalen Stammdaten. Die clientseitige Collection wird permanent und (meist) transparent in echtzeit mit der Teilmenge synchronisiert.
 
 <% note do %>
 
 ### Console vs Console vs Console
 
-////
+In diesem Kapitel beginnen wir die **Browser Konsole** zu benutzen, die man nicht mit dem **terminal**, der **Meteor Shell** oder der **Mongo Shell** verwechseln darf. Hier ist eine kurze Einführung zu jedem davon:
+
 
 #### Terminal
 
-<%= screenshot "terminal", "The Terminal" %>
+<%= screenshot "terminal", "Das Terminal" %>
 
-- ////
-- ////
-- ////
-- ////
+- wird im Betriebssystem aufgerufen
+- **serverseitiges** `console.log()` wird hier ausgegeben
+- Prompt: `$`
+- auch bekannt als: Shell, Bash
 
 #### Browser Console
 
-<%= screenshot "browser-console", "The Browser Console" %>
+<%= screenshot "browser-console", "Die Browser Konsole" %>
 
-- ////
-- ////
-- ////
-- ////
+- wird innerhalb des Browsers aufgerufen, führt JavaScript Code aus
+- **clientseitiges** console.log() wird hier ausgegeben
+- Prompt: `❯`
+- auch bekannt als: JavaScript Konsole, Dev-Tools Konsole
+
+#### Meteor Shell
+
+<%= screenshot "meteor-shell", "Die Meteor Shell" %>
+
+- wird im Terminal mit `meteor shell` aufgerufen
+- gewährt direkten Zugang zum serverseitigen Code der Anwendung
+- Prompt: `>`
 
 #### Mongo Shell
 
-<%= screenshot "mongo-shell", "The Mongo Shell" %>
+<%= screenshot "mongo-shell", "Die Mongo Shell" %>
 
-- ////
-- ////
-- ////
-- ////
+- wird im Terminal mit `meteor mongo` aufgerufen
+- gewährt direkten Zugang zur Datenbank der Anwendung
+- Prompt: `>`
+- auch bekannt als: Mongo Konsole
 
-////
+
+Beachte, dass man in keinem Fall als Teil eines Befehls das Prompt Zeichen (`$`, `❯`, oder `>`) eingibt. Auch kann man davon ausgehen, dass jede Zeile, die nicht mit dem Prompt beginnt, eine Ausgabe des vorangegangen Befehls ist.
 
 <% end %>
 
 ### Server-Side Collections
 
-////
+Kommen wir nun zurück zum Server, wo sich die Collection wie eine API in die Mongo Datenbank verhält. Im serverseitigen code, ermöglicht uns das, Mongo Befehle wie `Posts.insert()` oder `Posts.update()` zu schreiben, die dann Änderungen an der `posts` Collection in Mongo bewirken.
 
-////
+Um einen Blick in die Mongo Datenbank zu werfen, öffne ein zweites Terminal Fenster (während `meteor` noch im ersten Fenster läuft) und begib dich in das Verzeichnis deiner App. Führe dann den Befehl `meteor mongo` aus um eine Mongo shell zu starten in der man standard Mongo Befehle ausführen (und wie gewohnt mit `strg+c` beenden) kann. Lass uns z.B. einen neuen Post einfügen:
 
 ~~~bash
 > db.posts.insert({title: "A new post"});
@@ -85,57 +111,57 @@ Posts = new Meteor.Collection('posts');
 > db.posts.find();
 { "_id": ObjectId(".."), "title" : "A new post"};
 ~~~
-<%= caption "The Mongo Shell" %>
+<%= caption "Die Mongo Shell" %>
 
 <% note do %>
 
-### Mongo on Meteor.com
+### Mongo auf Meteor.com
 
-////
+Beachte, dass bei Apps, die auf *.meteor.com gehostet werden, ein Zugriff auf die Mongo shell der installierten Anwendung mit dem Befehl `meteor mongo myApp` möglich ist.
 
-////
+Wo wir schon dabei sind, mit folgendem Befehl kannst du die Logs deiner Anwendung einsehen: `meteor logs myApp`.
 
 <% end %>
 
-////
+Mongos Syntax wirkt vertraut, da er eine JavaScript Schnittstelle nutzt. Wir werden zwar keine weiteren Daten über die Mongo Shell verändern, aber wir werden ab und zu mal einen Blick hinein werfen, um zu sehen was sich darin befindet.
 
 ### Client-Side Collections
 
-////
+Clientseitig werden die Collections interessanter. Deklariert man `Posts = new Mongo.Collection('posts')`; auf der Clientseite, erzeugt man eine *lokale*, *im Browsercache* liegende, Kopie der realen Mongo Collection. Wenn wir von einer clientseitigen Collection als "cache" sprechen, meinen wir damit, dass sie eine *Teilmenge* der Daten enhält und einen sehr *schnellen* Zugriff bietet.
 
-////
+Es ist wichtig diese Punkte zu verstehen, da sie die Grundlage dafür bilden, wie Meteor funktioniert. Im Allgemeinen besteht eine clientseitige Collection aus einer Teilmenge aller Dokumente aus einer mongo Collection (schließlich wollen wir normalerweise nicht unsere *gesamte* Datenbank an den Client schicken.).
 
-////
+Zum Zweiten befinden sich diese Dokumente dann im *Browser Speicher* und es kann praktisch ohne Verzögerung darauf zugegriffen werden. Es gibt also keine langsames hin- und her Senden mit dem Server oder der Datenbank um Daten zu erhalten, wenn man `Posts.find()` auf der Clientseite aufruft, da die Daten bereits vorher geladen wurden.
 
 <% note do %>
 
 ### Introducing MiniMongo
 
-////
+Meteors clientseitige Mongo Implementierung heißt MiniMongo. Es ist noch keine perfekte Implementierung und es kann vorkommen, dass bestimmte Mongo Features nicht in MiniMongo funktionieren. Nichtsdestotrotz funktionieren alle Funktionen, die in diesem Buch erklärt werden sowohl in Mongo als auch in MiniMongo
 
 <% end %>
 
 ### Client-Server Communication
 
-////
+Der wichtigste Teil von alledem ist wie die clientseitige Collection ihre Daten mit der serverseitigen Collection gleichen Namens (`posts` in unserem Fall) synchronisiert. Anstatt das im Detail zu erklären, schauen wir uns einfach an was passiert.
 
-////
+Öffne dazu zwei Browser Fenster und jeweils die Browser Konsole. Öffne die Mongo shell in der Komandozeile.
 
-////
+Jetzt sollten wir in der Lage sein, das einzelne Dokument zu finden, das wir vorhin in allen drei Kontexten erstellt haben (beachte, dass das User Interface unserer App immernoch die drei statischen Datensätze anzeigt. Wir ignorieren das erst einmal).
 
 ~~~bash
 > db.posts.find();
 {title: "A new post", _id: ObjectId("..")};
 ~~~
-<%= caption "The Mongo Shell" %>
+<%= caption "Die Mongo Shell" %>
 
 ~~~js
 ❯ Posts.findOne();
 {title: "A new post", _id: LocalCollection._ObjectID};
 ~~~
-<%= caption "First browser console" %>
+<%= caption "Erste Browser Konsole" %>
 
-////
+Erstellen wir nun einen neuen Post, indem wir in einem der Browserfenster den Insert Befehl ausführen:
 
 ~~~js
 ❯ Posts.find().count();
@@ -145,72 +171,72 @@ Posts = new Meteor.Collection('posts');
 ❯ Posts.find().count();
 2
 ~~~
-<%= caption "First browser console" %>
+<%= caption "Erste Browser Konsole" %>
 
-////
+Wie nicht anders zu erwarten, ist der Post in der lokalen Collection gelandet. Nun sehen wir uns die Mongo Datenbank an.
 
 ~~~bash
 ❯ db.posts.find();
 {title: "A new post", _id: ObjectId("..")};
 {title: "A second post", _id: 'yyy'};
 ~~~
-<%= caption "The Mongo Shell" %>
+<%= caption "Die Mongo Shell" %>
 
-////
+Wie man sehen kann, ist der Post bis in die Mongo Datenbank gelangt, ohne dass wir auch nur eine Zeile Code geschrieben haben um unseren Clienten mit dem Server zu verbinden. (streng genommen, haben wir *eine* Zeile Code geschrieben: `new Mongo.Collection('posts')`). Doch das ist noch nicht alles!
 
-////
+Gib nun im zweiten Browserfenster folgendes in die Konsole ein:
 
 ~~~js
 ❯ Posts.find().count();
 2
 ~~~
-<%= caption "Second browser console" %>
+<%= caption "Zweite Browser Konsole" %>
 
-////
+Der Post ist auch hier! Obwohl wir das zweite Fenster nie neu geladen oder überhaupt irgendwie damit in Berührung gekommen sind und neuen Code, der Updates betrifft haben wir auch nicht geschrieben. Es ist alles magisch passiert - und unverzüglich, aber das wird später noch klarer werden.
 
-////
+Was passiert ist, ist, dass unsere serverseitige Collection von einer clientseitigen Collection über einen neuen Post informiert wurde, diesen in die Mongo Datenbank geschrieben und an alle anderen verbundenen `posts` Collections geschickt hat.
 
-////
+Doch Posts in der Browser Konsole abzufragen ist nicht wirklich hilfreich. Bald schon werden wir lernen, wie man diese Daten mit unseren Templates verbindet und dabei unseren einfachen HTML Prototypen in eine funktionierende echtzeit Webanwendung verwandeln. 
 
-### Keeping it Real-time
 
-////
+### Die Datenbank befüllen
 
-////
+Sich den Inhalt unserer Collections in der Browser Konsole anzusehen ist die eine Sache, aber was wir wirklich machen wollen ist, die Daten und die Änderungen daran auf dem Bildschirm anzuzeigen. Auf diese Weise werden wir unsere App von einer einfachen Web-*Seite*, die statische Daten anzeigt, zu einer echtzeit Web-*Anwendung* mit dynamischen, wechselnden Daten weiterentwickeln.
 
-### Populating the Database
+Zunächst einmal befüllen wir die Datenbank mit einigen Daten. Wir machen das über eine fixture Datei, die eine Sammlung von strukturierten Daten in die `Posts` Collection läd, wenn der Server das erste Mal startet.
 
-////
+Erst einmal sollte sichergestellt sein, dass die Datenbank leer ist. Wir benutzen `meteor reset` um die Datenbank zu löschen und das Projekt zurückzusetzen. Natürlich sollte man mit diesem Befehl sehr vorsichtig sein, wenn man beginnt an realen Projekten zu arbeiten.
 
-////
-
-////
+Stoppe jetzt den Meteor Server mit `strg+c` und führe in der Komandozeile folgenden Befehl aus:
 
 ~~~bash
 $ meteor reset
 ~~~
 
-////
+Der Reset-Befehl leert die Mongo Datenbank komplett. Er stellt einen nützlichen Befehl bei der Entwicklung dar, denn das Risiko ist groß, dass die Datenbank sonst inkonsistent wird.
 
-////
+Starten wir unsere Meteor App nun wieder:
+
+~~~bash
+$ meteor
+~~~
+
+Jetzt wo die Datenbank leer ist, können wird folgenden Code hinzufügen, der drei Posts einfügt, sobald der Server gestartet wird und die `Posts` Collection leer ist:
 
 ~~~js
 if (Posts.find().count() === 0) {
   Posts.insert({
     title: 'Introducing Telescope',
-    author: 'Sacha Greif',
     url: 'http://sachagreif.com/introducing-telescope/'
   });
   
   Posts.insert({
     title: 'Meteor',
-    author: 'Tom Coleman',
     url: 'http://meteor.com'
   });
   
   Posts.insert({
     title: 'The Meteor Book',
-    author: 'Tom Coleman',
     url: 'http://themeteorbook.com'
   });
 }
@@ -219,22 +245,26 @@ if (Posts.find().count() === 0) {
 
 <%= commit "4-2", "Added data to the posts collection." %>
 
-////
+Wir haben diese Datei im Server Verzeichnis abgelegt, damit sie niemals in einem Client-Browser geladen wird. Der Code wird sofort ausgeführt, wenn der Server startet und ruft `insert` auf um die drei einfachen Datensätze in unsere `posts` Collection zu speichern.
 
-////
+Starte jetzt den Server wieder mit dem Befehl `meteor` und die drei Posts werden in die Datenbank geladen.
 
-### Wiring the data to our HTML with helpers
 
-////
+### Dynamische Daten
+
+Wenn wir eine Browser Konsole öffnen, sehen wir wie alle drei Posts in MiniMongo geladen werden:
+
 
 ~~~js
 ❯ Posts.find().fetch();
 ~~~
-<%= caption "Browser console" %>
+<%= caption "Browser Konsole" %>
 
-////
+Um diese drei Posts in HTML gerendert zu bekommen, benutzen wir unseren Freund den Template Helper.
 
-////
+In Kapitel 3 haben wir bereits gesehen wie Meteor uns ermöglicht Daten mit unseren Spacebars Templates zu verknüpfen um HTML Ansichten einfacher Datenstrukturen zu erzeugen. Wir können nun Daten aus unserer Collection analog dazu einbinden. Dazu ersetzen wir einfach unser statisches JavaScript Objekt `postsData`durch eine dynamische Collection.
+
+Wo wir gerade davon sprechen, du kannst nun den Code von `postsData`löschen. So sollte die `posts_list.js`jetzt aussehen:
 
 ~~~js
 Template.postsList.helpers({
@@ -243,8 +273,7 @@ Template.postsList.helpers({
   }
 });
 ~~~
-<%= caption "client/views/posts/posts_list.js" %>
-<%= highlight "2~4" %>
+<%= caption "client/templates/posts/posts_list.js" %>
 
 <%= commit "4-3", "Wired collection into `postsList` template." %>
 
@@ -252,19 +281,20 @@ Template.postsList.helpers({
 
 ### Find & Fetch
 
-////
+In Meteor gibt `find()`einen Cursor zurück, was eine [reaktive Datenquelle](http://docs.meteor.com/#/full/find) darstellt. Wenn wir dessen Inhalte darstellen wollen, können wir `fetch` auf den Cursor anwenden um ihn in ein Array umzuwandeln.
 
-////
-
+Innerhalb einer App ist Meteor intelligent genug zu wissen wie man über einen Cursor iteriert ohne dass man jedes mal explizit eine Umwandlung in ein Array vornehmen muss. Das ist der Grund warum man `fetch` nur selten im Meteor Code findet (und warum wir es im Beispiel oben nicht benutzt haben).
 <% end %>
 
-////
-
-<%= screenshot "4-3", "Using live data" %>
+Anstatt eine Liste von Posts als ein statisches Array aus einer variable zu laden, geben wir nun einen Cursor an unseren Helper `posts` zurück (obwohl alles sehr ähnlich aussehen wird, da wir immernoch die gleichen Daten nutzen):
 
 ////
 
-////
+<%= screenshot "4-3", "Mit 'live' Daten" %>
+
+Unser Helper `{{#each}}` hat über all unsere `Posts` iteriert und zeigt sie auf dem Bildschirm an. Die serverseitige Collection hat die Posts von Mongo bezogen, an unsere clientseitige Collection übergeben und unsere Spacebars Helper haben sie ins Template übermittelt.
+
+Jetzt gehen wir noch einen Schritt weiter; wir fügen einen weiteren Post über die Konsole hinzu:
 
 ~~~js
 ❯ Posts.insert({
@@ -273,39 +303,37 @@ Template.postsList.helpers({
   url: 'http://docs.meteor.com'
 });
 ~~~
-<%= caption "Browser console" %>
+<%= caption "Browser Konsole" %>
 
-////
+Zurück im Browser sollte das nun etwa so aussehen:
 
-<%= screenshot "4-4", "Adding posts via the console" %>
+<%= screenshot "4-4", "Posts über die Konsole hinzufügen" %>
 
-////
+Du hast gerade zum ersten mal die Reaktivität in Aktion gesehen. Da wir Spacebars befohlen haben über den Cursor `Posts.find()` zu iterieren, hat es gewusst wie der Cursor auf Veränderungen überwacht werden muss und wie das HTML möglichst einfach anzupassen ist um die korrekten Daten darzustellen.
 
 <% note do %>
 
-### Inspecting DOM Changes
+### DOM Veränderungen untersuchen
 
-////
+In diesem Fall war die einfachste mögliche Veränderung ein weiteres `<div class="post">...</div>` hinzuzufügen. Wenn du sichergehen möchtest, dass dies wirklich die einzige Veränderung ist, öffne den DOM Inspector und wähle ein `<div>` eines bestehenden Posts.
 
-////
+In der JavaScript Konsole fügst du nun einen weiteren Post hinzu. Wenn du zurück zum Inspector wechselst, siehst du ein weiteres `<div>` für den neuen Post, doch das ausgewählte ´<div>` ist unverändert. Dies ist eine gute Methode um festzustellen, ob Elemente neu gerendert wurden oder unverändert geblieben sind.
 
 <% end %>
 
-### Connecting Collections: Publications and Subscriptions
+### Collections verbinden: Publications und Subscriptions
 
-////
+Bis jetzt hatten wir das `autopublish` Paket aktiviert, das nicht für den Einsatz bei Produktiv-Apps gedacht ist. Wie der Name schon sagt, bewirkt dieses Paket, dass jede Collection komplett mit jedem Client verbunden wird. Da dies nicht wirklich das ist, was wir wollen, entfernen wir es.
 
-////
+Öffne ein neues Terminal Fenster und führe folgenden Befehl aus:
 
 ~~~bash
 $ meteor remove autopublish
 ~~~
 
-////
+Dies hat eine sofortige Wirkung auf unser Projekt. Wenn du nun in den Browser schaust, wirst du sehen, dass alle Posts verschwunden sind! Das liegt daran, dass wir uns auf `autopublish` verlassen haben, das sichergestellt hat, dass unsere Client Collection der Posts eine 1:1 Kopie aller Posts in der Datenbank war. Schlussendlich müssen wir sicherstellen, dass wir nur die Posts übertragen, die der Benutzer auch wirklich sehen muss (Dinge wie Pagination berücksichtigt). Doch für den Moment richten wir `Posts` so ein, dass es komplett übergeben wird.
 
-////
-
-////
+Um dies zu erreichen, erstellen wir eine Funktion `publish()` die einen Cursor zurückgibt, der alle Posts referenziert:
 
 ~~~js
 Meteor.publish('posts', function() {
@@ -314,7 +342,7 @@ Meteor.publish('posts', function() {
 ~~~
 <%= caption "server/publications.js" %>
 
-////
+Beim Client müssen wir ein *subscribe* für die Publication einrichten. Dazu fügen wir einfach folgende Zeile in die `main.js` Datei ein:
 
 ~~~js
 Meteor.subscribe('posts');
@@ -323,8 +351,9 @@ Meteor.subscribe('posts');
 
 <%= commit "4-4", "Removed `autopublish` and set up a basic publication." %>
 
-////
+Wenn wir nun in den Browser zurückkehren, sind unsere Posts wieder da.
+Puh!
 
-### Conclusion
+### Zusammenfassung
 
-////
+Was haben wir also erreicht? Obwohl wir noch keine Benutzeroberfläche haben, verfügen wir über eine funktionierende Web-Anwendung. Wir könnten die App im Internet veröffentlichen und (über die Browser Konsole) anfangen Geschichten zu posten, welche dann in den Browsern der Benutzer in der ganzen Welt erscheinen würden.

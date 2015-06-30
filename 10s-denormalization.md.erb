@@ -4,47 +4,52 @@ slug: denormalization
 date: 0010/01/02
 number: 10.5
 sidebar: true
-contents: Understand what denormalization is.|Compare Mongo with traditional relational databases.|Learn when you should *not* denormalize your data. 
+contents: verstehen was Denormalisierung bedeutet|Mongo mit herkömmlichen relationalen Datenbanken vergleichen|erfahren wann man Daten *nicht* denormalisieren sollte 
 paragraphs: 15
 ---
 
-////
+Daten zu denormalisieren, bedeutet Daten nicht in einer "normalen" Form zu speichern. Mit anderen Worten bedeutet eine Denormalisierung, dass man mehrere Kopien, der gleichen Daten hat.
 
-////
+Im letzten Kapitel haben wir die Anzahl der Kommentare in das Post-Objekt denormalisiert, um nicht jedes mal alle Kommentare laden zu müssen. Im Sinne der Datenmodellierung ist dies redundant, denn wir könnten genau so gut jederzeiz die Anzahl der Kommentare bestimmen (Performance-Gesichtspunkte außen vor).
 
-////
+Eine Denormalisierung, bedeutet oft Mehrarbeit für den Entwickler. In unserem Beispiel müssen wir, jedes Mal wenn wir einen Post hinzufügen oder Entfernen auch beachten, den entsprechenden Post zu aktualisieren um sicherzustellen, dass das Feld `commentsCount` korrekt befüllt ist. Das ist der Grund warum dieses Herangehen bei relationalen Datenbanken wie MySql nicht gerne gesehen wird.
 
-////
+Trotzdem hat auch die herkömmliche Vorgehensweise Nachteile: ohne eine Eigenschaft ´commentsCount` müssten wir jedes Mal *alle* Kommentare laden nur um sie zählen zu können, so wie wir es auch am Anfang gemacht haben. Das Denormalisieren ermöglicht es uns das komplett zu umgehen.
 
 <% note do %>
 
-### A Special Publication
+### Eine besondere Publication
 
-////
+Es *wäre* möglich eine besondere Art von Publication zu erstellen, die ausschließlich die Anzahl der Kommentare, an denen wir interessiert sind, übermittelt (z.B. die Anzahl der Kommentare, die man momentan sehen kann, über aggregierte Queries auf dem Server).
 
-////
+Man muss jedoch abwägen, ob die Komplexität solcher Publications die Nachteile einer Denormalisierung nicht übertreffen würde...
 
 <% end %>
 
-////
+Diese Überlegungen hängen natürlich von der Anwendung ab: schreibt man Code, bei dem die Integrität der Daten von größter Wichtigkeit ist, sollte die Vermeidung von Inkonsistenzen eine höhere Priorität als Zugewinne bei der Performance haben.
 
-### Embedding Documents or Using Multiple Collections
+### Documente einbetten oder mehrere Collections verwenden
 
-////
+Wer Erfahrung mit Mongo hat, ist vielleicht überrascht, dass wir eine zweite Collection nur für Kommentare erstellt haben: warum nicht einfach die Kommentare im Dokument Post einbetten?
 
-////
+Es hat sich herausgestellt, dass viele der Werkzeuge, die Meteor uns zur Verfügung stellt, viel besser auf der Collection-Ebene funktionieren. Zum Beispiel:
 
-1. ////
-2. ////
-3. ////
-4. ////
+1. Der Helper `{{#each}}` ist sehr effizient darin über einen Cursor (dem Ergebnis von Collection.find()) zu iterieren. Das Gleiche gilt nicht beim iterieren übern ein Array von Objekten in einem großen Dokument.
 
-////
+2. `allow` und `deny` operieren auf Dokumenten-Level und vereinfachen deshlab auf einer Art und Weise sicherzustellen, dass jede Veränderung einzelner Kommentare korrekt durchgeführt wird, die auf Post-Level komplizierter wäre.
+
+3. DDP operiert auf dem Level der Top-Level Attribute eines Dokuments - das würde bedeuten, dass wenn `comments` eine Eigenschaft eines `post` wäre, würde bei jedem erstellen Kommentar, die Liste aller Posts vom Server für jeden verbundenen Client bezogen werden müssen.
+
+4. Publications und Subscriptions können viel leichter auf dem Dokumenten-Level gesteuert werden. Wenn wir zum Beispiel eine Pagination für Kommentare einrichten wollen, wäre die schwer möglich, wenn Kommentare keine eigene Collection hätten.
+
+Mongo empfiehlt das Einbetten von Dokumenten um die Anzahl aufwändiger Queries um Dokumente zu laden zu reduzieren. Nichtsdestotrotz wird dies selten zum Problem, wenn wir Meteors Architektur bedenken: die meiste Zeit durchsuchen wir Collections auf Seite des *Client*, wo der Datenbank-Zugriff praktisch keine Resourcen kostet.
+
+
 
 <% note do %>
 
-### The Downsides of Denormalization
+### Die Nachteile der Denormalisierung
 
-////
+Es gibt gute Gründe Daten *nicht* zu denormalisieren. Um einen guten Überblick zu erhalten, wann Denormalisierung nicht benutzt werden sollte, empfehlen wir den Artikel [Why You Should Never Use MongoDB](http://www.sarahmei.com/blog/2013/11/11/why-you-should-never-use-mongodb/) von Sarah Mei
 
 <% end %>

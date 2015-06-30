@@ -6,11 +6,11 @@ number: 3
 points: 1
 photoUrl: http://www.flickr.com/photos/73449134@N04/8194499092/
 photoAuthor: Mike Lewinski
-contents: Learn about Meteor's templating language, Handlebars.|Create your first three templates.|Learn how Meteor managers work.|Get a basic prototype working with static data.
+contents:  Handlebars, Meteors Templating Sprache, kennenlernen|deine ersten drei Templates erstellen|erfahren wie Meteors Manager funktionieren|einen ersten Prototyp mit statischen Daten erstellen
 paragraphs: 46
 ---
 „“
-Um den Einstieg in die Entwicklung mit Meteor zu erleichtern, verfolgen wir einen Outside-In-Ansatz. In anderen Worten: wir bauen zuerst eine „dumme“ äußere Schale aus HTML/JavaScript und hängeerknüpfen sie dann später mit der inneren Logik unserer App.
+Um den Einstieg in die Entwicklung mit Meteor zu erleichtern, verfolgen wir einen Outside-In-Ansatz. In anderen Worten: wir bauen zuerst eine „dumme“ äußere Schale aus HTML/JavaScript und verknüpfen sie dann später mit der inneren Logik unserer App.
 
 Das bedeutet, dass wir uns in diesem Kapitel nur mit dem beschäftigen werden, was in dem Verzeichnis `/client` vor sich geht.
 
@@ -22,12 +22,12 @@ Wenn das noch nicht geschehen ist, dann erzeuge im Verzeichnis `/client` eine ne
 </head>
 <body>
   <div class="container">
-    <header class="navbar">
-      <div class="navbar-inner">
-        <a class="brand" href="/">Microscope</a>
+    <header class="navbar navbar-default" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">Microscope</a>
       </div>
     </header>
-    <div id="main" class="row-fluid">
+    <div id="main">
       {{> postsList}}
     </div>
   </div>
@@ -35,21 +35,21 @@ Wenn das noch nicht geschehen ist, dann erzeuge im Verzeichnis `/client` eine ne
 ~~~
 <%= caption "client/main.html" %>
 
-Dies wird unser Haupt-Template. Wie du siehst ist es reines HTML bis auf ein einzelnes Tag, das das Template einführt: `{{> postsList}}`. Es dient als Einfügepunkt für das zukünftige Template `postsList`. Für den Moment werden wir einige weitere Templates erzeugen.
+Dies wird unser Haupt-Template. Wie du siehst, ist es reines HTML bis auf ein einzelnes Tag, das das Template einführt: `{{> postsList}}`. Es dient als Einfügepunkt für das zukünftige Template `postsList`. Für den Moment werden wir einige weitere Templates erzeugen.
 
 ### Meteor Templates
 
 In ihrem Kern besteht eine Soziale News-Site aus Postings, die in Listen organisiert sind und genau so werden wir unsere Templates organisieren.
 
-Lass' uns ein Verzeichnis `/templates` unterhalb von `/client` anlegen. Dort werden wir alle unsere Templates einfügen und um die Dinge schön geordnet zu halten, legen wir noch ein Verzeichnis `/posts` unterhalb von `/templates` an. Das dient als Speicherort für die Templates für Postings.
+Lass' uns ein Verzeichnis `/templates` unterhalb von `/client` anlegen. Dort werden wir alle unsere Templates einfügen und um die Dinge schön geordnet zu halten, legen wir noch ein Verzeichnis `/posts` unterhalb von `/templates` an, um die Templates für Postings zu speichern.
 
 <% note do %>
 
 ### Dateien finden
 
-Meteor ist gut im Finden von Dateien. Unabhängig davon, wo im Verzeichnis `/client` dein Code lagert, wird Meteor ihn finden und korrekt kompilieren. Das heißt, dass du keine Include-Pfade für JavaScript- oder CSS-Dateien von Hand festlegen brauchst. 
+Meteor ist gut im Finden von Dateien. Unabhängig davon, wo im Verzeichnis `/client` sich dein Code befindet, wird Meteor ihn finden und korrekt kompilieren. Das heißt, dass du keine Include-Pfade für JavaScript- oder CSS-Dateien von Hand festlegen brauchst. 
 
-Es heißt auch, dass du genauso gut alle Dateien in das selbe Verzeichnis legen könntest oder sogar den ganzen Code in eine einzige Datei. Weil Meteor jedoch ohnehin alles in eine einzige minifizierte Datei kompiliert halten wir die Dinge lieber gut organisiert und verwenden eine saubere Dateistruktur. 
+Es heißt auch, dass du genauso gut alle Dateien in das selbe Verzeichnis legen könntest oder sogar den ganzen Code in eine einzige Datei. Weil Meteor jedoch ohnehin alles in eine einzige minifizierte Datei kompiliert, halten wir die Dinge lieber gut organisiert und verwenden eine saubere Dateistruktur. 
 
 <% end %>
 
@@ -64,7 +64,7 @@ Wir sind nun so weit, unser zweites Template anzulegen. In `client/templates/pos
   </div>
 </template>
 ~~~
-<%= caption "client/views/posts/posts_list.html" %>
+<%= caption "client/templates/posts/posts_list.html" %>
 
 und `post_item.html`: 
 
@@ -77,17 +77,17 @@ und `post_item.html`:
   </div>
 </template>
 ~~~
-<%= caption "client/views/posts/post_item.html" %>
+<%= caption "client/templates/posts/post_item.html" %>
 
-Beachte das Attribut `name="postsList"` des Elementes `template`. Das ist der name, der von meteor verwendet wird, um nachzuhalten welches Template wo eingesetzt ist (beachte auch, dass der eigentliche *Dateiname* keine Bedeutung hat).
+Beachte das Attribut `name="postsList"` des Elementes `template`. Das ist der Name, der von Meteor verwendet wird, um nachzuverfolgen, welches Template wo eingesetzt ist (beachte, dass der eigentliche *Dateiname* keine Bedeutung hat).
 
 Nun ist es an der Zeit, Meteors Template-System **Spacebars** vorzustellen. Spacebars besteht aus HTML mit drei zusätzlichen Dingen: *inclusions* (manchmal auch „partials“ genannt), *expressions* (Ausdrücke) und *block helpers*.
 
-*Inclusions* verwenden die Syntax `{{> templateName}}` und teilen Meteor lediglich mit, dass die inclusion durch das Template gleichen Namens ersetzt werden soll.
+*Inclusions* verwenden die Syntax `{{> templateName}}` und teilen Meteor lediglich mit, dass die inclusion durch das Template gleichen Namens ersetzt werden soll (in unserem Fall `postItem`).
 
-*Expressions*, wie `{{title}}` rufen entweder eine property des aktuellen Objekts ider den Rückgabewert eines Template-Helpers, wie er in dem aktuellen Template-Manager definier ist. Doch davon wird später die Rede sein.
+*Expressions*, wie `{{title}}` rufen entweder eine property des aktuellen Objekts oder den Rückgabewert eines Template-Helpers, wie er in dem aktuellen Template-Manager definiert ist (dazu später mehr).
 
-Scließlich sind *block helpers* besondere Tags, die den Ablauf innerhalb des Templates steuern, wie `{{#each}}…{{/each}}` oder `{{#if}}…{{/if}}`.
+Schließlich sind *block helpers* besondere Tags, die den Ablauf innerhalb des Templates steuern, wie `{{#each}}…{{/each}}` oder `{{#if}}…{{/if}}`.
 
 <% note do %>
 
@@ -97,51 +97,49 @@ Um mehr über Spacebars zu lernen, lies die [Spacebars-Documentation](https://gi
 
 <% end %>
 
-Mit dieser Kenntnis konnen wir anfangen, zu verstehen, was hier passiert.
+Mit diesem Wissen konnen wir anfangen, zu verstehen, was hier passiert.
 
-Erstens, wir iterieren im Template `postsLists` mittels des Block-Helpers `{{#each}}…{{/each}}` über ein Objekt `posts`. Dann fügen wir für jede Iteration das Template `postItem` ein. 
+Zuerst iterieren wir im Template `postsLists` mittels des Block-Helpers `{{#each}}…{{/each}}` über ein Objekt `posts`. Dann fügen wir für jede Iteration das Template `postItem` ein. 
 
 Woher kommt dieses Objekt `posts`? Gute Frage. Eigentlich ist es ein **Template-Helper** und du kannst es als einen Platzhalter für einen dynamischen Wert ansehen.
 
-Das Template `postItem` selbst ist ziemlich geradlinig: Es benutzt lediglich drei Expressions: `{{url}}` und `{{title}}`liefern Properties des Dokuments und `{{domain}}` ruft einen Template-Helper auf.
+Das Template `postItem` selbst ist ziemlich einfach: Es benutzt lediglich drei Expressions: `{{url}}` und `{{title}}`liefern Properties des Dokuments und `{{domain}}` ruft einen Template-Helper auf.
 
 ### Template-Helper
 
-////
+Bis jetzt haben wir uns mit Spacebars beschäftigt, was kaum mehr als HTML mit ein paar zusätzlichen Tags ist. Anders als andere Sprachen wie PHP (oder sogar gewöhnliche HTML-Seiten, die JavaScript einbinden können), separiert Meteor Templates
+und deren Logik, so dass Templates selbst nicht viel machen.
 
-////
+Um zum Leben erweckt zu werden, braucht ein Template **helper**. Man kann sich diese Helper wie Köche vorstellen, die rohe Zutaten (deine Daten) nehmen und verarbeiten, bevor
+sie das fertige Gericht (das Template) and den Kellner übergeben, der es dir präsentiert.
 
-////
+In anderen Worten: während die Aufgabe des Templates darauf beschränkt ist, Variablen anzuzeigen oder darüber zu iterieren, sind es die Helper, die den Hauptteil der Arbeit erledigen
+indem sie jeder Variable einen Wert zuweisen.
 
 <% note do %>
 
-### Controllers?
+### Controller?
 
-////
+Man könnte meinen, dass die Datei mit den Template-Helpern eine Art Controller darstellt. Doch dies ist missverständlich (zumindest im Sinne von MVC), da Controller sonst eine etwas andere Rolle spielen.
 
-////
-
-////
+Wir haben uns deshalb entschieden, diesen Begriff zu vermeiden und einfach auf "Template-Helper" oder "Template-Logik" zu verweisen, wenn es um den, mit Templates verknüpften, JavaScript Code geht.
 
 <% end %>
 
-////
+Um die Dinge zu vereinfachen, übernehmen wir die Konvention und benennen die Datei mit den Helpern nach dem zugehörigen Template, aber mit einer **.js** Endung. Also erstellen wir jetzt die Datei `posts_list.js` im Verzeichnis `client/templates/posts` und beginnen darin unseren ersten Helper zu erstellen:
 
 ~~~js
 var postsData = [
   {
     title: 'Introducing Telescope',
-    author: 'Sacha Greif',
-    url: 'http://sachagreif.com/introducing-telescope/'
-  }, 
+    url: 'http://sachagreif.com/introducing-telescope'
+  },
   {
     title: 'Meteor',
-    author: 'Tom Coleman',
     url: 'http://meteor.com'
-  }, 
+  },
   {
     title: 'The Meteor Book',
-    author: 'Tom Coleman',
     url: 'http://themeteorbook.com'
   }
 ];
@@ -149,84 +147,87 @@ Template.postsList.helpers({
   posts: postsData
 });
 ~~~
-<%= caption "client/views/posts/posts_list.js" %>
+<%= caption "client/templates/posts/posts_list.js" %>
 
-////
+Wenn man alles richtig gemacht hat, sollte das im Browser ungefähr so aussehen:
 
-<%= screenshot "3-1", "Our first templates with static data" %>
+<%= screenshot "3-1", "Unser erstes Template mit statischen Daten" %>
 
-<%= commit "3-1", "Added basic posts list template and static data." %>
+Wir machen hier zwei Dinge: zuerst schreiben wir Beispieldaten in das Array `postsData`. Diese Daten würden normalerweise aus einer Datenbank kommen, aber da wir noch nicht gelernt haben wie das funktioniert (kommt im nächsten Kapitel!), bedienen wir uns dieses "Tricks" und benutzen statische Daten.
 
-////
+Dann benutzen wir Meteors Funktion `Template.postsList.helpers()` um einen Template-Helper namens `posts` zu erstellen, der das Array `postsData` zurückgibt, dasss wir gerade definiert haben.
 
-////
-
-////
+Wie du dich vielleicht erinnern kannst, benutzen wir den Helper `posts` bereits in unserem `postsList` Template:
 
 ~~~html
 <template name="postsList">
-  <div class="posts">
+  <div class="posts page">
     {{#each posts}}
       {{> postItem}}
     {{/each}}
   </div>
 </template>
 ~~~
-<%= caption "client/views/posts/posts_list.html" %>
+<%= caption "client/templates/posts/posts_list.html" %>
 
-////
+Da wir den Helper `postsList` definiert haben, steht er nun im Template zur Verfügung, wo wir nun über unser Array`postsData` iterieren und jedes Objekt, das darin enthalten ist, an das Template `postItem` übergeben lassen können.
 
-### The Value of "this"
+<%= commit "3-1", "Added basic posts list template and static data" %>
 
-////
+
+### Der `domain` Helper
+
+Ähnlich wie zuvor, erstellen wir nun die Datei `post_item.js`, die die Logik des Templates `postItem` enthalten soll:
 
 ~~~js
 Template.postItem.helpers({
-  domain: function() {
+  domain: function(){
     var a = document.createElement('a');
     a.href = this.url;
     return a.hostname;
   }
+
 });
 ~~~
-<%= caption "client/views/posts/post_item.js" %>
+<%= caption "client/templates/posts/post_item.js" %>
 
-<%= commit "3-2", "Setup a `domain` helper on the `postItem`." %>
+Dieses mal ist der Wert des Helpers `domain` kein Array, sondern eine anonyme Funktion. Im Vergleich zu unserem vorigen Beispiel mit den statischen Beispieldaten, ist dieses Muster viel gebräuchlicher (und nützlicher).
 
-////
+<%= screenshot "3-2", "Domains für jeden Link darstellen" %>
 
-<%= screenshot "3-2", "Displaying domains for each links." %>
+Durch ein bisschen JavaScript Magie, nimmt der Helper `domain` eine URL und gibt deren Domain zurück. Aber woher nimmt er diese URL überhaupt?
 
-////
+Um diese Frage zu beantworten, müssen wir uns noch einmal unser Template `posts_list.html` ansehen. Der Block-Helper `{{#each}}` iteriert nicht nur über unser Array, sondern er **setzt auch den Wert von `this` inerhalb des Blocks auf das aktuell zurückgegebene Objekt.**
 
-////
+Das bedeutet, dass zwischen beiden `{{#each}}` Tags, jeder Post nacheinander `this` zugewiesen wird und das setzt sich auch in der inkludierten Template-Logik `post_item.js` fort.
 
-////
+Jetzt verstehen wir warum `this.url`, die URL des aktuellen Posts zurückgibt. Desweiteren weiß Meteor, dass wenn wir `{{title}}` oder `{{url}}` in unserem Template `post_item.html` benutzen, wir eigentlich `this.title` und `this.url` meinen und gibt so die korrekten Werte zurück.
 
-////
+<%= commit "3-2", "Setup a `domain` helper on the `postItem` " %>
 
 <% note do %>
 
 ### JavaScript Magic
 
-////
+Obwohl nicht Meteor-spezifisch, findest du hier eine kurze Erklärung der oben stehenden "JavaScript Magie". Zuerst erstellen wir einen leeres HTML-Link Element `(a)` und speichern es in einer Variable.
 
-////
+Dann setzen wir das `href` Attribut gleich der URL des aktuellen Posts. (wie wir gerade gesehen haben, repräsentiert `this` in einem Helper das Objekt, mit dem gerade gearbeitet wird).
 
-////
+Zum Schluss machen wir uns die spezielle Eigenschaft `hostname` des `a` Elements zu nutzen und erhalten so die Domain ohne den Rest der URL.
 
 <% end %>
 
-////
+Wenn man bis hier korrekt mitgearbeitet hat, sollte man eine Liste von Posts im Browser angezeigt bekommen. Diese Liste ist statisch und nutzt noch keine von Meteors echtzeit Features. Wie du das ändern kannst, zeigen wir dir im nächsten Kapitel!
+
 
 <% note do %>
 
 ### Hot Code Reload
 
-////
+Vielleicht ist dir schon aufgefallen, dass du deine Seite im Browser nicht manuell neu laden musst, nachdem du eine Änderung an der Datei vorgenommen hast.
 
-////
+Das liegt daran, dass Meteor ständig alle Dateien im Projekt-Verzeichnis überwacht und automatisch den Browser neu läd, sobald eine Datei verändert wird.
 
-////
+Meteors hot code reload ist ziemlich intelligent, so dass es sogar den Zustand deiner App zwischen zwei Aktualisierungen der Seite aufrecht erhält!
 
 <% end %>
