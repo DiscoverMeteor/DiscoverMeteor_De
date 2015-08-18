@@ -4,24 +4,24 @@ slug: advanced-reactivity
 date: 0011/01/02
 number: 11.5
 sidebar: true
-contents: Learn about how to create reactive data sources in Meteor.|Create a simple example of a reactive data source.|See how Deps compares to AngularJS.
+contents: Lernen, wie du reaktive Datenquellen in Meteor erstellst.|Ein einfaches Beispiel einer reaktiven Datenquelle implementieren.|Sehen, wie sich Tracker im Vergleich zu AngularJS verhält.
 paragraphs: 29
 ---
 
-////
+Es kommt eher selten vor, dass man Code für das Abhängigkeitstracking selbst erstellt. Aber es ist sicherlich hilfreich, den zugrundeliegenden Mechanismus zu verstehen, um den Ablauf der Abhängigkeitsauflösung nachvollziehen zu können.
 
-////
+Stellen wir uns vor, wir möchten die Anzahl der Facebook-Freunde unseres aktuellen Benutzers, denen ein Post in Microscope gefällt,  nachverfolgen. Nehmen wir an, wir haben es bereits geschafft, den Benutzer gegenüber Facebook zu authentifizieren, die entsprechenden API-Aufrufe auszuführen und die relevanten Daten zu parsen. Wir haben nun eine asynchrone, clientseitige Funktion, welche die Anzahl der "Gefällt mir"-Angaben zurückgibt: `getFacebookLikeCount(user, url, callback)`.
 
-////
+Es ist wichtig, sich in Erinnerung zu rufen, dass eine derartige Funktion in hohem Maße *nicht-reaktiv* ist und sich nicht in Echtzeit mit Facebook synchronisiert. Sie wird zunächst einen HTTP-Request an Facebook senden, die Antwortdaten empfangen und diese dann der Applikation über einen asynchronen Callback zur Verfügung stellen. Sie wird sich jedoch nicht von selbst erneut aufrufen, wenn sich die "Gefällt mir"-Anzahl bei Facebook ändert, und unser UI wird sich nicht anpassen, wenn sich die zugrundeliegenden Daten ändern.
 
-////
+Um dies zu ändern, beginnen wir zunächst damit, unsere Funktion über `setInterval` alle paar Sekunden neu aufzurufen:
 
 ~~~js
 currentLikeCount = 0;
 Meteor.setInterval(function() {
   var postId;
   if (Meteor.user() && postId = Session.get('currentPostId')) {
-    getFacebookLikeCount(Meteor.user(), Posts.find(postId), 
+    getFacebookLikeCount(Meteor.user(), Posts.find(postId).url, 
       function(err, count) {
         if (!err)
           currentLikeCount = count;
@@ -30,7 +30,7 @@ Meteor.setInterval(function() {
 }, 5 * 1000);
 ~~~
 
-////
+Wir können jetzt davon ausgehen, dass wir jedes Mal, wenn wir die Variable `currentLikeCount` auswerten, die korrekte Anzahl erhalten &mdash; mit einem Ungenauigkeitszeitfenster von fünf Sekunden. Diese Variable können wir nun wie folgt in einem Helper verwenden:
 
 ~~~js
 Template.postItem.likeCount = function() {
@@ -38,23 +38,21 @@ Template.postItem.likeCount = function() {
 }
 ~~~
 
-////
+Allerdings gibt es noch niemanden, der unser Template zur Aktualisierung veranlasst, sobald sich `currentLikeCount` ändert. Auch wenn sich die Variable jetzt quasi in Echtzeit aktualisiert, ist sie noch nicht *reaktiv* und kann deshalb nicht in der erforderlichen Art und Weise mit dem Rest des Meteor-Ökosystems kommunizieren.
 
-### Tracking Reactivity: Computations
+### Reaktivitätstracking mittels Computations
 
-////
+Meteors Reaktivität ist über *Dependencies* (Abhängigkeiten) realisiert: Datenstrukturen, die eine Menge von Computations (Berechnungen) nachverfolgen. Wie wir in der Sidebar über Reaktivität bereits gesehen haben, besteht eine Computation aus einem Codeabschnitt, der reaktive Daten verwendet. In unserem Beispiel gibt es bereits eine Computation, die implizit für das Template `postItem` erzeugt wurde, und jeder Helper im zugehörigen Template-Manager besitzt ebenfalls seine eigene Computation.
 
-////
+Du kannst Dir eine Computation als einen Codeabschnitt vorstellen, der sich um reaktive Daten "kümmert". Wenn sich die Daten ändern, wird es diese Computaion sein, die darüber informiert wird (über `invalidate()`), und es ist auch die Aufgabe dieser Computation zu entscheiden, ob etwas zu tun ist.
 
-////
+### Eine Variable in eine reaktive Funktion überführen
 
-### Turning a Variable Into a Reactive Function
-
-////
+Um unsere Variable `currentLikeCount` in eine reaktive Datenquelle zu verwandeln, müssen wir alle Computations nachverfolgen, welche eine Abhängigkeit zu unserer Variable besitzen. Dies setzt voraus, dass wir die Variable in eine Funktion überführen (die einen Wert zurückgibt):
 
 ~~~js
 var _currentLikeCount = 0;
-var _currentLikeCountListeners = new Deps.Dependency();
+var _currentLikeCountListeners = new Tracker.Dependency();
 
 currentLikeCount = function() {
   _currentLikeCountListeners.depend();
@@ -76,37 +74,48 @@ Meteor.setInterval(function() {
 ~~~
 <%= highlight "1~7,14~17" %>
 
-////
+Hier haben wir eine Dependency namens `_currentLikeCountListeners` erstellt, welche sämtliche Computations nachverfolgt, in denen `currentLikeCount()` verwendet wird. Ändert sich der Wert von `_currentLikeCount`, rufen wir die Funktion `changed()` dieser Dependency auf, welche alle nachverfolgten Computations als ungültig kennzeichnet.
 
-////
+Diese Computations können nun von Fall zu Fall entscheiden, wie sie mit der Änderung umgehen. 
 
-### Template Computation and Controlling Redraws
+Wenn dies auf dich jetzt wie ein Haufen Boilerplate-Code wirkt, hast du vollkommen recht. Meteor hat deshalb einige Werkzeuge eingebaut, um das Ganze ein bisschen zu vereinfachen (genauso wie du Computations in der Regel nicht direkt verwendest, du verwendest einfach `autorun`). Es gibt ein Plattformpaket namens `reactive-var`, welches sich exakt wie unsere Funktion `currentLikeCount()` verhält. Wenn wir dieses Paket hinzufügen:
 
-////
+~~~bash
+meteor add reactive-var
+~~~
 
-////
+können wir unseren Code ein bisschen vereinfachen:
 
-////
+~~~js
+var currentLikeCount = new ReactiveVar();
 
-////
+Meteor.setInterval(function() {
+  var postId;
+  if (Meteor.user() && postId = Session.get('currentPostId')) {
+    getFacebookLikeCount(Meteor.user(), Posts.find(postId), 
+      function(err, count) {
+        if (!err) {
+          currentLikeCount.set(count);
+        }
+      });
+  }
+}, 5 * 1000);
+~~~
+<%= highlight "1,9" %>
 
-////
+Um die Variable zu verwenden, rufen wir `currentLikeCount.get()` in unserem Helper auf und alles funktioniert wie zuvor. Es gibt ein weiteres Plattformpaket namens `reactive-dict`, das einen reaktiven Schlüssel-Wert-Speicher bietet (nahezu identisch wie die `Session`) und ebenfalls nützlich sein kann.
 
-////
+### Vergleich zwischen Tracker und Angular
 
-### Comparing Deps to Angular
+[Angular](http://angularjs.org/) ist eine rein clientseitige Rendering Library, die von Google entwickelt wird. Zur besseren Anschaulichkeit ist es hilfreich, Meteors Ansatz des Abhängigkeitstrackings mit dem von Angular zu vergleichen, da sich beide Ansätze deutlich voneinander unterscheiden.
 
-////
+Wir haben gesehen, dass die Meteor-Variante Codeblöcke verwendet, die wir als Computations bezeichnen. Diese Codeblöcke werden von speziellen "reaktiven" Datenquellen (Funktionen) überwacht, welche die Computations als ungültig erklären, sofern dies erforderlich ist. Die Datenquellen informieren also alle ihre Abhängigkeiten _explizit_, sobald `invalidate()` auszuführen ist. Beachte dabei: Auch wenn dies im Allgemeinen nur dann geschieht, wenn sich die Daten geändert haben, könnte die Datenquelle grundsätzlich auch aus anderen Gründen die Ungültigkeit veranlassen.
 
-////
+Und auch wenn die Computations als Reaktion auf die Ungültigkeitserklärung normalerweise einfach erneut ausgeführt werden, könntest du prinzipiell ein ganz anderes Verhalten implementieren. All dies ermöglicht dir ein hohes Maß an Kontrolle über die Reaktivität.
 
-////
+In Angular wird die Reaktivität über das `scope`-Objekt abgebildet. Einen Scope kann man sich als einfaches JavaScript-Objekt vorstellen, das über ein paar spezielle Methoden verfügt. Wenn du eine reaktive Abhängigkeit zu einem Wert innerhalb des Scopes herstellen möchtest, rufst Du `scope.$watch` auf und übergibst den Ausdruck, an dem Du interessiert bist (d.h. du legst fest, welcher Teil des Scopes für dich wichtig ist) und außerdem eine Listener-Funktion, die bei jeder Änderung des Ausdrucks ausgeführt wird. Du sagst also explizit, was zu tun ist, wenn sich der Wert des Ausdrucks ändert.
 
-////
-
-////
-
-////
+Um bei unserem Facebook-Beispiel zu bleiben, würden wir in Angular schreiben:
 
 ~~~js
 $rootScope.$watch('currentLikeCount', function(likeCount) {
@@ -114,13 +123,13 @@ $rootScope.$watch('currentLikeCount', function(likeCount) {
 });
 ~~~
 
-////
+Natürlich würdest du `$watch` in Angular nicht allzu oft direkt aufrufen (so wie du in Meteor nur selten Computations einrichtest), da `ng-model`-Direktiven und `{{expressions}}` automatisch Beobachter einrichten, die sich bei Änderungen um das erneute Rendering kümmern.
 
-////
+Wenn sich ein solcher reaktiver Wert geändert hat, muss anschließend `scope.$apply()` aufgerufen werden. Dies wertet jeden Beobachter des Scope neu aus, ruft aber nur die Listener-Funktionen jener Beobachter auf, deren Werte sich auch *geändert* haben.
 
-////
+`scope.$apply()` ist also in etwa vergleichbar mit `dependency.changed()`, mit dem Unterschied, dass es auf Ebene des Scopes arbeitet und dir nicht die Kontrolle darüber gibt, im Detail festzulegen, welche Listener neu ausgewertet werden sollen. Diese geringfügige Einschränkung der Konrollmöglichkeit ermöglicht es Angular, sehr schlau und effizient präzise zu entscheiden, welche Listener neu ausgewertet werden müssen.
 
-////
+In Angular würde unsere Funktion `getFacebookLikeCount()` in etwa so aussehen:
 
 ~~~js
 Meteor.setInterval(function() {
@@ -135,4 +144,4 @@ Meteor.setInterval(function() {
 ~~~
 <%= highlight "5~6" %>
 
-////
+Zugegebenermaßen übernimmt Meteor die Schwerstarbeit für uns und lässt uns von Reaktivität profitieren, ohne dass wir selbst allzu viel dafür tun müssen. Aber hoffentlich wird es sich für dich als nützlich erweisen, diese Muster kennengelernt zu haben, wenn du einmal in die Gelegenheit kommen solltest, die Dinge etwas weiter treiben zu müssen.
