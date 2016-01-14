@@ -13,9 +13,9 @@ In diesem Kapitel werfen wir einen genaueren Blick darauf, wie das funktioniert 
 
 Eine Collection ist eine spezielle Datenstruktur, die sich um das Speichern von Daten in der permanenten, serverseitigen MongoDB Datenbank, sowie deren Synchronisation mit dem Browser jedes verbundenen Users in Echtzeit kümmert.
 
-Wir wollen, dass unsere Posts dauerhaft gepsichert sind und zwischen Usern geteilt werden, also beginnen wir damit eine Collection namens `Posts` zu erstellen um sie dort zu speichern.
+Wir wollen, dass unsere Posts dauerhaft gespeichert sind und zwischen Usern geteilt werden, also beginnen wir damit eine Collection namens `Posts` zu erstellen um sie dort zu speichern.
 
-Collections sind ein zentraler Bestandteil jeder App, um also sicherzustellen, dass sie immer zu Beginn definiert werden, erstellen wir sie in der lib directory. Sofern noch nicht geschehen, erstelle im Ordner `lib` einen Unterordner `collections/` und darin eine Datei posts.js. Dann füge dieser Datei folgende Zeile hinzu:
+Collections sind ein zentraler Bestandteil jeder App, um also sicherzustellen, dass sie immer zu Beginn definiert werden, erstellen wir sie im Verzeichnis `lib/`. Sofern noch nicht geschehen, erstelle im Ordner `/lib` einen Unterordner `/collections` und darin eine Datei posts.js. Dann füge dieser Datei folgende Zeile hinzu:
 
 ~~~js
 Posts = new Meteor.Collection('posts');
